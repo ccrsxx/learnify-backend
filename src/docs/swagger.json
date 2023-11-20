@@ -1,0 +1,1107 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Challenge 1 - Express App with Authentication and PostgresSQL",
+    "description": "An express app with Authentication and PostgreSQL\n\n## List of available users\n\n1. Superadmin\n\n   - email: emilia@rezero.com\n   - password: emilia\n\n1. Admin\n\n    - email: rem@rezero.com\n    - password: rem\n\n1. Member\n\n    - email: subaru@rezero.com\n    - password: subaru\n\n## How to authenticate\n\n1. Login with email and password on [this](#/auth/login) endpoint with any of the available users above.\n1. Copy the token from the response.\n1. Click the `Authorize` button on the top right corner of this page.\n1. Paste the token inside the `value` field and click `Authorize` button. Don't forget to add `Bearer ` prefix before the token.",
+    "version": "1.0.0",
+    "license": {
+      "name": "Production Server",
+      "url": "https://dev.risalamin.com"
+    }
+  },
+  "externalDocs": {
+    "description": "GitHub Repository",
+    "url": "https://github.com/ccrsxx/binar-academy"
+  },
+  "servers": [
+    {
+      "url": "https://dev.risalamin.com",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "index",
+      "description": "Everything about Index"
+    },
+    {
+      "name": "auth",
+      "description": "Everything about Auth"
+    },
+    {
+      "name": "users",
+      "description": "Everything about Users"
+    },
+    {
+      "name": "cars",
+      "description": "Everything about Cars"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": ["index"],
+        "summary": "Welcome to API",
+        "description": "Returns a welcome message and docs url",
+        "operationId": "index",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Ping successfully"
+                    },
+                    "docs": {
+                      "type": "string",
+                      "example": "https://dev.risalamin.com/docs"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Login",
+        "description": "Login with email and password",
+        "operationId": "login",
+        "requestBody": {
+          "description": "Login as an superadmin",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserCredentials"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Login successfully"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/User"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZiOWRlNThjLTIzNTctNDdhOS1iNWU1LWMzM2IwNWE4MzE2NiIsImlhdCI6MTY5Nzk4NjI0OCwiZXhwIjoxNjk4MDcyNjQ4fQ.AeyJQD5-VFCsue5gtwelyTrKKile_zpk1EOCJoarQxY"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingCredentialsError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/InvalidCredentialsError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PasswordIsNotMatchError"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Register user as an member",
+        "description": "Register user as an member",
+        "operationId": "register",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserBody",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        }
+      }
+    },
+    "/auth/register/admin": {
+      "post": {
+        "tags": ["auth"],
+        "summary": "Register user as an admin",
+        "description": "Register user as an admin",
+        "operationId": "registerAdmin",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UserBody",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "User created successfully"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/User"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "role": {
+                              "type": "string",
+                              "example": "admin"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingAuthorizationError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ValidationError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/SuperAdminError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/users/me": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Get current user",
+        "description": "Get current user",
+        "operationId": "getCurrentUser",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingAuthorizationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/cars": {
+      "get": {
+        "tags": ["cars"],
+        "summary": "Get all cars",
+        "description": "Get all cars",
+        "operationId": "getCars",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Car"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingAuthorizationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["cars"],
+        "summary": "Create a new car",
+        "description": "Create a new car",
+        "operationId": "createCar",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CarBody",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car created successfully"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/Car"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deletedAt": {
+                              "type": "string",
+                              "example": null
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingAuthorizationError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ValidationError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AdminError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/cars/{carId}": {
+      "get": {
+        "tags": ["cars"],
+        "summary": "Get car by id",
+        "description": "Get car by id",
+        "operationId": "getCarById",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/CarWithUser"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingAuthorizationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CarNotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "put": {
+        "tags": ["cars"],
+        "summary": "Update car by id",
+        "description": "Update car by id",
+        "operationId": "updateCarById",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to return",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/CarBody",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car updated successfully"
+                    },
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/CarWithUser"
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "deletedAt": {
+                              "type": "string",
+                              "example": null
+                            },
+                            "deletedByUser": {
+                              "type": "object",
+                              "example": null
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/MissingAuthorizationError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ValidationError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AdminError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CarNotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["cars"],
+        "summary": "Delete car by id",
+        "description": "Delete car by id",
+        "operationId": "deleteCarById",
+        "parameters": [
+          {
+            "name": "carId",
+            "in": "path",
+            "description": "ID of car to delete",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car deleted successfully"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/CarWithUser"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingAuthorizationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/AdminError"
+          },
+          "404": {
+            "$ref": "#/components/responses/CarNotFoundError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    },
+    "/cars/reset": {
+      "post": {
+        "tags": ["cars"],
+        "summary": "Reset all cars",
+        "description": "Reset all cars",
+        "operationId": "resetCars",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Car reset successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/MissingAuthorizationError"
+          },
+          "401": {
+            "$ref": "#/components/responses/InvalidAuthorizationError"
+          },
+          "403": {
+            "$ref": "#/components/responses/SuperAdminError"
+          },
+          "500": {
+            "$ref": "#/components/responses/InternalServerError"
+          }
+        },
+        "security": [
+          {
+            "token": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Satella"
+          },
+          "email": {
+            "type": "string",
+            "example": "satella@rezero.com"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://random-site.com/random-image.png"
+          },
+          "username": {
+            "type": "string",
+            "example": "satella"
+          },
+          "password": {
+            "type": "string",
+            "example": "$2b$10$m9qQtOm.ilSASXlPIdVaROsO4ExZAs9NQZvZUx7bG7OZqGScy3JMm"
+          },
+          "role": {
+            "type": "string",
+            "example": "member",
+            "enum": ["superadmin", "admin", "user"]
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          }
+        }
+      },
+      "EditableUser": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Satella"
+          },
+          "email": {
+            "type": "string",
+            "example": "satella@rezero.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "satella"
+          },
+          "image": {
+            "type": "string",
+            "example": "https://random-site.com/random-image.png"
+          },
+          "username": {
+            "type": "string",
+            "example": "satella"
+          }
+        }
+      },
+      "UserCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "emilia@rezero.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "emilia"
+          }
+        }
+      },
+      "Car": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
+          },
+          "name": {
+            "type": "string",
+            "example": "Toyota"
+          },
+          "type": {
+            "type": "string",
+            "example": "small",
+            "enum": ["small", "medium", "large"]
+          },
+          "image": {
+            "type": "string",
+            "example": "https://random-site.com/random-image.png"
+          },
+          "capacity": {
+            "type": "integer",
+            "example": 4
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "example": 100000
+          },
+          "description": {
+            "type": "string",
+            "description": "Good condition"
+          },
+          "availableAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          },
+          "deletedAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          }
+        }
+      },
+      "EditableCar": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Toyota"
+          },
+          "type": {
+            "type": "string",
+            "example": "small",
+            "enum": ["small", "medium", "large"]
+          },
+          "image": {
+            "type": "string",
+            "example": "https://random-site.com/random-image.png"
+          },
+          "capacity": {
+            "type": "integer",
+            "example": 4
+          },
+          "rentPerDay": {
+            "type": "integer",
+            "example": 100000
+          },
+          "description": {
+            "type": "string",
+            "description": "Good condition"
+          },
+          "availableAt": {
+            "type": "string",
+            "example": "2021-01-01T00:00:00.000Z"
+          }
+        }
+      },
+      "CarWithUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Car"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "createdByUser": {
+                "$ref": "#/components/schemas/User"
+              },
+              "updatedByUser": {
+                "$ref": "#/components/schemas/User"
+              },
+              "deletedByUser": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        ]
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "MissingCredentialsError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Email and password are required"
+          }
+        }
+      },
+      "InvalidCredentialsError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Email and password must be a string"
+          }
+        }
+      },
+      "PasswordIsNotMatchError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Password is not match"
+          }
+        }
+      },
+      "InternalServerError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal server error"
+          }
+        }
+      },
+      "ValidationError": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Validation error"
+          }
+        }
+      },
+      "AdminError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Only admin is allowed for this endpoint"
+          }
+        }
+      },
+      "SuperAdminError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Only superadmin is allowed for this endpoint"
+          }
+        }
+      },
+      "MissingAuthorizationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Missing authorization header"
+          }
+        }
+      },
+      "InvalidAuthorizationError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Invalid authorization header"
+          }
+        }
+      },
+      "CarNotFoundError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Car not found"
+          }
+        }
+      }
+    },
+    "responses": {
+      "CarNotFoundError": {
+        "description": "Car not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CarNotFoundError"
+            }
+          }
+        }
+      },
+      "InvalidAuthorizationError": {
+        "description": "Invalid authorization header",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InvalidAuthorizationError"
+            }
+          }
+        }
+      },
+      "MissingAuthorizationError": {
+        "description": "Missing authorization header",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MissingAuthorizationError"
+            }
+          }
+        }
+      },
+      "MissingCredentialsError": {
+        "description": "Email and password are required",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/MissingCredentialsError"
+            }
+          }
+        }
+      },
+      "InvalidCredentialsError": {
+        "description": "Email and password must be a string",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InvalidCredentialsError"
+            }
+          }
+        }
+      },
+      "InternalServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/InternalServerError"
+            }
+          }
+        }
+      },
+      "AdminError": {
+        "description": "Only admin is allowed for this endpoint",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AdminError"
+            }
+          }
+        }
+      },
+      "SuperAdminError": {
+        "description": "Only superadmin is allowed for this endpoint",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/SuperAdminError"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "PasswordIsNotMatchError": {
+        "description": "Password is not match",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/PasswordIsNotMatchError"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "UserBody": {
+        "description": "User object that needs to be added",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EditableUser"
+            }
+          }
+        }
+      },
+      "CarBody": {
+        "description": "Car object that needs to be added",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/EditableCar"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "token": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter the token with the `Bearer: ` prefix, e.g. \"Bearer abcde12345\"."
+      }
+    }
+  }
+}
