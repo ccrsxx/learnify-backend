@@ -7,7 +7,7 @@ import * as Types from '../../libs/types/common.js';
  */
 export function ping(_req, res) {
   res.status(200).json({
-    message: 'Ping successfully',
+    message: 'Ping successfully bikin baru',
     documentation: `${PUBLIC_URL}/docs`
   });
 }
