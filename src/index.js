@@ -5,6 +5,8 @@ import root from './api/routes/index.js';
 import docs from './api/routes/docs.js';
 import auth from './api/routes/auth.js';
 import users from './api/routes/users.js';
+import courses from './api/routes/courses.js';
+import categories from './api/routes/categories.js';
 import upload from './api/routes/uploads.js';
 
 /** @returns {void} */
@@ -20,6 +22,8 @@ function main() {
   auth(app);
   users(app);
   upload(app);
+  courses(app);
+  categories(app);
 
   app.listen(HOST_PORT, () =>
     // eslint-disable-next-line no-console

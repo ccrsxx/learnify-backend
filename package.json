@@ -31,6 +31,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-syntax-import-assertions": "^7.23.3",
+    "@faker-js/faker": "^8.3.1",
     "@types/jest": "^29.5.8",
     "eslint-plugin-jsdoc": "^46.9.0",
     "husky": "^8.0.3",
@@ -43,7 +44,6 @@
     "sequelize-cli": "^6.6.1"
   },
   "dependencies": {
-    "@faker-js/faker": "^8.2.0",
     "bcrypt": "^5.1.1",
     "cloudinary": "^1.41.0",
     "cors": "^2.8.5",
