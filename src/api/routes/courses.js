@@ -22,22 +22,24 @@ export function generateRandomCourse() {
   return Array.from({ length: 1 }, () => ({
     id: faker.string.uuid(),
     name: faker.person.fullName(),
+    code: faker.string.alpha(10),
     price: faker.commerce.price(),
-    details: {
-      about: faker.commerce.productDescription(),
-      target: Array.from({ length: 3 }, () =>
-        faker.commerce.productDescription()
-      )
-    },
+    author: faker.person.firstName(),
+    rating: 5,
     premium: faker.datatype.boolean(),
+    telegram: faker.internet.url(),
     onboarding: faker.commerce.productDescription(),
     difficulty: faker.helpers.arrayElement([
       'BEGINNER',
       'INTERMEDIATE',
       'ADVANCED'
     ]),
-    telegram_link: faker.internet.url(),
-    intro_video_link: faker.internet.url(),
+    desciption: faker.commerce.productDescription(),
+    intro_video: faker.internet.url(),
+    target_audience: Array.from({ length: 3 }, () =>
+      faker.commerce.productDescription()
+    ),
+    user_id: faker.string.uuid(),
     course_category_id: faker.string.uuid(),
     category: {
       id: faker.string.uuid(),
