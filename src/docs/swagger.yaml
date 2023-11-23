@@ -345,23 +345,7 @@ components:
           type: string
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
         category:
-          type: object
-          properties:
-            id:
-              type: string
-              example: d290f1ee-6c54-4b01-90e6-d701748f0851
-            name:
-              type: string
-              example: Ronald
-            image:
-              type: string
-              example: https://random-site.com/random-image.png
-            createdAt:
-              type: string
-              example: '2021-01-01T00:00:00.000Z'
-            updatedAt:
-              type: string
-              example: '2021-01-01T00:00:00.000Z'
+          $ref: '#/components/schemas/CourseCategory'
         createdAt:
           type: string
           example: '2021-01-01T00:00:00.000Z'

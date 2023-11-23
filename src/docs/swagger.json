@@ -40,7 +40,9 @@
   "paths": {
     "/": {
       "get": {
-        "tags": ["index"],
+        "tags": [
+          "index"
+        ],
         "summary": "Welcome to API",
         "description": "Returns a welcome message and docs url",
         "operationId": "index",
@@ -70,7 +72,9 @@
     },
     "/auth/login": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Login",
         "description": "Login with email and password",
         "operationId": "login",
@@ -153,7 +157,9 @@
     },
     "/auth/register": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Register user as an member",
         "description": "Register user as an member",
         "operationId": "register",
@@ -192,7 +198,9 @@
     },
     "/auth/register/admin": {
       "post": {
-        "tags": ["auth"],
+        "tags": [
+          "auth"
+        ],
         "summary": "Register user as an admin",
         "description": "Register user as an admin",
         "operationId": "registerAdmin",
@@ -269,7 +277,9 @@
     },
     "/courses": {
       "get": {
-        "tags": ["courses"],
+        "tags": [
+          "courses"
+        ],
         "summary": "Get all courses",
         "description": "Get all courses",
         "operationId": "courses",
@@ -311,7 +321,9 @@
     },
     "/course-categories": {
       "get": {
-        "tags": ["courses"],
+        "tags": [
+          "courses"
+        ],
         "summary": "Get all course category",
         "description": "Get all course category",
         "operationId": "courseCategories",
@@ -384,7 +396,11 @@
           "role": {
             "type": "string",
             "example": "member",
-            "enum": ["superadmin", "admin", "user"]
+            "enum": [
+              "superadmin",
+              "admin",
+              "user"
+            ]
           },
           "createdAt": {
             "type": "string",
@@ -476,7 +492,11 @@
           "difficulty": {
             "type": "string",
             "example": "INTERMEDIATE",
-            "enum": ["BEGINNER", "INTERMEDIATE", "ADVANCED"]
+            "enum": [
+              "BEGINNER",
+              "INTERMEDIATE",
+              "ADVANCED"
+            ]
           },
           "description": {
             "type": "string",
@@ -504,29 +524,7 @@
             "example": "3bc509a0-923c-419d-8bcd-3e269289dc8e"
           },
           "category": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-              },
-              "name": {
-                "type": "string",
-                "example": "Ronald"
-              },
-              "image": {
-                "type": "string",
-                "example": "https://random-site.com/random-image.png"
-              },
-              "createdAt": {
-                "type": "string",
-                "example": "2021-01-01T00:00:00.000Z"
-              },
-              "updatedAt": {
-                "type": "string",
-                "example": "2021-01-01T00:00:00.000Z"
-              }
-            }
+            "$ref": "#/components/schemas/CourseCategory"
           },
           "createdAt": {
             "type": "string",
