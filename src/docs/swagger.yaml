@@ -1,25 +1,8 @@
 openapi: 3.0.3
 info:
-  title: Challenge 1 - Express App with Authentication and PostgresSQL
+  title: MOOC - Final Project Fullstack Web and Android
   description: |-
-    An express app with Authentication and PostgreSQL
-
-    ## List of available users
-
-    1. Superadmin
-
-       - email: emilia@rezero.com
-       - password: emilia
-
-    1. Admin
-
-        - email: rem@rezero.com
-        - password: rem
-
-    1. Member
-
-        - email: subaru@rezero.com
-        - password: subaru
+    A website and mobile-based Massive Open Online Courses (MOOC) application
 
     ## How to authenticate
 
@@ -30,12 +13,12 @@ info:
   version: 1.0.0
   license:
     name: Production Server
-    url: https://dev.risalamin.com
+    url: http://api-binar-backend.risalamin.com
 externalDocs:
   description: GitHub Repository
-  url: https://github.com/ccrsxx/binar-academy
+  url: https://github.com/ccrsxx/binar-backend
 servers:
-  - url: https://dev.risalamin.com
+  - url: http://api-binar-backend.risalamin.com
     description: Production server
   - url: http://localhost:3000
     description: Local server
@@ -44,10 +27,8 @@ tags:
     description: Everything about Index
   - name: auth
     description: Everything about Auth
-  - name: users
-    description: Everything about Users
-  - name: cars
-    description: Everything about Cars
+  - name: courses
+    description: Everything about courses
 paths:
   /:
     get:
@@ -69,7 +50,7 @@ paths:
                     example: Ping successfully
                   docs:
                     type: string
-                    example: https://dev.risalamin.com/docs
+                    example: http://api-binar-backend.risalamin.com/docs
   /auth/login:
     post:
       tags:
@@ -191,38 +172,13 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-  /users/me:
+  /courses:
     get:
       tags:
-        - users
-      summary: Get current user
-      description: Get current user
-      operationId: getCurrentUser
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/User'
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-  /cars:
-    get:
-      tags:
-        - cars
-      summary: Get all cars
-      description: Get all cars
-      operationId: getCars
+        - courses
+      summary: Get all courses
+      description: Get all courses
+      operationId: courses
       responses:
         '200':
           description: Successful operation
@@ -234,7 +190,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Car'
+                      $ref: '#/components/schemas/Courses'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -243,64 +199,13 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-    post:
-      tags:
-        - cars
-      summary: Create a new car
-      description: Create a new car
-      operationId: createCar
-      requestBody:
-        $ref: '#/components/requestBodies/CarBody'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Car created successfully
-                  data:
-                    allOf:
-                      - $ref: '#/components/schemas/Car'
-                      - type: object
-                        properties:
-                          deletedAt:
-                            type: string
-                            example: null
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/MissingAuthorizationError'
-                  - $ref: '#/components/schemas/ValidationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '403':
-          $ref: '#/components/responses/AdminError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-  /cars/{carId}:
+  /course-categories:
     get:
       tags:
-        - cars
-      summary: Get car by id
-      description: Get car by id
-      operationId: getCarById
-      parameters:
-        - name: carId
-          in: path
-          description: ID of car to return
-          required: true
-          schema:
-            type: string
+        - courses
+      summary: Get all course category
+      description: Get all course category
+      operationId: courseCategories
       responses:
         '200':
           description: Successful operation
@@ -310,135 +215,13 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/CarWithUser'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CourseCategory'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
-        '404':
-          $ref: '#/components/responses/CarNotFoundError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-    put:
-      tags:
-        - cars
-      summary: Update car by id
-      description: Update car by id
-      operationId: updateCarById
-      parameters:
-        - name: carId
-          in: path
-          description: ID of car to return
-          required: true
-          schema:
-            type: string
-      requestBody:
-        $ref: '#/components/requestBodies/CarBody'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Car updated successfully
-                  data:
-                    allOf:
-                      - $ref: '#/components/schemas/CarWithUser'
-                      - type: object
-                        properties:
-                          deletedAt:
-                            type: string
-                            example: null
-                          deletedByUser:
-                            type: object
-                            example: null
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/MissingAuthorizationError'
-                  - $ref: '#/components/schemas/ValidationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '403':
-          $ref: '#/components/responses/AdminError'
-        '404':
-          $ref: '#/components/responses/CarNotFoundError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-    delete:
-      tags:
-        - cars
-      summary: Delete car by id
-      description: Delete car by id
-      operationId: deleteCarById
-      parameters:
-        - name: carId
-          in: path
-          description: ID of car to delete
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Car deleted successfully
-                  data:
-                    $ref: '#/components/schemas/CarWithUser'
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '403':
-          $ref: '#/components/responses/AdminError'
-        '404':
-          $ref: '#/components/responses/CarNotFoundError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-  /cars/reset:
-    post:
-      tags:
-        - cars
-      summary: Reset all cars
-      description: Reset all cars
-      operationId: resetCars
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Car reset successfully
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '403':
-          $ref: '#/components/responses/SuperAdminError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -506,7 +289,7 @@ components:
         password:
           type: string
           example: emilia
-    Car:
+    Courses:
       type: object
       properties:
         id:
@@ -514,77 +297,95 @@ components:
           example: d290f1ee-6c54-4b01-90e6-d701748f0851
         name:
           type: string
-          example: Toyota
-        type:
+          example: Web Development
+        code:
           type: string
-          example: small
-          enum:
-            - small
-            - medium
-            - large
-        image:
-          type: string
-          example: https://random-site.com/random-image.png
-        capacity:
-          type: integer
-          example: 4
-        rentPerDay:
+          example: ZQosLgGtzB
+        price:
           type: integer
           example: 100000
+        author:
+          type: string
+          example: Ronald
+        rating:
+          type: integer
+          example: 5
+        premium:
+          type: boolean
+          example: false
+        telegram:
+          type: string
+          example: https://random-site.com/tele-group
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
+        difficulty:
+          type: string
+          example: INTERMEDIATE
+          enum:
+            - BEGINNER
+            - INTERMEDIATE
+            - ADVANCED
         description:
           type: string
-          description: Good condition
-        availableAt:
+          example: This course will help you become a great programmer
+        intro_video:
           type: string
-          example: '2021-01-01T00:00:00.000Z'
+          example: https://random-site.com/random-video.mkv
+        target_audience:
+          type: array
+          items:
+            type: string
+          example:
+            [You want to understand the important points in creating a website]
+        user_id:
+          type: string
+          example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
+        course_category_id:
+          type: string
+          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+        category:
+          type: object
+          properties:
+            id:
+              type: string
+              example: d290f1ee-6c54-4b01-90e6-d701748f0851
+            name:
+              type: string
+              example: Ronald
+            image:
+              type: string
+              example: https://random-site.com/random-image.png
+            createdAt:
+              type: string
+              example: '2021-01-01T00:00:00.000Z'
+            updatedAt:
+              type: string
+              example: '2021-01-01T00:00:00.000Z'
         createdAt:
           type: string
           example: '2021-01-01T00:00:00.000Z'
         updatedAt:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-        deletedAt:
-          type: string
-          example: '2021-01-01T00:00:00.000Z'
-    EditableCar:
+    CourseCategory:
       type: object
       properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
         name:
           type: string
-          example: Toyota
-        type:
-          type: string
-          example: small
-          enum:
-            - small
-            - medium
-            - large
+          example: Ronald
         image:
           type: string
           example: https://random-site.com/random-image.png
-        capacity:
-          type: integer
-          example: 4
-        rentPerDay:
-          type: integer
-          example: 100000
-        description:
-          type: string
-          description: Good condition
-        availableAt:
+        createdAt:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-    CarWithUser:
-      allOf:
-        - $ref: '#/components/schemas/Car'
-        - type: object
-          properties:
-            createdByUser:
-              $ref: '#/components/schemas/User'
-            updatedByUser:
-              $ref: '#/components/schemas/User'
-            deletedByUser:
-              $ref: '#/components/schemas/User'
+        updatedAt:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
     SuccessResponse:
       type: object
       properties:
@@ -650,19 +451,7 @@ components:
         message:
           type: string
           example: Invalid authorization header
-    CarNotFoundError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Car not found
   responses:
-    CarNotFoundError:
-      description: Car not found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/CarNotFoundError'
     InvalidAuthorizationError:
       description: Invalid authorization header
       content:
@@ -724,12 +513,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/EditableUser'
-    CarBody:
-      description: Car object that needs to be added
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/EditableCar'
   securitySchemes:
     token:
       type: apiKey
