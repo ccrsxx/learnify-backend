@@ -19,7 +19,7 @@ export default (app) => {
 };
 
 export function generateRandomCourse() {
-  return Array.from({ length: 1 }, () => ({
+  return Array.from({ length: 25 }, () => ({
     id: faker.string.uuid(),
     name: faker.person.fullName(),
     code: faker.string.alpha(10),
