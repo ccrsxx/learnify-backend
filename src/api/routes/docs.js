@@ -1,5 +1,6 @@
+import { readFile } from 'fs/promises';
+import yaml from 'yaml';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../../docs/swagger.json' assert { type: 'json' };
 import * as Types from '../../libs/types/common.js';
 import { PUBLIC_URL } from '../../libs/env.js';
 
@@ -7,7 +8,10 @@ import { PUBLIC_URL } from '../../libs/env.js';
  * @type {Types.Route}
  * @returns {void}
  */
-export default (app) => {
+export default async (app) => {
+  const file = await readFile('./src/docs/swagger.yaml', 'utf8');
+  const swaggerDocument = yaml.parse(file);
+
   /** @type {swaggerUi.SwaggerUiOptions} */
   const options = {
     swaggerOptions: {

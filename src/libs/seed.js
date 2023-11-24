@@ -1,13 +1,8 @@
 import { faker } from '@faker-js/faker';
 import * as UserModel from '../api/models/user.js';
 
-/**
- * Generate 100 dummy users.
- *
- * @returns {Omit<UserModel.UserAttributes, 'id'>[]}
- */
 export function generateRandomUser() {
-  return Array.from({ length: 100 }, () => ({
+  return {
     name: faker.person.fullName(),
     role: faker.helpers.arrayElement(UserModel.userRoles),
     image: faker.image.avatar(),
@@ -15,5 +10,53 @@ export function generateRandomUser() {
     password: faker.internet.password(),
     createdAt: faker.date.past(),
     updatedAt: faker.date.recent()
-  }));
+  };
+}
+
+export function generateRandomCategory() {
+  return {
+    id: faker.string.uuid(),
+    name: faker.commerce.product(),
+    image: faker.image.urlLoremFlickr({ category: 'animals' }),
+    createdAt: faker.date.recent(),
+    updatedAt: faker.date.recent()
+  };
+}
+
+export function generateRandomCourse() {
+  return {
+    id: faker.string.uuid(),
+    name: faker.commerce.product(),
+    code: faker.string.alpha(8),
+    price: faker.commerce.price(),
+    author: faker.person.fullName(),
+    rating: faker.number.float({ min: 0, max: 5, precision: 0.1 }),
+    premium: faker.datatype.boolean(),
+    telegram: faker.internet.url(),
+    onboarding: faker.commerce.productDescription(),
+    difficulty: faker.helpers.arrayElement([
+      'BEGINNER',
+      'INTERMEDIATE',
+      'ADVANCED'
+    ]),
+    description: faker.commerce.productDescription(),
+    intro_video: faker.internet.url(),
+    target_audience: Array.from({ length: 3 }, () =>
+      faker.commerce.productDescription()
+    ),
+    user_id: faker.string.uuid(),
+    course_category_id: faker.string.uuid(),
+    user: {
+      id: faker.string.uuid(),
+      role: faker.helpers.arrayElement(['ADMIN', 'USER']),
+      email: faker.internet.email(),
+      phone_number: faker.helpers.replaceSymbolWithNumber('+628##########'),
+      password: faker.internet.password(),
+      createdAt: faker.date.recent(),
+      updatedAt: faker.date.recent()
+    },
+    course_category: generateRandomCategory(),
+    createdAt: faker.date.recent(),
+    updatedAt: faker.date.recent()
+  };
 }
