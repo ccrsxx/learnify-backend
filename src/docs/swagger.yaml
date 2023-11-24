@@ -24,11 +24,13 @@ servers:
     description: Local server
 tags:
   - name: index
-    description: Everything about Index
+    description: Everything about index
   - name: auth
-    description: Everything about Auth
+    description: Everything about auth
   - name: courses
     description: Everything about courses
+  - name: course-categories
+    description: Everything about course categories
 paths:
   /:
     get:
@@ -127,51 +129,6 @@ paths:
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /auth/register/admin:
-    post:
-      tags:
-        - auth
-      summary: Register user as an admin
-      description: Register user as an admin
-      operationId: registerAdmin
-      requestBody:
-        $ref: '#/components/requestBodies/UserBody'
-        required: true
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: User created successfully
-                  data:
-                    allOf:
-                      - $ref: '#/components/schemas/User'
-                      - type: object
-                        properties:
-                          role:
-                            type: string
-                            example: admin
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/MissingAuthorizationError'
-                  - $ref: '#/components/schemas/ValidationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '403':
-          $ref: '#/components/responses/SuperAdminError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
   /courses:
     get:
       tags:
@@ -190,7 +147,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Courses'
+                      $ref: '#/components/schemas/Course'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -202,10 +159,10 @@ paths:
   /course-categories:
     get:
       tags:
-        - courses
+        - course-categories
       summary: Get all course category
       description: Get all course category
-      operationId: courseCategories
+      operationId: course-categories
       responses:
         '200':
           description: Successful operation
@@ -237,29 +194,25 @@ components:
         name:
           type: string
           example: Satella
-        email:
-          type: string
-          example: satella@rezero.com
-        image:
-          type: string
-          example: https://random-site.com/random-image.png
-        username:
-          type: string
-          example: satella
-        password:
-          type: string
-          example: $2b$10$m9qQtOm.ilSASXlPIdVaROsO4ExZAs9NQZvZUx7bG7OZqGScy3JMm
         role:
           type: string
           example: member
           enum:
-            - superadmin
             - admin
             - user
-        createdAt:
+        email:
+          type: string
+          example: satella@rezero.com
+        password:
+          type: string
+          example: $2b$10$m9qQtOm.ilSASXlPIdVaROsO4ExZAs9NQZvZUx7bG7OZqGScy3JMm
+        phone_number:
+          type: string
+          example: 081234567890
+        created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-        updatedAt:
+        updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
     EditableUser:
@@ -289,7 +242,7 @@ components:
         password:
           type: string
           example: emilia
-    Courses:
+    Course:
       type: object
       properties:
         id:
@@ -344,12 +297,14 @@ components:
         course_category_id:
           type: string
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+        user:
+          $ref: '#/components/schemas/User'
         category:
           $ref: '#/components/schemas/CourseCategory'
-        createdAt:
+        created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-        updatedAt:
+        updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
     CourseCategory:
@@ -364,10 +319,10 @@ components:
         image:
           type: string
           example: https://random-site.com/random-image.png
-        createdAt:
+        created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-        updatedAt:
+        updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
     SuccessResponse:
