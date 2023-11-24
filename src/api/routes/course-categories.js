@@ -13,17 +13,17 @@ export default (app) => {
 
   router.get('/', (_req, res) => {
     res.status(200).json({
-      data: generateRandomCategories()
+      data: Array.from({ length: 10 }, generateRandomCategory)
     });
   });
 };
 
-export function generateRandomCategories() {
-  return Array.from({ length: 6 }, () => ({
+export function generateRandomCategory() {
+  return {
     id: faker.string.uuid(),
     name: faker.commerce.product(),
     image: faker.image.urlLoremFlickr({ category: 'animals' }),
     createdAt: faker.date.recent(),
     updatedAt: faker.date.recent()
-  }));
+  };
 }
