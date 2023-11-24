@@ -290,7 +290,9 @@ components:
           items:
             type: string
           example:
-            [You want to understand the important points in creating a website]
+            - You want to become a great programmer
+            - You want to become a great programmer
+            - You want to become a great programmer
         user_id:
           type: string
           example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
@@ -299,7 +301,7 @@ components:
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
         user:
           $ref: '#/components/schemas/User'
-        category:
+        course_category:
           $ref: '#/components/schemas/CourseCategory'
         created_at:
           type: string

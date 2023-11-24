@@ -51,7 +51,7 @@ export function generateRandomCourse() {
       createdAt: faker.date.recent(),
       updatedAt: faker.date.recent()
     },
-    category: generateRandomCategory(),
+    course_category: generateRandomCategory(),
     createdAt: faker.date.recent(),
     updatedAt: faker.date.recent()
   };
