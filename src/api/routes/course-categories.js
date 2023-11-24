@@ -1,6 +1,6 @@
 import { Router } from 'express';
+import { generateRandomCategory } from '../../libs/seed.js';
 import * as Types from '../../libs/types/common.js';
-import { faker } from '@faker-js/faker';
 
 /**
  * @type {Types.Route}
@@ -17,13 +17,3 @@ export default (app) => {
     });
   });
 };
-
-export function generateRandomCategory() {
-  return {
-    id: faker.string.uuid(),
-    name: faker.commerce.product(),
-    image: faker.image.urlLoremFlickr({ category: 'animals' }),
-    createdAt: faker.date.recent(),
-    updatedAt: faker.date.recent()
-  };
-}
