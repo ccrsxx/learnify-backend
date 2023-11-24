@@ -1,14 +1,13 @@
 import { faker } from '@faker-js/faker';
-import * as UserModel from '../api/models/user.js';
 
 export function generateRandomUser() {
   return {
-    name: faker.person.fullName(),
-    role: faker.helpers.arrayElement(UserModel.userRoles),
-    image: faker.image.avatar(),
+    id: faker.string.uuid(),
+    role: faker.helpers.arrayElement(['ADMIN', 'USER']),
     email: faker.internet.email(),
+    phone_number: faker.helpers.replaceSymbolWithNumber('+628##########'),
     password: faker.internet.password(),
-    createdAt: faker.date.past(),
+    createdAt: faker.date.recent(),
     updatedAt: faker.date.recent()
   };
 }
@@ -46,15 +45,7 @@ export function generateRandomCourse() {
     ),
     user_id: faker.string.uuid(),
     course_category_id: faker.string.uuid(),
-    user: {
-      id: faker.string.uuid(),
-      role: faker.helpers.arrayElement(['ADMIN', 'USER']),
-      email: faker.internet.email(),
-      phone_number: faker.helpers.replaceSymbolWithNumber('+628##########'),
-      password: faker.internet.password(),
-      createdAt: faker.date.recent(),
-      updatedAt: faker.date.recent()
-    },
+    user: generateRandomUser(),
     course_category: generateRandomCategory(),
     createdAt: faker.date.recent(),
     updatedAt: faker.date.recent()
