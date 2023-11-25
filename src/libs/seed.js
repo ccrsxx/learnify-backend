@@ -22,6 +22,28 @@ export function generateRandomCategory() {
   };
 }
 
+export function generateCategory() {
+  const categories = [
+    { name: 'UI/UX Design', image: '' },
+    { name: 'Product Management', image: '' },
+    { name: 'Web Development', image: '' },
+    { name: 'Android Development', image: '' },
+    { name: 'IOS Development', image: '' },
+    { name: 'Data Science', image: '' }
+  ];
+  let data = [];
+  for (let i = 0; i < categories.length; i++) {
+    data.push({
+      id: faker.string.uuid(),
+      name: categories[i].name,
+      image: faker.image.urlLoremFlickr({ category: 'animals' }),
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent()
+    });
+  }
+  return data;
+}
+
 export function generateRandomCourse() {
   return {
     id: faker.string.uuid(),
