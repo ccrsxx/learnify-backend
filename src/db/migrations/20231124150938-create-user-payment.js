@@ -18,11 +18,19 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'user',
+          key: 'id'
+        }
       },
       course_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'course',
+          key: 'id'
+        }
       },
       created_at: {
         allowNull: false,

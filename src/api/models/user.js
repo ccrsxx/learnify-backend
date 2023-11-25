@@ -31,25 +31,25 @@ export default (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.UserPayment, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
 
       // @ts-ignore
       this.hasMany(models.UserCourse, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
 
       // @ts-ignore
       this.hasMany(models.CourseMaterialStatus, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
 
       // @ts-ignore
       this.hasMany(models.Course, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
     }
   }

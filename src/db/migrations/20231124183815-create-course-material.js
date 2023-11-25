@@ -23,7 +23,11 @@ module.exports = {
       },
       course_chapter_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'course_chapter',
+          key: 'id'
+        }
       },
       created_at: {
         type: Sequelize.DATE

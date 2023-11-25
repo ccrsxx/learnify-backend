@@ -20,13 +20,13 @@ export default (sequelize, DataTypes) => {
       // @ts-ignore
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
 
       // @ts-ignore
       this.belongsTo(models.Course, {
         foreignKey: 'course_id'
-        // as: 'course_id'
+        // as: 'courseId'
       });
     }
   }

@@ -23,7 +23,7 @@ export default (sequelize, DataTypes) => {
       // @ts-ignore
       this.hasMany(models.CourseMaterial, {
         foreignKey: 'course_chapter_id'
-        // as: 'course_chapter_id'
+        // as: 'courseChapterId'
       });
     }
   }

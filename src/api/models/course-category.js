@@ -20,7 +20,7 @@ export default (sequelize, DataTypes) => {
       // @ts-ignore
       this.hasMany(models.Course, {
         foreignKey: 'course_category'
-        // as: 'course_category'
+        // as: 'courseCategory'
       });
     }
   }

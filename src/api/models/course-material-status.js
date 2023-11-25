@@ -17,7 +17,7 @@ export default (sequelize, DataTypes) => {
       // @ts-ignore
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
-        // as: 'user_id'
+        // as: 'userId'
       });
     }
   }

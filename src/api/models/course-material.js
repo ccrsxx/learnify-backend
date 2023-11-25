@@ -18,7 +18,7 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.CourseChapter, {
         foreignKey: 'course_chapter_id'
-        // as: 'course_chapter_id'
+        // as: 'courseChapterId'
       });
     }
   }

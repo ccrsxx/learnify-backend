@@ -16,7 +16,11 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'user',
+          key: 'id'
+        }
       },
       course_material_id: {
         type: Sequelize.UUID,
