@@ -23,12 +23,36 @@ export function generateRandomCategory() {
 
 export function generateCategory() {
   const categories = [
-    { name: 'UI/UX Design', image: '' },
-    { name: 'Product Management', image: '' },
-    { name: 'Web Development', image: '' },
-    { name: 'Android Development', image: '' },
-    { name: 'IOS Development', image: '' },
-    { name: 'Data Science', image: '' }
+    {
+      name: 'UI/UX Design',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/znwzjnbzevzldg88voxx'
+    },
+    {
+      name: 'Product Management',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/yr8lgaxnv9yr8mifvfqz'
+    },
+    {
+      name: 'Web Development',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/zuhljmfokfjfynnv5vs3'
+    },
+    {
+      name: 'Android Development',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/po9zcr17lovq6ezrh0ot'
+    },
+    {
+      name: 'IOS Development',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/fcaf00ejsgcqtylujckl'
+    },
+    {
+      name: 'Data Science',
+      image:
+        'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/zuhljmfokfjfynnv5vs3'
+    }
   ];
 
   const data = [];
@@ -36,7 +60,7 @@ export function generateCategory() {
   for (let i = 0; i < categories.length; i++) {
     data.push({
       name: categories[i].name,
-      image: faker.image.urlLoremFlickr({ category: 'animals' }),
+      image: categories[i].image,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent()
     });
