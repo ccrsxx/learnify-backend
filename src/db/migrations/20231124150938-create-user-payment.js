@@ -2,35 +2,27 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('user_payments', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      name: {
-        type: Sequelize.STRING,
+      paid: {
+        type: Sequelize.BOOLEAN
+      },
+      payment_method: {
+        type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER'),
         allowNull: false
       },
-      admin: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: false
-      },
-      email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
-      },
-      password: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.UUID,
         allowNull: false
       },
-      phone_number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+      course_id: {
+        type: Sequelize.UUID,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -43,6 +35,6 @@ module.exports = {
     });
   },
   async down(queryInterface, _Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('user_payments');
   }
 };

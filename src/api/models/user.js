@@ -4,18 +4,13 @@ import { Model } from 'sequelize';
  * @typedef UserAttributes
  * @property {string} id
  * @property {string} name
- * @property {UserRoles} role
- * @property {string} image
+ * @property {Boolean} admin
  * @property {string} email
  * @property {string} password
+ * @property {string} phone_number
  * @property {Date} createdAt
  * @property {Date} updatedAt
  */
-
-export const userRoles = /** @type {const} */ (['admin', 'member']);
-
-/** @typedef {(typeof userRoles)[number]} UserRoles */
-
 export const Models = {};
 
 /**
@@ -30,7 +25,7 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'Car', any>} _models
+     * @param {Record<'', any>} _models
      */
     static associate(_models) {
       // define association here
@@ -62,26 +57,12 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
-      role: {
-        type: DataTypes.ENUM(...userRoles),
+      admin: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 'member',
-        validate: {
-          isIn: {
-            args: [userRoles],
-            msg: `Role must be one of ${userRoles.join(', ')}`
-          }
-        }
+        defaultValue: false
       },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          isUrl: {
-            msg: 'Image is not valid'
-          }
-        }
-      },
+
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -95,7 +76,15 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
-      password: DataTypes.STRING
+      password: DataTypes.STRING,
+      phone_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          name: 'phone number',
+          msg: 'Phone number already exists'
+        }
+      }
     },
     {
       sequelize,
