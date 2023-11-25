@@ -25,22 +25,32 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'', any>} _models
+     * @param {Record<'UserPayment', any>} models
      */
-    static associate(_models) {
+    static associate(models) {
       // define association here
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'createdBy',
-      //   as: 'createdByUser'
-      // });
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'updatedBy',
-      //   as: 'updatedByUser'
-      // });
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'deletedBy',
-      //   as: 'deletedByUser'
-      // });
+      this.hasMany(models.UserPayment, {
+        foreignKey: 'user_id'
+        // as: 'user_id'
+      });
+
+      // @ts-ignore
+      this.hasMany(models.UserCourse, {
+        foreignKey: 'user_id'
+        // as: 'user_id'
+      });
+
+      // @ts-ignore
+      this.hasMany(models.CourseMaterialStatus, {
+        foreignKey: 'user_id'
+        // as: 'user_id'
+      });
+
+      // @ts-ignore
+      this.hasMany(models.Course, {
+        foreignKey: 'user_id'
+        // as: 'user_id'
+      });
     }
   }
 

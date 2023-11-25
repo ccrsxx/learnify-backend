@@ -13,10 +13,15 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'', any>} _models
+     * @param {Record<'', any>} models
      */
-    static associate(_models) {
+    static associate(models) {
       // define association here
+      // @ts-ignore
+      this.hasMany(models.Course, {
+        foreignKey: 'course_category'
+        // as: 'course_category'
+      });
     }
   }
 
