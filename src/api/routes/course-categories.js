@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import * as courseCategoryController from '../controllers/course-category.js';
-import { generateRandomCategory } from '../../libs/seed.js';
 import * as Types from '../../libs/types/common.js';
 
 /**
