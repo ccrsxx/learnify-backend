@@ -1,17 +1,26 @@
 'use strict';
+
 import { Model } from 'sequelize';
+
+/**
+ * @param {import('sequelize').Sequelize} sequelize
+ * @param {import('sequelize').DataTypes} DataTypes
+ */
 export default (sequelize, DataTypes) => {
-  class course_material extends Model {
+  class CourseMaterial extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
+     *
+     * @param {Record<'', any>} _models
      */
     static associate(_models) {
       // define association here
     }
   }
-  course_material.init(
+
+  CourseMaterial.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -32,9 +41,11 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'course_material',
+      modelName: 'CourseMaterial',
+      tableName: 'course_material',
       underscored: true
     }
   );
-  return course_material;
+
+  return CourseMaterial;
 };

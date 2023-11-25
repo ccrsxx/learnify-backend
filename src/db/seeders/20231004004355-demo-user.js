@@ -4,12 +4,12 @@ module.exports = {
     const { generateRandomUser } = await import('../../libs/seed.js');
 
     return queryInterface.bulkInsert(
-      'Users',
+      'user',
       Array.from({ length: 100 }, generateRandomUser)
     );
   },
   down: (queryInterface, _Sequelize) => {
     // @ts-ignore
-    return queryInterface.bulkDelete('Users', null, {});
+    return queryInterface.bulkDelete('user', null, {});
   }
 };

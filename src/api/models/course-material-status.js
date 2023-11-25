@@ -1,14 +1,11 @@
-'use strict';
 import { Model } from 'sequelize';
-export const Models = {};
 
 /**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */
-
 export default (sequelize, DataTypes) => {
-  class user_course extends Model {
+  class CourseMaterialStatus extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
      * Sequelize lifecycle. The `models/index` file will call this method
@@ -20,16 +17,27 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  user_course.init(
+  CourseMaterialStatus.init(
     {
-      onboarded: { type: DataTypes.BOOLEAN, allowNull: false },
-      user_id: { type: DataTypes.UUID, allowNull: false },
-      course_id: { type: DataTypes.UUID, allowNull: false }
+      completed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+      },
+      user_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      course_material_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: 'user_course'
+      modelName: 'CourseMaterialStatus',
+      tableName: 'course_material_status',
+      underscored: true
     }
   );
-  return user_course;
+  return CourseMaterialStatus;
 };

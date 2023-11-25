@@ -2,23 +2,22 @@ import { faker } from '@faker-js/faker';
 
 export function generateRandomUser() {
   return {
-    id: faker.string.uuid(),
-    role: faker.helpers.arrayElement(['ADMIN', 'USER']),
+    name: faker.person.fullName(),
+    admin: faker.datatype.boolean(),
     email: faker.internet.email(),
     phone_number: faker.helpers.replaceSymbolWithNumber('+628##########'),
     password: faker.internet.password(),
-    createdAt: faker.date.recent(),
-    updatedAt: faker.date.recent()
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
   };
 }
 
 export function generateRandomCategory() {
   return {
-    id: faker.string.uuid(),
     name: faker.commerce.product(),
     image: faker.image.urlLoremFlickr({ category: 'animals' }),
-    createdAt: faker.date.recent(),
-    updatedAt: faker.date.recent()
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
   };
 }
 
@@ -31,22 +30,23 @@ export function generateCategory() {
     { name: 'IOS Development', image: '' },
     { name: 'Data Science', image: '' }
   ];
-  let data = [];
+
+  const data = [];
+
   for (let i = 0; i < categories.length; i++) {
     data.push({
-      id: faker.string.uuid(),
       name: categories[i].name,
       image: faker.image.urlLoremFlickr({ category: 'animals' }),
       created_at: faker.date.recent(),
       updated_at: faker.date.recent()
     });
   }
+
   return data;
 }
 
 export function generateRandomCourse() {
   return {
-    id: faker.string.uuid(),
     name: faker.commerce.product(),
     code: faker.string.alpha(8),
     price: faker.commerce.price(),
@@ -69,7 +69,7 @@ export function generateRandomCourse() {
     course_category_id: faker.string.uuid(),
     user: generateRandomUser(),
     course_category: generateRandomCategory(),
-    createdAt: faker.date.recent(),
-    updatedAt: faker.date.recent()
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
   };
 }

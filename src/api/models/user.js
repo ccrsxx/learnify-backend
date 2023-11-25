@@ -4,8 +4,8 @@ import { Model } from 'sequelize';
  * @typedef UserAttributes
  * @property {string} id
  * @property {string} name
- * @property {Boolean} admin
  * @property {string} email
+ * @property {boolean} admin
  * @property {string} password
  * @property {string} phone_number
  * @property {Date} createdAt
@@ -62,7 +62,6 @@ export default (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false
       },
-
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -88,7 +87,9 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'User'
+      modelName: 'User',
+      tableName: 'user',
+      underscored: true
     }
   );
 

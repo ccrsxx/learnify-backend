@@ -5,17 +5,20 @@ import { Model } from 'sequelize';
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
-  class Courses extends Model {
+  class Course extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
+     *
+     * @param {Record<'', any>} _models
      */
     static associate(_models) {
       // define association here
     }
   }
-  Courses.init(
+
+  Course.init(
     {
       name: {
         type: DataTypes.STRING,
@@ -76,9 +79,11 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Courses',
+      modelName: 'Course',
+      tableName: 'course',
       underscored: true
     }
   );
-  return Courses;
+
+  return Course;
 };

@@ -9,6 +9,13 @@ import config from '../../db/config/database.js';
  * @property {Sequelize} sequelize
  * @property {Sequelize} Sequelize
  * @property {ReturnType<typeof import('./user.js').default>} User
+ * @property {ReturnType<typeof import('./user-course.js').default>} UserCourse
+ * @property {ReturnType<typeof import('./user-payment.js').default>} UserPayment
+ * @property {ReturnType<typeof import('./course.js').default>} Course
+ * @property {ReturnType<typeof import('./course-chapter.js').default>} CourseChapter
+ * @property {ReturnType<typeof import('./course-category.js').default>} CourseCategory
+ * @property {ReturnType<typeof import('./course-material.js').default>} CourseMaterial
+ * @property {ReturnType<typeof import('./course-material-status.js').default>} CourseMaterialStatus
  */
 
 /** @returns {Promise<Database>} */
@@ -50,4 +57,14 @@ async function initializeDatabase() {
   return /** @type {Database} */ (/** @type {unknown} */ (db));
 }
 
-export const { sequelize, User } = await initializeDatabase();
+export const {
+  sequelize,
+  User,
+  UserCourse,
+  UserPayment,
+  Course,
+  CourseChapter,
+  CourseCategory,
+  CourseMaterial,
+  CourseMaterialStatus
+} = await initializeDatabase();

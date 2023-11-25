@@ -8,7 +8,7 @@ export const Models = {};
  */
 
 export default (sequelize, DataTypes) => {
-  class user_payment extends Model {
+  class UserPayment extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
      * Sequelize lifecycle. The `models/index` file will call this method
@@ -20,7 +20,8 @@ export default (sequelize, DataTypes) => {
       // define association here
     }
   }
-  user_payment.init(
+
+  UserPayment.init(
     {
       paid: DataTypes.BOOLEAN,
       payment_method: {
@@ -32,8 +33,11 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'user_payment'
+      modelName: 'UserPayment',
+      tableName: 'user_payment',
+      underscored: true
     }
   );
-  return user_payment;
+
+  return UserPayment;
 };
