@@ -1,5 +1,5 @@
-'use strict';
 import { Model } from 'sequelize';
+
 /**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
@@ -11,37 +11,32 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'', any>} models
+     * @param {Record<import('./index.js').ModelName, any>} models
      */
     static associate(models) {
       // define association here
-      // @ts-ignore
       this.hasMany(models.UserPayment, {
         foreignKey: 'course_id'
         // as: 'courseId'
       });
 
-      // @ts-ignore
       this.hasMany(models.UserCourse, {
         foreignKey: 'course_id'
         // as: 'courseId'
       });
 
-      // @ts-ignore
       this.hasMany(models.CourseChapter, {
         foreignKey: 'course_id'
         // as: 'courseId'
       });
 
-      // @ts-ignore
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
         // as: 'userId'
       });
 
-      // @ts-ignore
       this.belongsTo(models.CourseCategory, {
-        foreignKey: 'course_category'
+        foreignKey: 'course_category_id'
         // as: 'courseCategory'
       });
     }

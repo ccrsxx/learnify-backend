@@ -11,6 +11,7 @@ import { Model } from 'sequelize';
  * @property {Date} createdAt
  * @property {Date} updatedAt
  */
+
 export const Models = {};
 
 /**
@@ -25,7 +26,7 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'UserPayment', any>} models
+     * @param {Record<import('./index.js').ModelName, any>} models
      */
     static associate(models) {
       // define association here
@@ -34,19 +35,16 @@ export default (sequelize, DataTypes) => {
         // as: 'userId'
       });
 
-      // @ts-ignore
       this.hasMany(models.UserCourse, {
         foreignKey: 'user_id'
         // as: 'userId'
       });
 
-      // @ts-ignore
       this.hasMany(models.CourseMaterialStatus, {
         foreignKey: 'user_id'
         // as: 'userId'
       });
 
-      // @ts-ignore
       this.hasMany(models.Course, {
         foreignKey: 'user_id'
         // as: 'userId'

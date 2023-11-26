@@ -11,13 +11,17 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'User', any>} models
+     * @param {Record<import('./index.js').ModelName, any>} models
      */
     static associate(models) {
-      // @ts-ignore
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
         // as: 'userId'
+      });
+
+      this.belongsTo(models.CourseMaterial, {
+        foreignKey: 'course_material_id'
+        // as: 'courseMaterialId'
       });
     }
   }

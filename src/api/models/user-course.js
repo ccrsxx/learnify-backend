@@ -1,12 +1,9 @@
-'use strict';
 import { Model } from 'sequelize';
-export const Models = {};
 
 /**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */
-
 export default (sequelize, DataTypes) => {
   class UserCourse extends Model {
     /**
@@ -14,16 +11,14 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'', any>} models
+     * @param {Record<import('./index.js').ModelName, any>} models
      */
     static associate(models) {
-      // @ts-ignore
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
         // as: 'userId'
       });
 
-      // @ts-ignore
       this.belongsTo(models.Course, {
         foreignKey: 'course_id'
         // as: 'courseId'

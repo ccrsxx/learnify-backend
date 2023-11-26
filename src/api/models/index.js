@@ -18,6 +18,8 @@ import config from '../../db/config/database.js';
  * @property {ReturnType<typeof import('./course-material-status.js').default>} CourseMaterialStatus
  */
 
+/** @typedef {keyof Omit<Database, 'sequelize' | 'Sequelize'>} ModelName */
+
 /** @returns {Promise<Database>} */
 async function initializeDatabase() {
   const __filename = fileURLToPath(import.meta.url);
