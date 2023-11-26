@@ -24,7 +24,11 @@ module.exports = {
       },
       course_material_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'course_material',
+          key: 'id'
+        }
       },
       created_at: {
         type: Sequelize.DATE
