@@ -13,12 +13,12 @@ info:
   version: 1.0.0
   license:
     name: Production Server
-    url: http://api-binar-backend.risalamin.com
+    url: https://api.belajar.risalamin.com
 externalDocs:
   description: GitHub Repository
   url: https://github.com/ccrsxx/binar-backend
 servers:
-  - url: http://api-binar-backend.risalamin.com
+  - url: https://api.belajar.risalamin.com
     description: Production server
   - url: http://localhost:3000
     description: Local server
