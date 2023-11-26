@@ -1,9 +1,9 @@
 import { generateApplicationError } from '../../libs/error.js';
 import * as courseCategoryRepository from '../repositories/course-category.js';
 
-export async function listCourseCategories() {
+export async function getCourseCategories() {
   try {
-    const categories = await courseCategoryRepository.listCourseCategories();
+    const categories = await courseCategoryRepository.getCourseCategories();
 
     return categories;
   } catch (err) {

@@ -1,5 +1,5 @@
 import { CourseCategory } from '../models/index.js';
 
-export function listCourseCategories() {
+export function getCourseCategories() {
   return CourseCategory.findAll();
 }

@@ -11,5 +11,5 @@ export default (app) => {
 
   app.use('/course-categories', router);
 
-  router.get('/', courseCategoryController.listCourseCategories);
+  router.get('/', courseCategoryController.getCourseCategories);
 };
