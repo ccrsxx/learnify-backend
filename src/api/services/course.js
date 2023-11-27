@@ -10,3 +10,17 @@ export async function getCourses() {
     throw generateApplicationError(err, 'Error while getting courses', 500);
   }
 }
+/** @param {string} id */
+export async function getCourseById(id) {
+  try {
+    const course = await courseRepository.getCourseById(id);
+
+    return course;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting course details',
+      500
+    );
+  }
+}

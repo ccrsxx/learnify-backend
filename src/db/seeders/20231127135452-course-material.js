@@ -7,7 +7,7 @@ module.exports = {
       generateRandomCourseMaterial
     } = await import('../../libs/seed.js');
 
-    if (!(await isTableHasRecords('course_material', queryInterface))) return;
+    if (await isTableHasRecords('course_material', queryInterface)) return;
 
     const courseMaterials = [
       {
