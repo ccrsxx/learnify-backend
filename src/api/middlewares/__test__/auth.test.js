@@ -178,7 +178,7 @@ describe('Auth middleware', () => {
       const mockRequest = {};
 
       const mockResponse = {
-        locals: { user: { role: 'superadmin' } }
+        locals: { user: { admin: true } }
       };
 
       const mockNext = jest.fn();
@@ -186,7 +186,7 @@ describe('Auth middleware', () => {
       authMiddleware.isAdmin(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.locals).toEqual({
-        user: { role: 'superadmin' },
+        user: { admin: true },
         isAdmin: true
       });
 
@@ -197,7 +197,7 @@ describe('Auth middleware', () => {
       const mockRequest = {};
 
       const mockResponse = {
-        locals: { user: { role: 'admin' } }
+        locals: { user: { admin: true } }
       };
 
       const mockNext = jest.fn();
@@ -205,7 +205,7 @@ describe('Auth middleware', () => {
       authMiddleware.isAdmin(mockRequest, mockResponse, mockNext);
 
       expect(mockResponse.locals).toEqual({
-        user: { role: 'admin' },
+        user: { admin: true },
         isAdmin: true
       });
 
@@ -216,7 +216,7 @@ describe('Auth middleware', () => {
       const mockRequest = {};
 
       const mockResponse = {
-        locals: { user: { role: 'user' } },
+        locals: { user: { admin: false } },
         status: jest.fn().mockReturnThis(),
         json: jest.fn()
       };
@@ -230,7 +230,7 @@ describe('Auth middleware', () => {
         message: 'Only admin is allowed for this endpoint'
       });
 
-      expect(mockResponse.locals).toEqual({ user: { role: 'user' } });
+      expect(mockResponse.locals).toEqual({ user: { admin: false } });
       expect(mockNext).not.toHaveBeenCalled();
     });
   });

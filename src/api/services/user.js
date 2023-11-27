@@ -37,19 +37,16 @@ export async function getUserByEmail(email) {
   }
 }
 
-/**
- * @param {Models.UserAttributes} payload
- * @param {boolean} isAdmin
- */
-export async function createUser(payload, isAdmin) {
+/** @param {Models.UserAttributes} payload */
+export async function createUser(payload) {
   const { password } = payload;
 
   const parsedPayload = omitPropertiesFromObject(payload, [
     'id',
-    'role',
+    'admin',
     'password',
-    'createdAt',
-    'updatedAt'
+    'created_at',
+    'updated_at'
   ]);
 
   try {
@@ -58,7 +55,7 @@ export async function createUser(payload, isAdmin) {
     const parsedUserWithEncryptedPassword =
       /** @type {Models.UserAttributes} */ ({
         ...parsedPayload,
-        role: isAdmin ? 'admin' : 'member',
+        admin: false,
         password: encryptedPassword
       });
 

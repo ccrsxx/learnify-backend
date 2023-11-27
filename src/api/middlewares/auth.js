@@ -42,7 +42,7 @@ export async function isAuthorized(req, res, next) {
 }
 
 /**
- * Check if user is admin or superadmin.
+ * Check if user is admin.
  *
  * @type {Types.Middleware<
  *   Types.ExtractLocalsMiddleware<typeof isAuthorized> & {
@@ -52,18 +52,16 @@ export async function isAuthorized(req, res, next) {
  * @returns {void}
  */
 export function isAdmin(_req, res, next) {
-  const { role } = res.locals.user;
+  const { admin } = res.locals.user;
 
-  const isAdmin = ['superadmin', 'admin'].includes(role);
-
-  if (!isAdmin) {
+  if (!admin) {
     res
       .status(403)
       .json({ message: 'Only admin is allowed for this endpoint' });
     return;
   }
 
-  res.locals.isAdmin = isAdmin;
+  res.locals.isAdmin = admin;
 
   next();
 }

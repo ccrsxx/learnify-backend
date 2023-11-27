@@ -13,7 +13,7 @@ module.exports = {
       name: 'Emilia',
       admin: true,
       email: 'emilia@rezero.com',
-      password: 'emilia'
+      password: '$2b$10$83jR0dcXC7.bS5TLe288yu6DMgeAgB4IkDA1swej4SUNmjD.DwIbu'
     };
 
     const normalUser = {
@@ -22,7 +22,7 @@ module.exports = {
       name: 'Rem',
       admin: false,
       email: 'rem@rezero.com',
-      password: 'rem'
+      password: '$2b$10$ajTX6qtrFWc4eHDAbXblxepkmKK3D1vJTVEYwU2khOITajzTASCCy'
     };
 
     const seedUsers = [adminUser, normalUser];

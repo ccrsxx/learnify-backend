@@ -12,10 +12,8 @@ import * as Types from '../../libs/types/common.js';
 export async function register(req, res) {
   const body = req.body;
 
-  const isSuperAdmin = res.locals.isSuperAdmin;
-
   try {
-    const data = await userService.createUser(body, isSuperAdmin);
+    const data = await userService.createUser(body);
 
     res.status(201).json({ message: 'User created successfully', data: data });
   } catch (err) {

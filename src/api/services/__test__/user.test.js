@@ -128,7 +128,7 @@ describe('User service', () => {
   });
 
   describe('Create user', () => {
-    it('returns user data with role admin admin creates it', async () => {
+    it('returns user data with admin false when member creates it', async () => {
       const mockUser = {
         name: 'Emilia',
         password: 'Emilia'
@@ -136,9 +136,9 @@ describe('User service', () => {
 
       const mockHashedPassword = 'Emilia-tan';
 
-      const mockUserWithHashedPasswordAndRole = {
+      const mockUserWithHashedPasswordAndAdmin = {
         ...mockUser,
-        role: 'admin',
+        admin: false,
         password: mockHashedPassword
       };
 
@@ -149,37 +149,10 @@ describe('User service', () => {
 
       userRepository.createUser.mockImplementation((payload) => payload);
 
-      const userResult = await userService.createUser(mockUser, true);
+      const userResult = await userService.createUser(mockUser);
 
-      expect(userResult).toEqual(mockUserWithHashedPasswordAndRole);
-      expect(userResult).toMatchObject({ role: 'admin' });
-    });
-
-    it('returns user data with role member when member creates it', async () => {
-      const mockUser = {
-        name: 'Emilia',
-        password: 'Emilia'
-      };
-
-      const mockHashedPassword = 'Emilia-tan';
-
-      const mockUserWithHashedPasswordAndRole = {
-        ...mockUser,
-        role: 'member',
-        password: mockHashedPassword
-      };
-
-      authService.hashPassword.mockResolvedValue(
-        /** @ts-ignore */
-        mockHashedPassword
-      );
-
-      userRepository.createUser.mockImplementation((payload) => payload);
-
-      const userResult = await userService.createUser(mockUser, false);
-
-      expect(userResult).toEqual(mockUserWithHashedPasswordAndRole);
-      expect(userResult).toMatchObject({ role: 'member' });
+      expect(userResult).toEqual(mockUserWithHashedPasswordAndAdmin);
+      expect(userResult).toMatchObject({ admin: false });
     });
 
     it('throws application error when creating user fails', async () => {
