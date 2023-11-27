@@ -1,21 +1,14 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, _Sequelize) {
-    const { User, CourseCategory } = await import('../../api/models/index.js');
-    const { generateRandomCourse } = await import('../../libs/seed.js');
+    const {
+      isTableEmpty,
+      getUserIdByAdmin,
+      getCategoryIdByName,
+      generateRandomCourse
+    } = await import('../../libs/seed.js');
 
-    /** @param {string} name */
-    async function getCategoryIdByName(name) {
-      return CourseCategory.findOne({
-        where: { name }
-      }).then((model) => model?.dataValues.id);
-    }
-
-    async function getUserIdByAdmin() {
-      return User.findOne({
-        where: { admin: true }
-      }).then((model) => model?.dataValues.id);
-    }
+    if (!(await isTableEmpty('course', queryInterface))) return;
 
     const userAdminId = await getUserIdByAdmin();
 

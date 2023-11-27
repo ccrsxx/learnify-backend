@@ -1,6 +1,12 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, _Sequelize) {
+    const { isTableEmpty, generateRandomCourseCategory } = await import(
+      '../../libs/seed.js'
+    );
+
+    if (!(await isTableEmpty('course_category', queryInterface))) return;
+
     const courseCategories = [
       {
         id: 'c63a172f-4eb1-44b2-8c90-66336b016d8f',
@@ -39,8 +45,6 @@ module.exports = {
           'https://res.cloudinary.com/damvxl4ky/image/upload/f_auto,q_auto/v1/binar_final/course_categories/zuhljmfokfjfynnv5vs3'
       }
     ];
-
-    const { generateRandomCourseCategory } = await import('../../libs/seed.js');
 
     const seedCourseCategories = courseCategories.map((category) => ({
       ...generateRandomCourseCategory(),

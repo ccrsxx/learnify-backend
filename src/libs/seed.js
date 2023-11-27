@@ -1,3 +1,4 @@
+import { CourseCategory, User } from '../api/models/index.js';
 import { faker } from '@faker-js/faker';
 
 export function generateRandomUser() {
@@ -49,4 +50,30 @@ export function generateRandomCourse() {
     created_at: faker.date.recent(),
     updated_at: faker.date.recent()
   };
+}
+
+/**
+ * @param {string} tableName
+ * @param {import('sequelize').QueryInterface} queryInterface
+ */
+export async function isTableEmpty(tableName, queryInterface) {
+  return (
+    queryInterface
+      // @ts-ignore
+      .select(null, tableName, { limit: 1 })
+      .then((data) => data.length === 0)
+  );
+}
+
+/** @param {string} name */
+export async function getCategoryIdByName(name) {
+  return CourseCategory.findOne({
+    where: { name }
+  }).then((model) => model?.dataValues.id);
+}
+
+export async function getUserIdByAdmin() {
+  return User.findOne({
+    where: { admin: true }
+  }).then((model) => model?.dataValues.id);
 }
