@@ -34,3 +34,6 @@ jobs:
 
       - name: Migrate database
         run: npm run db:migrate
+
+      - name: Seed database
+        run: npm run db:seed
