@@ -1,10 +1,13 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, _Sequelize) {
-    const { isTableEmpty, getCourseIdByName, generateRandomCourseChapter } =
-      await import('../../libs/seed.js');
+    const {
+      isTableHasRecords,
+      getCourseIdByName,
+      generateRandomCourseChapter
+    } = await import('../../libs/seed.js');
 
-    if (!(await isTableEmpty('course_chapter', queryInterface))) return;
+    if (!(await isTableHasRecords('course_chapter', queryInterface))) return;
 
     const courseChapters = [
       {
