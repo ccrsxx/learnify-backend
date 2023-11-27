@@ -1,10 +1,43 @@
 import { Model } from 'sequelize';
 
 /**
+ * @typedef CourseAttributes
+ * @property {string} id
+ * @property {string} name
+ * @property {string} code
+ * @property {number} price
+ * @property {string} author
+ * @property {string} image
+ * @property {number} rating
+ * @property {boolean} premium
+ * @property {string} telegram
+ * @property {Difficulty} difficulty
+ * @property {string} description
+ * @property {string} intro_video
+ * @property {string} onboarding_text
+ * @property {string[]} target_audience
+ * @property {string} user_id
+ * @property {string} course_category_id
+ * @property {Date} created_at
+ * @property {Date} updated_at
+ */
+
+export const Models = {};
+
+const DIFFICULTY = /** @type {const} */ ([
+  'BEGINNER',
+  'INTERMEDIATE',
+  'ADVANCED'
+]);
+
+/** @typedef {(typeof DIFFICULTY)[number]} Difficulty */
+
+/**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
+  /** @extends {Model<CourseAttributes>} */
   class Course extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
@@ -43,6 +76,7 @@ export default (sequelize, DataTypes) => {
   }
 
   Course.init(
+    // @ts-ignore
     {
       name: {
         type: DataTypes.STRING,
@@ -60,6 +94,10 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       rating: {
         type: DataTypes.DECIMAL,
         allowNull: false
@@ -73,7 +111,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false
       },
       difficulty: {
-        type: DataTypes.ENUM('BEGINNER', 'INTERMEDIATE', 'ADVANCED'),
+        type: DataTypes.ENUM(...DIFFICULTY),
         allowNull: false
       },
       description: {

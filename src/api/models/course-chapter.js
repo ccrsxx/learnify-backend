@@ -1,10 +1,24 @@
 import { Model } from 'sequelize';
 
 /**
+ * @typedef CourseChapterAttributes
+ * @property {string} id
+ * @property {string} name
+ * @property {number} duration
+ * @property {number} order_index
+ * @property {string} course_id
+ * @property {Date} created_at
+ * @property {Date} updated_at
+ */
+
+export const Models = {};
+
+/**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
+  /** @extends {Model<CourseChapterAttributes>} */
   class CourseChapter extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
@@ -27,6 +41,7 @@ export default (sequelize, DataTypes) => {
   }
 
   CourseChapter.init(
+    // @ts-ignore
     {
       name: {
         type: DataTypes.STRING,

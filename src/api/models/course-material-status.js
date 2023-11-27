@@ -1,10 +1,23 @@
 import { Model } from 'sequelize';
 
 /**
+ * @typedef CourseMaterialStatusAttributes
+ * @property {string} id
+ * @property {boolean} completed
+ * @property {string} user_id
+ * @property {string} course_material_id
+ * @property {Date} created_at
+ * @property {Date} updated_at
+ */
+
+export const Models = {};
+
+/**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */
 export default (sequelize, DataTypes) => {
+  /** @extends {Model<CourseMaterialStatusAttributes>} */
   class CourseMaterialStatus extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
@@ -26,6 +39,7 @@ export default (sequelize, DataTypes) => {
     }
   }
   CourseMaterialStatus.init(
+    // @ts-ignore
     {
       completed: {
         type: DataTypes.BOOLEAN,
