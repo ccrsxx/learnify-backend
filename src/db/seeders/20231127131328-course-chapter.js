@@ -7,7 +7,7 @@ module.exports = {
       generateRandomCourseChapter
     } = await import('../../libs/seed.js');
 
-    if (!(await isTableHasRecords('course_chapter', queryInterface))) return;
+    if (await isTableHasRecords('course_chapter', queryInterface)) return;
 
     const courseChapters = [
       {
