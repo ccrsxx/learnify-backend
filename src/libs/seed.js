@@ -56,12 +56,12 @@ export function generateRandomCourse() {
  * @param {string} tableName
  * @param {import('sequelize').QueryInterface} queryInterface
  */
-export async function isTableEmpty(tableName, queryInterface) {
+export async function isTableHasRecords(tableName, queryInterface) {
   return (
     queryInterface
       // @ts-ignore
       .select(null, tableName, { limit: 1 })
-      .then((data) => data.length === 0)
+      .then((data) => data.length === 1)
   );
 }
 

@@ -1,11 +1,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: async (queryInterface, _Sequelize) => {
-    const { isTableEmpty, generateRandomUser } = await import(
+    const { isTableHasRecords, generateRandomUser } = await import(
       '../../libs/seed.js'
     );
 
-    if (!(await isTableEmpty('user', queryInterface))) return;
+    if (await isTableHasRecords('user', queryInterface)) return;
 
     const adminUser = {
       ...generateRandomUser(),

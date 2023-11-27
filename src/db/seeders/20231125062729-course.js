@@ -2,13 +2,13 @@
 module.exports = {
   async up(queryInterface, _Sequelize) {
     const {
-      isTableEmpty,
       getUserIdByAdmin,
+      isTableHasRecords,
       getCategoryIdByName,
       generateRandomCourse
     } = await import('../../libs/seed.js');
 
-    if (!(await isTableEmpty('course', queryInterface))) return;
+    if (await isTableHasRecords('course', queryInterface)) return;
 
     const userAdminId = await getUserIdByAdmin();
 
