@@ -24,3 +24,14 @@ export async function getCourseById(id) {
     );
   }
 }
+
+/** @param {string} id */
+export async function getCourseDataById(id) {
+  try {
+    const courseData = await courseRepository.getCourseDataById(id);
+
+    return courseData;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting courses', 500);
+  }
+}
