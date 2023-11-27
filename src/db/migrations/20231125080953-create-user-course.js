@@ -2,46 +2,44 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('user_course', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      name: {
-        type: Sequelize.STRING,
+      onboarded: {
+        type: Sequelize.BOOLEAN,
         allowNull: false
       },
-      role: {
-        type: Sequelize.ENUM('admin', 'member'),
+      user_id: {
+        type: Sequelize.UUID,
         allowNull: false,
-        defaultValue: 'member'
+        references: {
+          model: 'user',
+          key: 'id'
+        }
       },
-      image: {
-        type: Sequelize.STRING,
-        allowNull: true
-      },
-      email: {
-        type: Sequelize.STRING,
+      course_id: {
+        type: Sequelize.UUID,
         allowNull: false,
-        unique: true
+        references: {
+          model: 'course',
+          key: 'id'
+        }
       },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      createdAt: {
+      created_at: {
         allowNull: false,
         type: Sequelize.DATE
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
         type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, _Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('user_course');
   }
 };

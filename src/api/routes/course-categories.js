@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { generateRandomCategory } from '../../libs/seed.js';
+import * as courseCategoryController from '../controllers/course-category.js';
 import * as Types from '../../libs/types/common.js';
 
 /**
@@ -11,9 +11,5 @@ export default (app) => {
 
   app.use('/course-categories', router);
 
-  router.get('/', (_req, res) => {
-    res.status(200).json({
-      data: Array.from({ length: 10 }, generateRandomCategory)
-    });
-  });
+  router.get('/', courseCategoryController.getCourseCategories);
 };

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as Types from '../../libs/types/common.js';
-import { generateRandomCourse } from '../../libs/seed.js';
+import * as courseController from '../controllers/course.js';
 
 /**
  * @type {Types.Route}
@@ -11,9 +11,5 @@ export default (app) => {
 
   app.use('/courses', router);
 
-  router.get('/', (_req, res) => {
-    res.status(200).json({
-      data: Array.from({ length: 50 }, generateRandomCourse)
-    });
-  });
+  router.get('/', courseController.getCourses);
 };

@@ -4,17 +4,13 @@ import { Model } from 'sequelize';
  * @typedef UserAttributes
  * @property {string} id
  * @property {string} name
- * @property {UserRoles} role
- * @property {string} image
  * @property {string} email
+ * @property {boolean} admin
  * @property {string} password
- * @property {Date} createdAt
- * @property {Date} updatedAt
+ * @property {string} phone_number
+ * @property {Date} created_at
+ * @property {Date} updated_at
  */
-
-export const userRoles = /** @type {const} */ (['admin', 'member']);
-
-/** @typedef {(typeof userRoles)[number]} UserRoles */
 
 export const Models = {};
 
@@ -30,22 +26,25 @@ export default (sequelize, DataTypes) => {
      * Sequelize lifecycle. The `models/index` file will call this method
      * automatically.
      *
-     * @param {Record<'Car', any>} _models
+     * @param {Record<import('./index.js').ModelName, any>} models
      */
-    static associate(_models) {
+    static associate(models) {
       // define association here
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'createdBy',
-      //   as: 'createdByUser'
-      // });
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'updatedBy',
-      //   as: 'updatedByUser'
-      // });
-      // this.hasMany(models.Car, {
-      //   foreignKey: 'deletedBy',
-      //   as: 'deletedByUser'
-      // });
+      this.hasMany(models.UserPayment, {
+        foreignKey: 'user_id'
+      });
+
+      this.hasMany(models.UserCourse, {
+        foreignKey: 'user_id'
+      });
+
+      this.hasMany(models.CourseMaterialStatus, {
+        foreignKey: 'user_id'
+      });
+
+      this.hasMany(models.Course, {
+        foreignKey: 'user_id'
+      });
     }
   }
 
@@ -62,25 +61,10 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
-      role: {
-        type: DataTypes.ENUM(...userRoles),
+      admin: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
-        defaultValue: 'member',
-        validate: {
-          isIn: {
-            args: [userRoles],
-            msg: `Role must be one of ${userRoles.join(', ')}`
-          }
-        }
-      },
-      image: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        validate: {
-          isUrl: {
-            msg: 'Image is not valid'
-          }
-        }
+        defaultValue: false
       },
       email: {
         type: DataTypes.STRING,
@@ -95,11 +79,21 @@ export default (sequelize, DataTypes) => {
           }
         }
       },
-      password: DataTypes.STRING
+      password: DataTypes.STRING,
+      phone_number: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          name: 'phone number',
+          msg: 'Phone number already exists'
+        }
+      }
     },
     {
       sequelize,
-      modelName: 'User'
+      modelName: 'User',
+      tableName: 'user',
+      underscored: true
     }
   );
 
