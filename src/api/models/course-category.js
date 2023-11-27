@@ -29,7 +29,6 @@ export default (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.Course, {
         foreignKey: 'course_category_id'
-        // as: 'courseCategory'
       });
     }
   }

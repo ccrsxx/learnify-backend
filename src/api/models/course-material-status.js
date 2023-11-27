@@ -29,12 +29,10 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsTo(models.User, {
         foreignKey: 'user_id'
-        // as: 'userId'
       });
 
       this.belongsTo(models.CourseMaterial, {
         foreignKey: 'course_material_id'
-        // as: 'courseMaterialId'
       });
     }
   }

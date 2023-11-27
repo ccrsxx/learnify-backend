@@ -50,27 +50,24 @@ export default (sequelize, DataTypes) => {
       // define association here
       this.hasMany(models.UserPayment, {
         foreignKey: 'course_id'
-        // as: 'courseId'
       });
 
       this.hasMany(models.UserCourse, {
         foreignKey: 'course_id'
-        // as: 'courseId'
       });
 
       this.hasMany(models.CourseChapter, {
         foreignKey: 'course_id'
-        // as: 'courseId'
       });
 
       this.belongsTo(models.User, {
-        foreignKey: 'user_id'
-        // as: 'userId'
+        foreignKey: 'user_id',
+        as: 'user'
       });
 
       this.belongsTo(models.CourseCategory, {
-        foreignKey: 'course_category_id'
-        // as: 'courseCategory'
+        foreignKey: 'course_category_id',
+        as: 'course_category'
       });
     }
   }

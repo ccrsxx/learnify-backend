@@ -30,12 +30,10 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       this.hasMany(models.CourseMaterial, {
         foreignKey: 'course_chapter_id'
-        // as: 'courseChapterId'
       });
 
       this.belongsTo(models.Course, {
         foreignKey: 'course_id'
-        // as: 'courseId'
       });
     }
   }
