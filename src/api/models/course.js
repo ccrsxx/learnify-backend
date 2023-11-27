@@ -57,7 +57,8 @@ export default (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.CourseChapter, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        as: 'chapters'
       });
 
       this.belongsTo(models.User, {
