@@ -1,11 +1,11 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, _Sequelize) {
-    const { isTableEmpty, generateRandomCourseCategory } = await import(
+    const { isTableHasRecords, generateRandomCourseCategory } = await import(
       '../../libs/seed.js'
     );
 
-    if (!(await isTableEmpty('course_category', queryInterface))) return;
+    if (await isTableHasRecords('course_category', queryInterface)) return;
 
     const courseCategories = [
       {
