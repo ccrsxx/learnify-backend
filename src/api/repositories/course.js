@@ -41,7 +41,7 @@ export function getCourseById(id) {
           sequelize.literal(
             '(SELECT COUNT(*) FROM "course_material" WHERE "course_material"."course_chapter_id" IN (SELECT "id" FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id"))'
           ),
-          'total_materials'
+          'total_material'
         ]
       ]
     },

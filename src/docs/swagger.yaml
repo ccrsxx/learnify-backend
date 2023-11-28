@@ -156,6 +156,74 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
+  /courses/{id}:
+    get:
+      tags:
+        - courses
+      summary: Get course detail by ID
+      description: Get course detail by ID
+      operationId: courses-detail
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Course ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CourseDetail'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /courses/{id}/data:
+    get:
+      tags:
+        - courses
+      summary: Get course data by ID
+      description: Get course data by ID
+      operationId: courses-data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Course ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CourseData'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
   /course-categories:
     get:
       tags:
@@ -260,6 +328,9 @@ components:
         author:
           type: string
           example: Ronald
+        image:
+          type: string
+          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
         rating:
           type: integer
           example: 5
@@ -269,9 +340,6 @@ components:
         telegram:
           type: string
           example: https://random-site.com/tele-group
-        onboarding_text:
-          type: string
-          example: This course will help you become a great programmer
         difficulty:
           type: string
           example: INTERMEDIATE
@@ -285,6 +353,9 @@ components:
         intro_video:
           type: string
           example: https://random-site.com/random-video.mkv
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
         target_audience:
           type: array
           items:
@@ -303,6 +374,147 @@ components:
           $ref: '#/components/schemas/User'
         course_category:
           $ref: '#/components/schemas/CourseCategory'
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    CourseDetail:
+      type: object
+      properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Web Development
+        code:
+          type: string
+          example: ZQosLgGtzB
+        price:
+          type: integer
+          example: 100000
+        author:
+          type: string
+          example: Ronald
+        image:
+          type: string
+          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
+        rating:
+          type: integer
+          example: 5
+        premium:
+          type: boolean
+          example: false
+        telegram:
+          type: string
+          example: https://random-site.com/tele-group
+        difficulty:
+          type: string
+          example: INTERMEDIATE
+          enum:
+            - BEGINNER
+            - INTERMEDIATE
+            - ADVANCED
+        description:
+          type: string
+          example: This course will help you become a great programmer
+        intro_video:
+          type: string
+          example: https://random-site.com/random-video.mkv
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
+        target_audience:
+          type: array
+          items:
+            type: string
+          example:
+            - You want to become a great programmer
+            - You want to become a great programmer
+            - You want to become a great programmer
+        user_id:
+          type: string
+          example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
+        course_category_id:
+          type: string
+          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+        course_category:
+          $ref: '#/components/schemas/CourseCategory'
+        total_duration:
+          type: integer
+          example: 55
+        total_material:
+          type: integer
+          example: 3
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    CourseData:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5db0a017-6041-4d9a-8f44-5fca03d5378a
+        name:
+          type: string
+          example: Belajar Fullstack developer
+        course_chapter:
+          $ref: '#/components/schemas/CourseChapter'
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    CourseChapter:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
+        name:
+          type: string
+          example: Pengenalan Fullstack
+        duration:
+          type: integer
+          example: 39
+        order_index:
+          type: integer
+          example: 1
+        course_id:
+          type: string
+          example: 5db0a017-6041-4d9a-8f44-5fca03d5378
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        course_material:
+          $ref: '#/components/schemas/CourseMaterial'
+    CourseMaterial:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a34858de-4585-47f0-892c-3660ad3cc032
+        name:
+          type: string
+          example: Apa itu Fullstack?
+        video:
+          type: string
+          example: https://overcooked-weight.org
+        order_index:
+          type: integer
+          example: 1
+        course_chapter_id:
+          type: string
+          example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
