@@ -179,9 +179,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CourseDetail'
+                    $ref: '#/components/schemas/CourseDetail'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -213,9 +211,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/CourseData'
+                    $ref: '#/components/schemas/CourseData'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
