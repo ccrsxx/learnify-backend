@@ -11,6 +11,11 @@ export function getCourses() {
   });
 }
 
+/** @param {any} category */
+export function getCourseByCategory(category) {
+  return Course.findAll({ where: category });
+}
+
 /** @param {string} id */
 export function getCourseById(id) {
   return Course.findByPk(id, {

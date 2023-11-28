@@ -1,10 +1,15 @@
 import { generateApplicationError } from '../../libs/error.js';
 import * as courseRepository from '../repositories/course.js';
 
-export async function getCourses() {
+/** @param {any} category */
+export async function getCourses(category) {
   try {
-    const courses = await courseRepository.getCourses();
+    if (category) {
+      const courses = await courseRepository.getCourseByCategory(category);
+      return courses;
+    }
 
+    const courses = await courseRepository.getCourses();
     return courses;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting courses', 500);

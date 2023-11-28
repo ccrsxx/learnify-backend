@@ -6,9 +6,10 @@ import { ApplicationError } from '../../libs/error.js';
  * @type {Types.Controller}
  * @returns {Promise<void>}
  */
-export async function getCourses(_req, res) {
+export async function getCourses(req, res) {
   try {
-    const data = await courseService.getCourses();
+    const category = req.query;
+    const data = await courseService.getCourses(category);
 
     res.status(200).json({ data });
   } catch (err) {
