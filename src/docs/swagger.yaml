@@ -53,12 +53,12 @@ paths:
                   docs:
                     type: string
                     example: http://api-binar-backend.risalamin.com/docs
-  /login:
+  /auth/login:
     post:
       tags:
         - auth
-      summary: Login
-      description: Login with email/phone bumber and password
+      summary: Login user as an member
+      description: Login with email / phone number and password
       operationId: login
       requestBody:
         description: Login as member user
@@ -66,8 +66,8 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/UserCredentials'
-                - $ref: '#/components/schemas/UserCredentials2'
+                - $ref: '#/components/schemas/UserCredentialsWithEmail'
+                - $ref: '#/components/schemas/UserCredentialsWithPhoneNumber'
         required: true
       responses:
         '200':
@@ -104,7 +104,7 @@ paths:
                 $ref: '#/components/schemas/PasswordIsNotMatchError'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /register:
+  /auth/register:
     post:
       tags:
         - auth
@@ -229,8 +229,7 @@ components:
         password:
           type: string
           example: satella
-
-    UserCredentials:
+    UserCredentialsWithEmail:
       type: object
       properties:
         email:
@@ -239,8 +238,7 @@ components:
         password:
           type: string
           example: emilia
-
-    UserCredentials2:
+    UserCredentialsWithPhoneNumber:
       type: object
       properties:
         phone_number:
