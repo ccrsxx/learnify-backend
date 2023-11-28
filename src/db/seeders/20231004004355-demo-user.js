@@ -13,7 +13,8 @@ module.exports = {
       name: 'Emilia',
       admin: true,
       email: 'emilia@rezero.com',
-      password: '$2b$10$83jR0dcXC7.bS5TLe288yu6DMgeAgB4IkDA1swej4SUNmjD.DwIbu'
+      password: '$2b$10$83jR0dcXC7.bS5TLe288yu6DMgeAgB4IkDA1swej4SUNmjD.DwIbu',
+      phone_number: '+6289876543210'
     };
 
     const normalUser = {
@@ -22,7 +23,8 @@ module.exports = {
       name: 'Rem',
       admin: false,
       email: 'rem@rezero.com',
-      password: '$2b$10$ajTX6qtrFWc4eHDAbXblxepkmKK3D1vJTVEYwU2khOITajzTASCCy'
+      password: '$2b$10$ajTX6qtrFWc4eHDAbXblxepkmKK3D1vJTVEYwU2khOITajzTASCCy',
+      phone_number: '+6281234567890'
     };
 
     const seedUsers = [adminUser, normalUser];
