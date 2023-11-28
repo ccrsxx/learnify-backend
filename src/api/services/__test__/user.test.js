@@ -11,6 +11,7 @@ jest.unstable_mockModule(
     /** @type {UserRepositoryMock} */ ({
       getUser: jest.fn(),
       getUserByEmail: jest.fn(),
+      getUserByPhoneNumber: jest.fn(),
       createUser: jest.fn(),
       updateUser: jest.fn(),
       destroyUser: jest.fn(),
@@ -124,6 +125,52 @@ describe('User service', () => {
       await expect(userService.getUserByEmail('email')).rejects.toThrow(
         `Error while getting user: ${mockError.message}`
       );
+    });
+  });
+
+  describe('Get user by phone number', () => {
+    it('returns user data', async () => {
+      const mockUser = {
+        dataValues: {
+          id: '1',
+          name: 'Emilia'
+        }
+      };
+
+      userRepository.getUserByPhoneNumber.mockResolvedValue(
+        /** @ts-ignore */
+        mockUser
+      );
+
+      const user = await userService.getUserByPhoneNumber('phone_number');
+
+      expect(user).toEqual(mockUser);
+    });
+
+    it('throws application error when user is not found', async () => {
+      const mockError = new ApplicationError('User not found', 404);
+
+      userRepository.getUserByPhoneNumber.mockResolvedValue(
+        /** @ts-ignore */
+        null
+      );
+
+      await expect(
+        userService.getUserByPhoneNumber('phone_number')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
+    });
+
+    it('throws application error when getting user fails', async () => {
+      const mockError = new ApplicationError('Failed to get user', 500);
+
+      userRepository.getUserByPhoneNumber.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
+
+      await expect(
+        userService.getUserByPhoneNumber('phone_number')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
     });
   });
 

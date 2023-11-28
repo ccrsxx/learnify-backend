@@ -8,7 +8,7 @@ const validationMiddleware = /** @type {ValidationMiddlewareMock} */ (
 
 describe('Validation middleware', () => {
   describe('Is valid credential', () => {
-    it('passes the middleware', async () => {
+    it('passes the middleware with email', async () => {
       const mockRequest = {
         body: {
           email: 'Emilia',
@@ -34,7 +34,33 @@ describe('Validation middleware', () => {
       expect(mockNext).toHaveBeenCalledTimes(1);
     });
 
-    it('returns 400 when email and password are not provided', async () => {
+    it('passes the middleware with phone number', async () => {
+      const mockRequest = {
+        body: {
+          phone_number: 'Emilia',
+          password: 'Best girl'
+        }
+      };
+
+      const mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      const mockNext = jest.fn();
+
+      validationMiddleware.isValidCredential(
+        mockRequest,
+        mockResponse,
+        mockNext
+      );
+
+      expect(mockResponse.status).not.toHaveBeenCalled();
+      expect(mockResponse.json).not.toHaveBeenCalled();
+      expect(mockNext).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns 400 when email or phone number and password are not provided', async () => {
       const mockRequest = {
         body: {}
       };
@@ -54,12 +80,12 @@ describe('Validation middleware', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Email and password are required'
+        message: 'Email or phone number and password are required'
       });
       expect(mockNext).not.toHaveBeenCalled();
     });
 
-    it('returns 400 when email and password are not string', async () => {
+    it('returns 400 when email or phone number and password are not string', async () => {
       const mockRequest = {
         body: {
           email: 1,
@@ -82,7 +108,7 @@ describe('Validation middleware', () => {
 
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Email and password must be string'
+        message: 'Email or phone number and password must be string'
       });
       expect(mockNext).not.toHaveBeenCalled();
     });

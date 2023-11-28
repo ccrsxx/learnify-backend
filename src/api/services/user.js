@@ -37,6 +37,21 @@ export async function getUserByEmail(email) {
   }
 }
 
+/** @param {string} phoneNumber */
+export async function getUserByPhoneNumber(phoneNumber) {
+  try {
+    const user = await userRepository.getUserByPhoneNumber(phoneNumber);
+
+    if (!user) {
+      throw new ApplicationError('User not found', 404);
+    }
+
+    return user;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting user', 500);
+  }
+}
+
 /** @param {Models.UserAttributes} payload */
 export async function createUser(payload) {
   const { password } = payload;

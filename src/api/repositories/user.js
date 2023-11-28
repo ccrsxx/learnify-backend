@@ -17,6 +17,13 @@ export function getUserByEmail(email) {
   });
 }
 
+/** @param {string} phoneNumber */
+export function getUserByPhoneNumber(phoneNumber) {
+  return User.findOne({
+    where: { phone_number: phoneNumber }
+  });
+}
+
 /** @param {Models.UserAttributes} payload */
 export function createUser(payload) {
   return User.create(payload);
