@@ -1,4 +1,9 @@
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
+import {
+  Course,
+  CourseChapter,
+  CourseMaterial,
+  sequelize
+} from '../models/index.js';
 
 export function getCourses() {
   return Course.findAll({
@@ -10,13 +15,37 @@ export function getCourses() {
 export function getCourseById(id) {
   return Course.findByPk(id, {
     include: [
-      'user',
       'course_category',
       {
         model: CourseChapter,
-        as: 'chapters'
+        as: 'course_chapter',
+        attributes: [],
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material',
+            attributes: []
+          }
+        ]
       }
-    ]
+    ],
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            '(SELECT SUM("duration") FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id")'
+          ),
+          'total_duration'
+        ],
+        [
+          sequelize.literal(
+            '(SELECT COUNT(*) FROM "course_material" WHERE "course_material"."course_chapter_id" IN (SELECT "id" FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id"))'
+          ),
+          'total_materials'
+        ]
+      ]
+    },
+    group: ['Course.id', 'course_chapter.id', 'course_category.id']
   });
 }
 
@@ -26,7 +55,7 @@ export function getCourseDataById(id) {
     include: [
       {
         model: CourseChapter,
-        as: 'chapters',
+        as: 'course_chapter',
         include: [
           {
             model: CourseMaterial,
