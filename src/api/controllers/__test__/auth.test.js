@@ -21,7 +21,8 @@ jest.unstable_mockModule(
     /** @type {UserServiceMock} */
     ({
       createUser: jest.fn(),
-      getUserByEmail: jest.fn()
+      getUserByEmail: jest.fn(),
+      getUserByPhoneNumber: jest.fn()
     })
 );
 
@@ -130,7 +131,7 @@ describe('Auth controller', () => {
   });
 
   describe('Login', () => {
-    it('returns 200 status code with message and user data', async () => {
+    it('returns 200 status code with message and user data when login using email', async () => {
       const mockToken = 'Emilia is the best girl';
 
       const mockUser = {
@@ -151,6 +152,53 @@ describe('Auth controller', () => {
       };
 
       userService.getUserByEmail.mockResolvedValue(
+        // @ts-ignore
+        { dataValues: mockUser }
+      );
+
+      authService.isPasswordMatch.mockResolvedValue(
+        // @ts-ignore
+        true
+      );
+
+      authService.generateToken.mockResolvedValue(
+        // @ts-ignore
+        mockToken
+      );
+
+      await authController.login(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Login successfully',
+        data: {
+          ...mockUser,
+          token: mockToken
+        }
+      });
+    });
+
+    it('returns 200 status code with message and user data when login using phone number', async () => {
+      const mockToken = 'Emilia is the best girl';
+
+      const mockUser = {
+        name: 'Emilia',
+        password: '123'
+      };
+
+      const mockRequest = {
+        body: {
+          phone_number: mockUser.name,
+          password: mockUser.password
+        }
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      userService.getUserByPhoneNumber.mockResolvedValue(
         // @ts-ignore
         { dataValues: mockUser }
       );

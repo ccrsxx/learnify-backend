@@ -57,15 +57,17 @@ paths:
     post:
       tags:
         - auth
-      summary: Login
-      description: Login with email and password
+      summary: Login user as an member
+      description: Login with email / phone number and password
       operationId: login
       requestBody:
-        description: Login as an superadmin
+        description: Login as member user
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserCredentials'
+              oneOf:
+                - $ref: '#/components/schemas/UserCredentialsWithEmail'
+                - $ref: '#/components/schemas/UserCredentialsWithPhoneNumber'
         required: true
       responses:
         '200':
@@ -194,21 +196,18 @@ components:
         name:
           type: string
           example: Satella
-        role:
-          type: string
-          example: member
-          enum:
-            - admin
-            - user
+        admin:
+          type: boolean
+          example: false
         email:
           type: string
           example: satella@rezero.com
+        phone_number:
+          type: string
+          example: '+6287852075425'
         password:
           type: string
           example: $2b$10$m9qQtOm.ilSASXlPIdVaROsO4ExZAs9NQZvZUx7bG7OZqGScy3JMm
-        phone_number:
-          type: string
-          example: 081234567890
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -224,21 +223,27 @@ components:
         email:
           type: string
           example: satella@rezero.com
+        phone_number:
+          type: string
+          example: '+6287852075425'
         password:
           type: string
           example: satella
-        image:
-          type: string
-          example: https://random-site.com/random-image.png
-        username:
-          type: string
-          example: satella
-    UserCredentials:
+    UserCredentialsWithEmail:
       type: object
       properties:
         email:
           type: string
           example: emilia@rezero.com
+        password:
+          type: string
+          example: emilia
+    UserCredentialsWithPhoneNumber:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          example: '+6287852075425'
         password:
           type: string
           example: emilia

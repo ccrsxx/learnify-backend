@@ -31,10 +31,12 @@ export async function register(req, res) {
  * @returns {Promise<void>}
  */
 export async function login(req, res) {
-  const { email, password } = req.body;
+  const { email, phone_number, password } = req.body;
 
   try {
-    const user = await userService.getUserByEmail(email);
+    const user = email
+      ? await userService.getUserByEmail(email)
+      : await userService.getUserByPhoneNumber(phone_number);
 
     const isMatch = await authService.isPasswordMatch(
       password,
