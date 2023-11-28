@@ -1,11 +1,19 @@
 import { generateApplicationError } from '../../libs/error.js';
 import * as courseRepository from '../repositories/course.js';
 
-/** @param {any} category */
-export async function getCourses(category) {
+/** @param {any} params */
+export async function getCourses(params) {
+  const { name, category, difficulty, premium } = params;
+
   try {
-    if (category) {
-      const courses = await courseRepository.getCourseByCategory(category);
+    if (name || premium || category || difficulty) {
+      const filter = {};
+      if (name) filter.name = name;
+      if (premium) filter.premium = premium;
+      if (category) filter.category = category;
+      if (difficulty) filter.difficulty = difficulty;
+
+      const courses = await courseRepository.getCourseByFilter(filter);
       return courses;
     }
 

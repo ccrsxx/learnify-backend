@@ -8,8 +8,8 @@ import { ApplicationError } from '../../libs/error.js';
  */
 export async function getCourses(req, res) {
   try {
-    const category = req.query;
-    const data = await courseService.getCourses(category);
+    const params = req.query;
+    const data = await courseService.getCourses(params);
 
     res.status(200).json({ data });
   } catch (err) {

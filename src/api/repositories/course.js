@@ -11,9 +11,9 @@ export function getCourses() {
   });
 }
 
-/** @param {any} category */
-export function getCourseByCategory(category) {
-  return Course.findAll({ where: category });
+/** @param {any} params */
+export function getCourseByFilter(params) {
+  return Course.findAll({ where: params });
 }
 
 /** @param {string} id */
