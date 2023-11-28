@@ -441,7 +441,7 @@ components:
         total_duration:
           type: integer
           example: 55
-        total_material:
+        total_materials:
           type: integer
           example: 3
         created_at:

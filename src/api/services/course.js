@@ -32,6 +32,21 @@ export async function getCourseDataById(id) {
 
     return courseData;
   } catch (err) {
-    throw generateApplicationError(err, 'Error while getting courses', 500);
+    throw generateApplicationError(err, 'Error while getting course data', 500);
+  }
+}
+
+/** @param {string} id */
+export async function getCourseFullDataById(id) {
+  try {
+    const courseData = await courseRepository.getCourseFullDataById(id);
+
+    return courseData;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting course full data',
+      500
+    );
   }
 }

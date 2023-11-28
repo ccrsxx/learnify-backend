@@ -41,7 +41,7 @@ export function getCourseById(id) {
           sequelize.literal(
             '(SELECT COUNT(*) FROM "course_material" WHERE "course_material"."course_chapter_id" IN (SELECT "id" FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id"))'
           ),
-          'total_material'
+          'total_materials'
         ]
       ]
     },
@@ -84,5 +84,46 @@ export function getCourseDataById(id) {
         'updatedAt'
       ]
     }
+  });
+}
+
+/** @param {string} id */
+export function getCourseFullDataById(id) {
+  return Course.findByPk(id, {
+    include: [
+      'course_category',
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material'
+          }
+        ]
+      }
+    ],
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            '(SELECT SUM("duration") FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id")'
+          ),
+          'total_duration'
+        ],
+        [
+          sequelize.literal(
+            '(SELECT COUNT(*) FROM "course_material" WHERE "course_material"."course_chapter_id" IN (SELECT "id" FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id"))'
+          ),
+          'total_materials'
+        ]
+      ]
+    },
+    group: [
+      'Course.id',
+      'course_chapter.id',
+      'course_category.id',
+      'course_chapter->course_material.id'
+    ]
   });
 }
