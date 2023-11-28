@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import isMobilePhone from 'validator/lib/isMobilePhone.js';
 
 /**
  * @typedef UserAttributes
@@ -86,6 +87,18 @@ export default (sequelize, DataTypes) => {
         unique: {
           name: 'phone number',
           msg: 'Phone number already exists'
+        },
+        validate: {
+          /** @param {string | number} value */
+          isPhoneNumber(value) {
+            if (
+              !isMobilePhone.default(String(value), 'id-ID', {
+                strictMode: true
+              })
+            ) {
+              throw new Error('Phone number is not valid');
+            }
+          }
         }
       }
     },
