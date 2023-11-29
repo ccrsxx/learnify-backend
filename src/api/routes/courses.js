@@ -14,5 +14,4 @@ export default (app) => {
   router.get('/', courseController.getCourses);
   router.route('/:id').get(courseController.getCoursesById);
   router.route('/:id/data').get(courseController.getCourseDataById);
-  router.route('/:id/full-data').get(courseController.getCourseFullDataById);
 };

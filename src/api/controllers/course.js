@@ -66,18 +66,3 @@ export async function getCourseDataById(req, res) {
  * @type {Types.Controller}
  * @returns {Promise<void>}
  */
-export async function getCourseFullDataById(req, res) {
-  try {
-    const { id } = req.params;
-    const data = await courseService.getCourseFullDataById(id);
-
-    res.status(200).json({ data });
-  } catch (err) {
-    if (err instanceof ApplicationError) {
-      res.status(err.statusCode).json({ message: err.message });
-      return;
-    }
-
-    res.status(500).json({ message: 'Internal server error' });
-  }
-}
