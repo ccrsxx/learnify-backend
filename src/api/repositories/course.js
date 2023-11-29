@@ -7,7 +7,23 @@ import {
 
 export function getCourses() {
   return Course.findAll({
-    include: ['user', 'course_category']
+    include: ['user', 'course_category'],
+    attributes: {
+      include: [
+        [
+          sequelize.literal(
+            '(SELECT SUM("duration") FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id")'
+          ),
+          'total_duration'
+        ],
+        [
+          sequelize.literal(
+            '(SELECT COUNT(*) FROM "course_material" WHERE "course_material"."course_chapter_id" IN (SELECT "id" FROM "course_chapter" WHERE "course_chapter"."course_id" = "Course"."id"))'
+          ),
+          'total_materials'
+        ]
+      ]
+    }
   });
 }
 
