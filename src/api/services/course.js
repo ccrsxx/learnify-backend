@@ -1,23 +1,23 @@
-import { generateApplicationError } from '../../libs/error.js';
+import {
+  ApplicationError,
+  generateApplicationError
+} from '../../libs/error.js';
+import { getCourseFilterQuery } from '../../libs/query.js';
 import * as courseRepository from '../repositories/course.js';
+import * as Types from '../../libs/types/common.js';
 
-/** @param {any} params */
+/** @param {Types.RequestQuery} params */
 export async function getCourses(params) {
-  const { type, filter, category, difficulty, search } = params;
-
   try {
-    if (type || filter || category || difficulty || search) {
-      const filters = {};
-      if (type) filters.type = type;
-      if (filter) filters.filter = filter.split(','); // waiting for table user course
-      if (category) filters.category = category.split(',');
-      if (difficulty) filters.difficulty = difficulty.split(',');
-      if (search) filters.search = search;
+    const queryFilters = await getCourseFilterQuery(params);
 
-      const courses = await courseRepository.getCourseByFilter(filters);
-      return courses;
-    }
-    const courses = await courseRepository.getCourses();
+    // @ts-ignore
+    const sortByNewest = params.filter?.includes?.('new');
+
+    const courses = await (queryFilters
+      ? courseRepository.getCoursesByFilter(queryFilters, sortByNewest)
+      : courseRepository.getCourses());
+
     return courses;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting courses', 500);
@@ -29,6 +29,10 @@ export async function getCourseById(id) {
   try {
     const course = await courseRepository.getCourseById(id);
 
+    if (!course) {
+      throw new ApplicationError('Course not found', 404);
+    }
+
     return course;
   } catch (err) {
     throw generateApplicationError(
@@ -36,16 +40,5 @@ export async function getCourseById(id) {
       'Error while getting course details',
       500
     );
-  }
-}
-
-/** @param {string} id */
-export async function getCourseDataById(id) {
-  try {
-    const courseData = await courseRepository.getCourseDataById(id);
-
-    return courseData;
-  } catch (err) {
-    throw generateApplicationError(err, 'Error while getting course data', 500);
   }
 }

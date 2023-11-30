@@ -24,7 +24,7 @@ import { Model } from 'sequelize';
 
 export const Models = {};
 
-const DIFFICULTY = /** @type {const} */ ([
+export const DIFFICULTY = /** @type {const} */ ([
   'BEGINNER',
   'INTERMEDIATE',
   'ADVANCED'
