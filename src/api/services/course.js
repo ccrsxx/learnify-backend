@@ -8,12 +8,14 @@ export async function getCourses(params) {
   try {
     if (name || premium || category || difficulty) {
       const filter = {};
+
       if (name) filter.name = name;
       if (premium) filter.premium = premium;
       if (category) filter.category = category;
       if (difficulty) filter.difficulty = difficulty;
 
       const courses = await courseRepository.getCourseByFilter(filter);
+
       return courses;
     }
 
