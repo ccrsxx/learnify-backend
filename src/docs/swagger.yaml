@@ -52,7 +52,7 @@ paths:
                     example: Ping successfully
                   docs:
                     type: string
-                    example: http://belajar.risalamin.com/docs
+                    example: http://api.belajar.risalamin.com/docs
   /auth/login:
     post:
       tags:
