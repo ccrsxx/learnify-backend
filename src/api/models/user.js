@@ -93,6 +93,8 @@ export default (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       tableName: 'user',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
       underscored: true
     }
   );

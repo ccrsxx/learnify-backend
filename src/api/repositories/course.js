@@ -17,7 +17,7 @@ export async function getCoursesByFilter(whereOptions, sortByNewest = false) {
   return Course.findAll({
     where: whereOptions,
     include: ['user', 'course_category'],
-    ...(sortByNewest && { order: [['createdAt', 'DESC']] }),
+    ...(sortByNewest && { order: [['created_at', 'DESC']] }),
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
   });
 }

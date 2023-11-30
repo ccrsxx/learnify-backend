@@ -63,6 +63,8 @@ export default (sequelize, DataTypes) => {
       sequelize,
       modelName: 'CourseChapter',
       tableName: 'course_chapter',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
       underscored: true
     }
   );

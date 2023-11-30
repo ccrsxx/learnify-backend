@@ -57,6 +57,8 @@ export default (sequelize, DataTypes) => {
       sequelize,
       modelName: 'UserPayment',
       tableName: 'user_payment',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
       underscored: true
     }
   );
