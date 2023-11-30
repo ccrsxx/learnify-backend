@@ -29,7 +29,8 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.CourseMaterial, {
-        foreignKey: 'course_chapter_id'
+        foreignKey: 'course_chapter_id',
+        as: 'course_material'
       });
 
       this.belongsTo(models.Course, {
@@ -62,6 +63,8 @@ export default (sequelize, DataTypes) => {
       sequelize,
       modelName: 'CourseChapter',
       tableName: 'course_chapter',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
       underscored: true
     }
   );

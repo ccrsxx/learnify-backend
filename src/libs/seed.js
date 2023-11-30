@@ -1,4 +1,9 @@
-import { CourseCategory, User } from '../api/models/index.js';
+import {
+  CourseCategory,
+  Course,
+  CourseChapter,
+  User
+} from '../api/models/index.js';
 import { faker } from '@faker-js/faker';
 
 export function generateRandomUser() {
@@ -52,6 +57,22 @@ export function generateRandomCourse() {
   };
 }
 
+export function generateRandomCourseChapter() {
+  return {
+    duration: faker.number.int({ min: 10, max: 60 }),
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
+  };
+}
+
+export function generateRandomCourseMaterial() {
+  return {
+    video: faker.internet.url(),
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
+  };
+}
+
 /**
  * @param {string} tableName
  * @param {import('sequelize').QueryInterface} queryInterface
@@ -68,6 +89,20 @@ export async function isTableHasRecords(tableName, queryInterface) {
 /** @param {string} name */
 export async function getCategoryIdByName(name) {
   return CourseCategory.findOne({
+    where: { name }
+  }).then((model) => model?.dataValues.id);
+}
+
+/** @param {string} name */
+export async function getCourseIdByName(name) {
+  return Course.findOne({
+    where: { name }
+  }).then((model) => model?.dataValues.id);
+}
+
+/** @param {string} name */
+export async function getCourseChapterIdByName(name) {
+  return CourseChapter.findOne({
     where: { name }
   }).then((model) => model?.dataValues.id);
 }

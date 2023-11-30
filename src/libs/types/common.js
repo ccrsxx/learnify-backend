@@ -45,4 +45,12 @@ import * as UserModel from '../../api/models/user.js';
  * >} AuthorizedController
  */
 
+/** @typedef {import('express').Request['query']} RequestQuery */
+
+/**
+ * @template {Record<string, any>} [T=Record<string, any>] Default is. Default.
+ *   Default is `Record<string, any>`
+ * @typedef {import('sequelize').WhereOptions<T>} WhereOptions
+ */
+
 export const Types = {};

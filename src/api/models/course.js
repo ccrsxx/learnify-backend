@@ -24,7 +24,7 @@ import { Model } from 'sequelize';
 
 export const Models = {};
 
-const DIFFICULTY = /** @type {const} */ ([
+export const DIFFICULTY = /** @type {const} */ ([
   'BEGINNER',
   'INTERMEDIATE',
   'ADVANCED'
@@ -57,7 +57,8 @@ export default (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.CourseChapter, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        as: 'course_chapter'
       });
 
       this.belongsTo(models.User, {
@@ -140,6 +141,8 @@ export default (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Course',
       tableName: 'course',
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
       underscored: true
     }
   );
