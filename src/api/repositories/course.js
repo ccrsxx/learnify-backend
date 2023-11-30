@@ -50,8 +50,12 @@ export async function getCourseByFilter(params) {
     whereClause.name = { [Op.iLike]: `%${search.toLowerCase()}%` };
   }
 
-  // @ts-ignore
-  return Course.findAll({ where: whereClause });
+  return Course.findAll({
+    // @ts-ignore
+    where: whereClause,
+    include: ['user', 'course_category'],
+    attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+  });
 }
 
 /** @param {string} id */
