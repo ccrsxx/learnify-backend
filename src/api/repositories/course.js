@@ -1,10 +1,5 @@
-import SequelizeType from 'sequelize';
-import {
-  Course,
-  sequelize,
-  CourseChapter,
-  CourseMaterial
-} from '../models/index.js';
+import sequelize from 'sequelize';
+import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
 
 export function getCourses() {
   return Course.findAll({
@@ -58,7 +53,7 @@ export function getCourseDataById(id) {
   });
 }
 
-/** @returns {SequelizeType.ProjectionAlias} */
+/** @returns {sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(
@@ -74,7 +69,7 @@ function getTotalDuration() {
   ];
 }
 
-/** @returns {SequelizeType.ProjectionAlias} */
+/** @returns {sequelize.ProjectionAlias} */
 function getTotalMaterials() {
   return [
     sequelize.cast(
