@@ -3,28 +3,27 @@ import * as courseRepository from '../repositories/course.js';
 
 /** @param {any} params */
 export async function getCourses(params) {
-  const { name, category, difficulty, premium } = params;
+  const { type, filter, category, difficulty, search } = params;
 
   try {
-    if (name || premium || category || difficulty) {
-      const filter = {};
+    if (type || filter || category || difficulty || search) {
+      const filters = {};
+      if (type) filters.type = type;
+      if (filter) filters.filter = filter.split(','); // waiting for table user course
+      if (category) filters.category = category.split(',');
+      if (difficulty) filters.difficulty = difficulty.split(',');
+      if (search) filters.search = search;
 
-      if (name) filter.name = name;
-      if (premium) filter.premium = premium;
-      if (category) filter.category = category;
-      if (difficulty) filter.difficulty = difficulty;
-
-      const courses = await courseRepository.getCourseByFilter(filter);
-
+      const courses = await courseRepository.getCourseByFilter(filters);
       return courses;
     }
-
     const courses = await courseRepository.getCourses();
     return courses;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting courses', 500);
   }
 }
+
 /** @param {string} id */
 export async function getCourseById(id) {
   try {

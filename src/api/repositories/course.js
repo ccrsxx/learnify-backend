@@ -1,5 +1,10 @@
-import sequelize from 'sequelize';
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
+import sequelize, { Op } from 'sequelize';
+import {
+  Course,
+  CourseChapter,
+  CourseMaterial,
+  CourseCategory
+} from '../models/index.js';
 
 export function getCourses() {
   return Course.findAll({
@@ -9,8 +14,44 @@ export function getCourses() {
 }
 
 /** @param {any} params */
-export function getCourseByFilter(params) {
-  return Course.findAll({ where: params });
+export async function getCourseByFilter(params) {
+  const { type, filter, category, difficulty, search } = params || {};
+  const whereClause = {};
+
+  if (type) {
+    if (type !== 'all') {
+      if (type === 'free') {
+        whereClause.premium = false;
+      } else if (type === 'premium') {
+        whereClause.premium = true;
+      }
+    }
+  }
+  if (filter) {
+    whereClause.filter = filter.map(String);
+  }
+  if (category) {
+    const categoryNames = category.map(String);
+    const categories = await CourseCategory.findAll({
+      where: { name: categoryNames },
+      attributes: ['id']
+    });
+    // @ts-ignore
+    const categoryIds = categories.map((category) => category.id);
+    whereClause.course_category_id = categoryIds;
+  }
+  if (difficulty) {
+    if (!difficulty.includes('all')) {
+      // @ts-ignore
+      whereClause.difficulty = difficulty.map((level) => level.toUpperCase());
+    }
+  }
+  if (search) {
+    whereClause.name = { [Op.iLike]: `%${search.toLowerCase()}%` };
+  }
+
+  // @ts-ignore
+  return Course.findAll({ where: whereClause });
 }
 
 /** @param {string} id */
