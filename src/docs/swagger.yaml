@@ -52,7 +52,7 @@ paths:
                     example: Ping successfully
                   docs:
                     type: string
-                    example: http://api-binar-backend.risalamin.com/docs
+                    example: http://belajar.risalamin.com/docs
   /auth/login:
     post:
       tags:
@@ -106,8 +106,8 @@ paths:
     post:
       tags:
         - auth
-      summary: Register user as an member
-      description: Register user as an member
+      summary: Register
+      description: Register user
       operationId: register
       requestBody:
         $ref: '#/components/requestBodies/UserBody'
@@ -160,38 +160,6 @@ paths:
     get:
       tags:
         - courses
-      summary: Get course detail by ID
-      description: Get course detail by ID
-      operationId: courses-detail
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: The Course ID
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/CourseDetail'
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-  /courses/{id}/data:
-    get:
-      tags:
-        - courses
       summary: Get course data by ID
       description: Get course data by ID
       operationId: courses-data
@@ -211,7 +179,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/CourseData'
+                    $ref: '#/components/schemas/CourseDetails'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -258,12 +226,9 @@ components:
         name:
           type: string
           example: Satella
-        role:
-          type: string
-          example: member
-          enum:
-            - admin
-            - user
+        admin:
+          type: boolean
+          example: false
         email:
           type: string
           example: satella@rezero.com
@@ -376,7 +341,7 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-    CourseDetail:
+    CourseDetails:
       type: object
       properties:
         id:
@@ -438,29 +403,22 @@ components:
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
         course_category:
           $ref: '#/components/schemas/CourseCategory'
+        course_chapter_id:
+          type: string
+          example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
+        course_chapter:
+          type: array
+          items:
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/CourseChapter'
+              - $ref: '#/components/schemas/CourseChapter'
         total_duration:
           type: integer
           example: 55
         total_materials:
           type: integer
           example: 3
-        created_at:
-          type: string
-          example: '2021-01-01T00:00:00.000Z'
-        updated_at:
-          type: string
-          example: '2021-01-01T00:00:00.000Z'
-    CourseData:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 5db0a017-6041-4d9a-8f44-5fca03d5378a
-        name:
-          type: string
-          example: Belajar Fullstack developer
-        course_chapter:
-          $ref: '#/components/schemas/CourseChapter'
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -485,14 +443,22 @@ components:
         course_id:
           type: string
           example: 5db0a017-6041-4d9a-8f44-5fca03d5378
+        course_material_id:
+          type: string
+          example: 5db0a017-6041-4d9a-8f44-5fca03d5378
+        course_material:
+          type: array
+          items:
+            type: object
+            oneOf:
+              - $ref: '#/components/schemas/CourseMaterial'
+              - $ref: '#/components/schemas/CourseMaterial'
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-        course_material:
-          $ref: '#/components/schemas/CourseMaterial'
     CourseMaterial:
       type: object
       properties:
