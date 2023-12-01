@@ -70,9 +70,15 @@ export async function getCourseFilterQuery(params) {
   // TODO: Handle filter popular and promo, waiting for table user course
   // if (queryFilters.filter) ...
 
-  if (queryFilters.type && queryFilters.type !== 'all') {
+  if (queryFilters.type) {
     if (queryFilters.type === 'free') whereClause.premium = false;
     else if (queryFilters.type === 'premium') whereClause.premium = true;
+  }
+
+  if (queryFilters.search) {
+    whereClause.name = {
+      [Op.iLike]: `%${queryFilters.search}%`
+    };
   }
 
   if (queryFilters.category?.length) {
@@ -86,17 +92,8 @@ export async function getCourseFilterQuery(params) {
     whereClause.course_category_id = categoryIds;
   }
 
-  if (
-    queryFilters.difficulty?.length &&
-    !queryFilters.difficulty.includes('all')
-  ) {
+  if (queryFilters.difficulty?.length) {
     whereClause.difficulty = queryFilters.difficulty;
-  }
-
-  if (queryFilters.search) {
-    whereClause.name = {
-      [Op.iLike]: `%${queryFilters.search}%`
-    };
   }
 
   return whereClause;
