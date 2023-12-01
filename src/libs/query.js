@@ -53,15 +53,19 @@ export async function getCourseFilterQuery(params) {
   }
 
   if (difficulty) {
-    queryFilters.difficulty = difficulty.split(',').flatMap((diff) => {
-      const difficulty = diff.trim().toUpperCase();
+    const difficultyIncludesAll = difficulty.includes('all');
 
-      const validDifficulty = CourseModel.DIFFICULTY.includes(
-        /** @type {CourseModel.Difficulty} */ (difficulty)
-      );
+    if (!difficultyIncludesAll) {
+      queryFilters.difficulty = difficulty.split(',').flatMap((diff) => {
+        const difficulty = diff.trim().toUpperCase();
 
-      return validDifficulty ? difficulty : [];
-    });
+        const validDifficulty = CourseModel.DIFFICULTY.includes(
+          /** @type {CourseModel.Difficulty} */ (difficulty)
+        );
+
+        return validDifficulty ? difficulty : [];
+      });
+    }
   }
 
   /** @type {Types.WhereOptions<CourseModel.CourseAttributes>} */
