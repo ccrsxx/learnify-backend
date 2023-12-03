@@ -5,6 +5,7 @@ import { JWT_SECRET } from '../../libs/env.js';
 import * as userService from '../services/user.js';
 import { generateApplicationError } from '../../libs/error.js';
 import * as Models from '../models/user.js';
+import otpGenerator from 'otp-generator';
 
 /**
  * Generate hash password with bcrypt
@@ -71,4 +72,13 @@ export async function verifyToken(token) {
   } catch (err) {
     throw generateApplicationError(err, 'Error while verifying token', 500);
   }
+}
+
+export function generateOTP() {
+  const otp = otpGenerator.generate(6, {
+    lowerCaseAlphabets: false,
+    upperCaseAlphabets: false,
+    specialChars: false
+  });
+  return otp;
 }
