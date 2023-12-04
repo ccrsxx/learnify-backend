@@ -1,6 +1,7 @@
 import sequelize from 'sequelize';
 import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
+import * as Models from '../models/course.js';
 
 export function getCourses() {
   return Course.findAll({
@@ -40,6 +41,12 @@ export function getCourseById(id) {
     ],
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
   });
+}
+
+/** @param {Models.CourseAttributes} payload */
+export function createCourse(payload) {
+  console.log(payload);
+  return Course.create(payload);
 }
 
 /** @returns {sequelize.ProjectionAlias} */

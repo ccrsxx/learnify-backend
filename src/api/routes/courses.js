@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import * as Types from '../../libs/types/common.js';
 import * as courseController from '../controllers/course.js';
+import * as authMiddleware from '../middlewares/auth.js';
+import * as uploadMiddleware from '../middlewares/upload.js';
 
 /**
  * @type {Types.Route}
@@ -11,7 +13,16 @@ export default (app) => {
 
   app.use('/courses', router);
 
-  router.get('/', courseController.getCourses);
+  router
+    .route('/')
+    .get(courseController.getCourses)
+    .post(
+      authMiddleware.isAuthorized,
+      authMiddleware.isAdmin,
+      uploadMiddleware.parseImage,
+      uploadMiddleware.uploadCloudinary,
+      courseController.createCourse
+    );
 
   router.route('/:id').get(courseController.getCourseById);
 };
