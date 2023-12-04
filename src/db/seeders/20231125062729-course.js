@@ -85,8 +85,11 @@ module.exports = {
         name: 'Full-Stack Web Developer',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Web Development'),
-        description:
-          'Penguasaan front end (user interface) dan back end (business logic) pada saat membangun website adalah hal utama bagi seorang Full Stack Web Developer. Bahkan, akan lebih baik jika didukung oleh skill UI/UX Design dan System Administration agar keseluruhan sistem web dapat berjalan dengan baik. \nDi kelas ini, mentor kami akan menjelaskan UX design, UI design, dan pengembangan web menggunakan Bootstrap dan Laravel secara terperinci. Kelas ini cocok bagi Anda yang sedang bingung menentukan spesialisasi karir di bidang teknologi. Banyak ilmu yang bisa didapatkan dan bisa menjadi bekal untuk menjadi developer yang handal. Kelas ini menggunakan tools Laravel 6 dan PHP ≥ 7.2. \nSetelah menyelesaikan kelas ini, Anda dapat lebih fokus memilih bidang sesuai dengan minat dan kemampuan. Segera daftar dan kami tunggu di kelas!',
+        description: `Penguasaan front end (user interface) dan back end (business logic) pada saat membangun website adalah hal utama bagi seorang Full Stack Web Developer. Bahkan, akan lebih baik jika didukung oleh skill UI/UX Design dan System Administration agar keseluruhan sistem web dapat berjalan dengan baik.
+          
+          Di kelas ini, mentor kami akan menjelaskan UX design, UI design, dan pengembangan web menggunakan Bootstrap dan Laravel secara terperinci. Kelas ini cocok bagi Anda yang sedang bingung menentukan spesialisasi karir di bidang teknologi. Banyak ilmu yang bisa didapatkan dan bisa menjadi bekal untuk menjadi developer yang handal. Kelas ini menggunakan tools Laravel 6 dan PHP ≥ 7.2.
+          
+          Setelah menyelesaikan kelas ini, Anda dapat lebih fokus memilih bidang sesuai dengan minat dan kemampuan. Segera daftar dan kami tunggu di kelas!`,
         intro_video: 'https://youtu.be/6hXoBeIQd-o',
         target_audience: [
           'Anda yang ingin mempelajari Prototype',
@@ -101,8 +104,13 @@ module.exports = {
         name: 'Flutter Developer: Provider State Management',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Android Development'),
-        description:
-          'Pada pengembangan aplikasi, kita tidak akan terlepas dari proses penyimpanan data. Namun, dalam menjaga sebuah data agar dapat mudah digunakan kapan pun diperlukan proses dalam jangka waktu yang lama. Sejak 2019, Flutter SDK telah digunakan oleh banyak perusahaan besar dunia semisal Tencent, Alibaba Group dan BMW. Melalui Flutter, kita dapat mengakses library yang tersedia agar dapat mengelola data atau state pada aplikasi secara efektif. \nPada kelas ini, kita akan belajar bagaimana mengimplementasikan State Management dengan menggunakan Provider agar state dapat tersimpan, maintainable dan mudah digunakan kembali di mana pun dan kapan pun saat dibutuhkan. Flutter memberikan kemudahan kepada para developer agar dapat dengan mudah mengelola state sesuai dengan keinginan mereka. \nPada case study, kita akan membangun sebuah aplikasi pencarian kerja IT secara online dan mengelola datanya menggunakan State Management. Kelas ini sangat tepat untuk dipelajari bagi Anda yang ingin memperdalam ilmu mengenai State Management. Silahkan bergabung dan kami tunggu di kelas, ya!',
+        description: `Pada pengembangan aplikasi, kita tidak akan terlepas dari proses penyimpanan data. Namun, dalam menjaga sebuah data agar dapat mudah digunakan kapan pun diperlukan proses dalam jangka waktu yang lama.
+          
+          Sejak 2019, Flutter SDK telah digunakan oleh banyak perusahaan besar dunia semisal Tencent, Alibaba Group dan BMW. Melalui Flutter, kita dapat mengakses library yang tersedia agar dapat mengelola data atau state pada aplikasi secara efektif.
+          
+          Pada kelas ini, kita akan belajar bagaimana mengimplementasikan State Management dengan menggunakan Provider agar state dapat tersimpan, maintainable dan mudah digunakan kembali di mana pun dan kapan pun saat dibutuhkan. Flutter memberikan kemudahan kepada para developer agar dapat dengan mudah mengelola state sesuai dengan keinginan mereka.
+          
+          Pada case study, kita akan membangun sebuah aplikasi pencarian kerja IT secara online dan mengelola datanya menggunakan State Management. Kelas ini sangat tepat untuk dipelajari bagi Anda yang ingin memperdalam ilmu mengenai State Management. Silahkan bergabung dan kami tunggu di kelas, ya!`,
         intro_video: 'https://youtu.be/eSrXU5vrgaI',
         target_audience: [
           'Anda yang ingin membangun aplikasi mobile menggunakan API',
@@ -117,8 +125,13 @@ module.exports = {
         name: 'Learn Flutter & Adobe XD: Build a Complete Mobile App',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Android Development'),
-        description:
-          'Faktor pertama yang menjadi alasan pengguna menggunakan aplikasi e-commerce adalah tampilan antarmuka (UI) yang menarik. UI yang dirancang dengan baik dapat menanamkan kepercayaan pada produk yang ditawarkan, yang nantinya berpengaruh penting terhadap kelancaran bisnis produk tersebut. Kelas ini akan membahas proses pengembangan UI pada sisi Front-End secara lengkap, dari mendesain UI dengan Adobe XD sampai slicing desain ke Flutter. \nMelalui case study “E-Commerce Story”, Adobe XD digunakan untuk membangun komponen UI (icon, tipografi, gambar, warna, dll) menjadi sebuah aplikasi utuh. Dengan Adobe XD, kita bisa menghasilkan high quality design sekaligus prototype guna memeriksa apakah interaksi dan navigasi pilihan kita sudah dirasa sesuai untuk dipakai secara nyata. Setelah desain selesai dibuat, proses berlanjut pada tahapan slicing design asset ke Flutter SDK. Slicing dilakukan untuk menulis coding dalam satu basis kode dengan beragam Widget praktis seperti Scaffold, Drawer, hingga Navigator. \nKelas ini cocok bagi Anda yang ingin mendalami desain aplikasi berskala besar. Bila menemukan kendala selama belajar, silakan berkonsultasi dengan para Mentor ahli kami di grup konsultasi. Segera daftar dan kami tunggu di kelas, ya!',
+        description: `Faktor pertama yang menjadi alasan pengguna menggunakan aplikasi e-commerce adalah tampilan antarmuka (UI) yang menarik. UI yang dirancang dengan baik dapat menanamkan kepercayaan pada produk yang ditawarkan, yang nantinya berpengaruh penting terhadap kelancaran bisnis produk tersebut. Kelas ini akan membahas proses pengembangan UI pada sisi Front-End secara lengkap, dari mendesain UI dengan Adobe XD sampai slicing desain ke Flutter.
+          
+          Melalui case study “E-Commerce Story”, Adobe XD digunakan untuk membangun komponen UI (icon, tipografi, gambar, warna, dll) menjadi sebuah aplikasi utuh. Dengan Adobe XD, kita bisa menghasilkan high quality design sekaligus prototype guna memeriksa apakah interaksi dan navigasi pilihan kita sudah dirasa sesuai untuk dipakai secara nyata.
+          
+          Setelah desain selesai dibuat, proses berlanjut pada tahapan slicing design asset ke Flutter SDK. Slicing dilakukan untuk menulis coding dalam satu basis kode dengan beragam Widget praktis seperti Scaffold, Drawer, hingga Navigator.
+          
+          Kelas ini cocok bagi Anda yang ingin mendalami desain aplikasi berskala besar. Bila menemukan kendala selama belajar, silakan berkonsultasi dengan para Mentor ahli kami di grup konsultasi. Segera daftar dan kami tunggu di kelas, ya!`,
         intro_video: 'https://youtu.be/JVJc4k6xjTM',
         target_audience: [
           'Anda yang ingin mempelajari proses Design to Code',
@@ -133,8 +146,11 @@ module.exports = {
         name: 'SwiftUI & iOS Engineer: The Complete App Development Bootcamp',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('IOS Development'),
-        description:
-          'Di era digital, berbagai perusahaan berlomba untuk mengembangkan situs web dan aplikasi yang user friendly dan responsif. Oleh karena itu, berbagai pekerjaan seputar design dan development sangat dibutuhkan saat ini. Jika kamu menyukai bagaimana melakukan slicing UI ke dalam UI/UX Development, profesi Junior UI/UX Developer atau yang lebih dikenal dengan UI Engineer akan menjadi profesi yang ideal untukmu. \nMelalui kelas ini, kamu akan berperan sebagai UI Engineer untuk melakukan slicing Food App design dari Figma menggunakan aplikasi Xcode, development tools untuk aplikasi berbasis iOS. Nantinya, mentor Angga tidak hanya akan memberikan panduan untuk melakukan slicing, namun juga akan ada challange untuk kamu melakukan slicing sendiri. Namun jangan khawatir, di akhir kelas kamu bisa mencocokan bagiamana cara kamu dan mentor dalam melakukan slicing page tersebut. \nSilahkan bergabung untuk upgrade skill slicing kamu dan mendapatkan sertifikat resminya setelah kamu menyelesaikan kelas. Okay people with the spirit of learning semoga bermanfaat dan kami tunggu di kelas ya!',
+        description: `Di era digital, berbagai perusahaan berlomba untuk mengembangkan situs web dan aplikasi yang user friendly dan responsif. Oleh karena itu, berbagai pekerjaan seputar design dan development sangat dibutuhkan saat ini. Jika kamu menyukai bagaimana melakukan slicing UI ke dalam UI/UX Development, profesi Junior UI/UX Developer atau yang lebih dikenal dengan UI Engineer akan menjadi profesi yang ideal untukmu.
+          
+          Melalui kelas ini, kamu akan berperan sebagai UI Engineer untuk melakukan slicing Food App design dari Figma menggunakan aplikasi Xcode, development tools untuk aplikasi berbasis iOS. Nantinya, mentor tidak hanya akan memberikan panduan untuk melakukan slicing, namun juga akan ada challange untuk kamu melakukan slicing sendiri. Namun jangan khawatir, di akhir kelas kamu bisa mencocokan bagiamana cara kamu dan mentor dalam melakukan slicing page tersebut.
+          
+          Silahkan bergabung untuk upgrade skill slicing kamu dan mendapatkan sertifikat resminya setelah kamu menyelesaikan kelas. Okay people with the spirit of learning semoga bermanfaat dan kami tunggu di kelas ya!`,
         intro_video: 'https://youtu.be/yk_p1bi6Oyw',
         target_audience: [
           'Anda yang ingin meningkatkan skill slicing User Interface',
@@ -149,8 +165,13 @@ module.exports = {
         name: 'SQL for Beginners: Learn SQL using MySQL and Database Design',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Data Science'),
-        description:
-          'Charles Bachman menciptakan database agar data memiliki tampilan yang mudah dipahami dan tentunya dapat dikelola oleh banyak pengguna. Data yang tersusun rapi melalui Database Management System (DBMS), dapat memudahkan kebutuhan kita dalam pengembangan aplikasi. Dengan menguasai DBMS, kita dapat dengan mudah mencari atau mengubah data sesuai kebutuhan, mengolah big data, hingga mempercepat kinerja aplikasi secara efisien. \nPada kelas ini, Mentor akan menjelaskan database management dengan MySQL. Kita akan mulai dengan pengenalan dasar-dasar database (data, DBMS, SQL) dan storage engine pada DBMS. Pada software MySQL, kita akan membangun database “Flying” dimulai dari menyiapkan tabel, mengatur field dan mengisi tipe data. Selain itu juga kita menggunakan TablePlus karena bahasa query lebih fleksibel dan hasil database mudah dipahami melalui tampilan yang user friendly. Kelas ini menggunakan tools XAMPP, Beekeeper Studio, Dbeaver, Mamp, Table Plus dan MySQL 5.7. \nKelas ini cocok bagi Anda yang ingin mendalami database management dalam pengembangan aplikasi. Mentor ahli kami pun siap membantumu melalui grup konsultasi. Silakan daftar dan sampai jumpa di kelas!',
+        description: `Charles Bachman menciptakan database agar data memiliki tampilan yang mudah dipahami dan tentunya dapat dikelola oleh banyak pengguna. Data yang tersusun rapi melalui Database Management System (DBMS), dapat memudahkan kebutuhan kita dalam pengembangan aplikasi. Dengan menguasai DBMS, kita dapat dengan mudah mencari atau mengubah data sesuai kebutuhan, mengolah big data, hingga mempercepat kinerja aplikasi secara efisien.
+          
+          Pada kelas ini, Mentor akan menjelaskan database management dengan MySQL. Kita akan mulai dengan pengenalan dasar-dasar database (data, DBMS, SQL) dan storage engine pada DBMS. Pada software MySQL, kita akan membangun database “Flying” dimulai dari menyiapkan tabel, mengatur field dan mengisi tipe data.
+          
+          Selain itu juga kita menggunakan TablePlus karena bahasa query lebih fleksibel dan hasil database mudah dipahami melalui tampilan yang user friendly. Kelas ini menggunakan tools XAMPP, Beekeeper Studio, Dbeaver, Mamp, Table Plus dan MySQL 5.7.
+          
+          Kelas ini cocok bagi Anda yang ingin mendalami database management dalam pengembangan aplikasi. Mentor ahli kami pun siap membantumu melalui grup konsultasi. Silakan daftar dan sampai jumpa di kelas!`,
         intro_video: 'https://youtu.be/CQDcJ07sMNg',
         target_audience: [
           'Anda yang ingin mempelajari MySQL',
