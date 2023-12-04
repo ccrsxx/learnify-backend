@@ -18,8 +18,15 @@ module.exports = {
         name: 'Intro to Design System',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('UI/UX Design'),
-        description:
-          'Design system adalah kumpulan komponen design, code, ataupun dokumentasi yang dapat digunakan sebagai panduan utama yang memunginkan designer serta developer memiliki lebih banyak kontrol atas berbagai platform. Dengan hadirnya design system, dapat menjaga konsistensi tampilan user interface dan meningkatkan user experience menjadi lebih baik. Disisi bisnis, design system sangat berguna dalam menghemat waktu dan biaya ketika mengembangkan suatu produk. \nBersama mentor terpercaya, kita akan mempelajari design system dari mulai manfaat, alur kerja pembuatannya, tools yang digunakan, hingga pada akhirnya, kita akan membuat MVP dari design system. Selain itu, mentor juga akan menjelaskan berbagai resource yang dibutuhkan untuk mencari inspirasi mengenai design system. \nKelas ini sesuai untuk Anda yang ingin memahami apa itu design system. Tidak hanya ditujukan untuk UI/UX Designer ataupun Developer, kelas ini sangat sesuai untuk stakeholder lain agar dapat memudahkan tim dalam bekerja sama. Yuk segera daftar dan kami tunggu di kelas ya!',
+        description: `Design system adalah kumpulan komponen design, code, ataupun dokumentasi yang dapat digunakan sebagai panduan utama yang memunginkan designer serta developer memiliki lebih banyak kontrol atas berbagai platform.
+
+        Dengan hadirnya design system, dapat menjaga konsistensi tampilan user interface dan meningkatkan user experience menjadi lebih baik. Disisi bisnis, design system sangat berguna dalam menghemat waktu dan biaya ketika mengembangkan suatu produk.
+
+        Bersama mentor terpercaya, kita akan mempelajari design system dari mulai manfaat, alur kerja pembuatannya, tools yang digunakan, hingga pada akhirnya, kita akan membuat MVP dari design system. Selain itu, mentor juga akan menjelaskan berbagai resource yang dibutuhkan untuk mencari inspirasi mengenai design system.
+        
+        Kelas ini sesuai untuk Anda yang ingin memahami apa itu design system. Tidak hanya ditujukan untuk UI/UX Designer ataupun Developer, kelas ini sangat sesuai untuk stakeholder lain agar dapat memudahkan tim dalam bekerja sama.
+
+        Yuk segera daftar dan kami tunggu di kelas ya!`,
         intro_video: 'https://youtu.be/ixOd42SEUF0',
         target_audience: [
           'Anda yang ingin memahami poin penting design system',
@@ -34,8 +41,15 @@ module.exports = {
         name: 'Product Management Fundamentals',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Product Management'),
-        description:
-          'Sebuah artikel berita baru-baru ini menyebut Manajer Produk sebagai peran terpenting ke-4 dalam perusahaan saat ini, menjadikan manajemen produk sebagai salah satu pekerjaan terpanas di pasar. Namun, kebanyakan orang tidak mengetahui apa yang sebenarnya dilakukan oleh Manajer Produk. Apakah peran tersebut membutuhkan keterampilan teknis atau keterampilan bisnis? Dan apa yang dimaksud dengan peran yang menuntut empati yang tinggi terhadap pelanggan? \nKursus e-learning dari Institute of Product Leadership ini adalah kursus dasar yang mengungkap peran tersebut. Dimulai dari dasar-dasar "Apa itu produk?", kurikulum kursus ini memperkenalkan siswa pada proses pembuatan produk dan keterampilan serta kerangka kerja seperti Analisis Pasar, Perencanaan Strategis, Perencanaan Produk, Masuk ke Pasar, dan Pemberdayaan Penjualan yang diperlukan untuk merancang, meluncurkan, dan memelihara produk. Siswa juga akan diperkenalkan dengan peran dan jenjang karier seorang Manajer Produk dan konteks bisnis, teknologi, dan pelanggan yang perlu dikuasai seseorang untuk menjadi Manajer Produk yang baik. \nMeskipun tidak diperlukan pengetahuan sebelumnya, apresiasi atau pengalaman langsung tentang bagaimana perusahaan produk dan layanan beroperasi akan sangat membantu.',
+        description: `Sebuah artikel berita baru-baru ini menyebut Manajer Produk sebagai peran terpenting ke-4 dalam perusahaan saat ini, menjadikan manajemen produk sebagai salah satu pekerjaan terpanas di pasar. Namun, kebanyakan orang tidak mengetahui apa yang sebenarnya dilakukan oleh Manajer Produk. 
+          
+          Apakah peran tersebut membutuhkan keterampilan teknis atau keterampilan bisnis? Dan apa yang dimaksud dengan peran yang menuntut empati yang tinggi terhadap pelanggan? Kursus e-learning dari Institute of Product Leadership ini adalah kursus dasar yang mengungkap peran tersebut.
+          
+          Dimulai dari dasar-dasar "Apa itu produk?", kurikulum kursus ini memperkenalkan siswa pada proses pembuatan produk dan keterampilan serta kerangka kerja seperti Analisis Pasar, Perencanaan Strategis, Perencanaan Produk, Masuk ke Pasar, dan Pemberdayaan Penjualan yang diperlukan untuk merancang, meluncurkan, dan memelihara produk.
+          
+          Siswa juga akan diperkenalkan dengan peran dan jenjang karier seorang Manajer Produk dan konteks bisnis, teknologi, dan pelanggan yang perlu dikuasai seseorang untuk menjadi Manajer Produk yang baik.
+          
+          Meskipun tidak diperlukan pengetahuan sebelumnya, apresiasi atau pengalaman langsung tentang bagaimana perusahaan produk dan layanan beroperasi akan sangat membantu.`,
         intro_video: 'https://youtu.be/HYfG_uCOlhc',
         target_audience: [
           'Anda yang ingin bekerja dalam peran Manajemen Produk',
@@ -50,8 +64,13 @@ module.exports = {
         name: 'Web Development Microservice: Website Kelas Online',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Web Development'),
-        description:
-          'Microservice adalah salah satu arsitektur pada Website Development yang digunakan oleh banyak Developer dan perusahaan IT dalam mengembangkan suatu Website. Tujuannya adalah agar Website tersebut lebih stabil dan mudah diperbaiki pada setiap service-nya jika adanya suatu bug pada service tersebut. \nProjek yang dibangun adalah website untuk belajar online (kelas digital) untuk siapa saja yang ingin upgrade skill dalam dunia IT atau juga self-improvement. Dimulai dari slicing design website dari Figma menggunakan React JavaScript Framework dan dibantu juga dengan Tailwind CSS. Setelah itu kita akan coba menggunakan API (per service) yang telah kita buat menggunakan Laravel dan Express JS. \nJika kamu tertarik untuk belajar web development lebih dalam silakan bergabung di kelas ini dan kami akan mengarahkan dengan secara terstruktur dan rapih. Silakan bergabung dan kami tunggu di kelas. Kelas ini menggunakan tools NextJS versi 9.',
+        description: `Microservice adalah salah satu arsitektur pada Website Development yang digunakan oleh banyak Developer dan perusahaan IT dalam mengembangkan suatu Website. Tujuannya adalah agar Website tersebut lebih stabil dan mudah diperbaiki pada setiap service-nya jika adanya suatu bug pada service tersebut.
+          
+          Projek yang dibangun adalah website untuk belajar online (kelas digital) untuk siapa saja yang ingin upgrade skill dalam dunia IT atau juga self-improvement. Dimulai dari slicing design website dari Figma menggunakan React JavaScript Framework dan dibantu juga dengan Tailwind CSS.
+          
+          Setelah itu kita akan coba menggunakan API (per service) yang telah kita buat menggunakan Laravel dan Express JS. Jika kamu tertarik untuk belajar web development lebih dalam silakan bergabung di kelas ini dan kami akan mengarahkan dengan secara terstruktur dan rapih.
+          
+          Silakan bergabung dan kami tunggu di kelas. Kelas ini menggunakan tools NextJS versi 9.`,
         intro_video: 'https://youtu.be/6hIUgd6WuFw',
         target_audience: [
           'Cocok untuk yang ingin membangun website kelas online',
