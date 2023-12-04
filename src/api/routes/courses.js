@@ -28,6 +28,14 @@ export default (app) => {
   router
     .route('/:id')
     .get(courseController.getCourseById)
+    .put(
+      authMiddleware.isAuthorized,
+      authMiddleware.isAdmin,
+      validationMiddleware.isCourseExists,
+      uploadMiddleware.parseImage,
+      uploadMiddleware.uploadCloudinary,
+      courseController.updateCourse
+    )
     .delete(
       authMiddleware.isAuthorized,
       authMiddleware.isAdmin,

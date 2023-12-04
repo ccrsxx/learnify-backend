@@ -50,7 +50,11 @@ export async function getCourseById(id) {
  * @param {string} userId
  */
 export async function createCourse(payload, userId) {
-  const parsedPayload = omitPropertiesFromObject(payload, ['id', 'updated_at']);
+  const parsedPayload = omitPropertiesFromObject(payload, [
+    'id',
+    'created_at',
+    'updated_at'
+  ]);
 
   const parsedPayloadWithCategoryAndUser =
     /** @type {Models.CourseAttributes} */ ({
@@ -65,6 +69,36 @@ export async function createCourse(payload, userId) {
     return car;
   } catch (err) {
     throw generateApplicationError(err, 'Error while creating course', 500);
+  }
+}
+
+/**
+ * @param {Models.CourseAttributes} payload
+ * @param {string} id
+ */
+export async function updateCourse(id, payload) {
+  const parsedPayload = omitPropertiesFromObject(payload, [
+    'id',
+    'created_at',
+    'updated_at'
+  ]);
+
+  /** @type {Partial<Models.CourseAttributes>} */
+  const parsedPayloadWithUpdatedAt = {
+    ...parsedPayload,
+    updated_at: new Date()
+  };
+
+  try {
+    const [, [course]] = await courseRepository.updateCourse(
+      id,
+      // @ts-ignore
+      parsedPayloadWithUpdatedAt
+    );
+
+    return course;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while updating course', 500);
   }
 }
 

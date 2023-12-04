@@ -48,6 +48,17 @@ export function createCourse(payload) {
   return Course.create(payload);
 }
 
+/**
+ * @param {string} id
+ * @param {Models.CourseAttributes} payload
+ */
+export function updateCourse(id, payload) {
+  return Course.update(payload, {
+    where: { id },
+    returning: true
+  });
+}
+
 /** @param {string} id */
 export async function destroyCourse(id) {
   return await Course.destroy({ where: { id } });

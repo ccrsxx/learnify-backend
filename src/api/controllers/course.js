@@ -74,6 +74,32 @@ export async function createCourse(req, res) {
 }
 
 // @ts-ignore
+export async function updateCourse(req, res) {
+  const { body } = req;
+  const { id } = req.params;
+  const oldCourseData = await courseService.getCourseById(id);
+
+  // @ts-ignore
+  const image = res.locals.image ?? oldCourseData.image;
+  const bodyWithImage = { ...body, image: image };
+
+  try {
+    const course = await courseService.updateCourse(id, bodyWithImage);
+
+    res
+      .status(200)
+      .json({ message: 'Course updated successfully', data: course });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+// @ts-ignore
 export async function destroyCourse(req, res) {
   const { id } = req.params;
 
