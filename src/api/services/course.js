@@ -67,3 +67,12 @@ export async function createCourse(payload, userId) {
     throw generateApplicationError(err, 'Error while creating course', 500);
   }
 }
+
+/** @param {string} id */
+export async function destroyCourse(id) {
+  try {
+    return await courseRepository.destroyCourse(id);
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while deleting course', 500);
+  }
+}

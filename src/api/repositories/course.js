@@ -45,8 +45,12 @@ export function getCourseById(id) {
 
 /** @param {Models.CourseAttributes} payload */
 export function createCourse(payload) {
-  console.log(payload);
   return Course.create(payload);
+}
+
+/** @param {string} id */
+export async function destroyCourse(id) {
+  return await Course.destroy({ where: { id } });
 }
 
 /** @returns {sequelize.ProjectionAlias} */

@@ -3,6 +3,7 @@ import * as Types from '../../libs/types/common.js';
 import * as courseController from '../controllers/course.js';
 import * as authMiddleware from '../middlewares/auth.js';
 import * as uploadMiddleware from '../middlewares/upload.js';
+import * as validationMiddleware from '../middlewares/validation.js';
 
 /**
  * @type {Types.Route}
@@ -24,5 +25,13 @@ export default (app) => {
       courseController.createCourse
     );
 
-  router.route('/:id').get(courseController.getCourseById);
+  router
+    .route('/:id')
+    .get(courseController.getCourseById)
+    .delete(
+      authMiddleware.isAuthorized,
+      authMiddleware.isAdmin,
+      validationMiddleware.isCourseExists,
+      courseController.destroyCourse
+    );
 };

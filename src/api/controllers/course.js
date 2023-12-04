@@ -72,3 +72,23 @@ export async function createCourse(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+// @ts-ignore
+export async function destroyCourse(req, res) {
+  const { id } = req.params;
+
+  try {
+    await courseService.destroyCourse(id);
+
+    res
+      .status(204)
+      .json({ message: 'Course deleted successfully', data: null });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
