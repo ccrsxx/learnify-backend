@@ -1,0 +1,31 @@
+name: 💀 Reset database
+
+on:
+  workflow_dispatch:
+    inputs:
+      database_name:
+        type: string
+        required: true
+        description: 'Database name to reset'
+
+jobs:
+  migration:
+    name: 🔑 Reset database
+    runs-on: ubuntu-latest
+
+    env:
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_DATABASE: ${{ inputs.database_name }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download deps
+        run: npm ci
+
+      - name: Reset database
+        run: npm run db:reset
