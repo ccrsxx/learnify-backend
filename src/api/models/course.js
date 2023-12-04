@@ -113,7 +113,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false
       },
       description: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       intro_video: {
@@ -121,7 +121,7 @@ export default (sequelize, DataTypes) => {
         allowNull: false
       },
       onboarding_text: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false
       },
       target_audience: {

@@ -12,125 +12,191 @@ module.exports = {
     const courseMaterials = [
       {
         id: 'c12dd512-0015-43a2-8fb7-004cbfdb6cf8',
-        name: 'Apa itu Figma?',
+        name: 'Kapan Membangun Design System?',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Figma')
-      },
-      {
-        id: 'c79437fd-cf2f-4f17-9ed7-446811a62669',
-        name: 'Registrasi Akun Figma',
-        order_index: 2,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Figma')
+        course_chapter_id: await getCourseChapterIdByName(
+          'Pengenalan Design System'
+        ),
+        video: 'https://youtu.be/ChdiLQ1iy5o'
       },
       {
         id: 'abd244c7-5f79-4e46-80c9-2c89846f1738',
-        name: 'Setup Project Figma',
+        name: 'Tools Utama Membuat Design System',
         order_index: 1,
         course_chapter_id: await getCourseChapterIdByName(
-          'Design Sederhana Dengan Figma'
-        )
+          'Workflow Membangun Design System'
+        ),
+        video: 'https://youtu.be/DwTkyMJi890'
       },
       {
-        id: '0a9a22d9-ea08-4aa6-99c5-0856e3c47972',
-        name: 'Grid System Figma',
+        id: 'c79437fd-cf2f-4f17-9ed7-446811a62669',
+        name: 'Syarat Awal Membangun Design System',
         order_index: 2,
         course_chapter_id: await getCourseChapterIdByName(
-          'Design Sederhana Dengan Figma'
-        )
+          'Workflow Membangun Design System'
+        ),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: 'b3e35579-7cbf-43f2-96b4-fb72dc354027',
-        name: 'Apa itu Frontend?',
+        id: '8b24ff2c-8ba1-4970-ad5d-cb3e11c9edf7',
+        name: 'Apa itu Product?',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Frontend')
+        course_chapter_id: await getCourseChapterIdByName(
+          'Memahami Product Management'
+        ),
+        video: 'https://youtu.be/ixOd42SEUF0'
       },
       {
-        id: '9177cb7e-ab04-4135-b108-ecebb53d5e72',
-        name: 'Tools Frontend',
+        id: 'd0c0c841-2ee9-4a30-8529-a9e33daabb42',
+        name: 'Apa itu Value?',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Value Management'),
+        video: 'https://youtu.be/DwTkyMJi890'
+      },
+      {
+        id: '33862af4-8b10-4f91-a139-ac4f3e39fd16',
+        name: 'Memahami Value Management',
         order_index: 2,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Frontend')
+        course_chapter_id: await getCourseChapterIdByName('Value Management'),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: 'c7e2a973-d05c-4ea4-80ce-8f0622fbbdbf',
-        name: 'Apa itu HTML?',
+        id: 'f9e1d65f-cad5-43ad-b7c2-a4922cc498f9',
+        name: 'Set Up API Gateway',
         order_index: 1,
         course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan HTML & CSS'
-        )
+          'Penjelasan Arsitektur'
+        ),
+        video: 'https://youtu.be/ixOd42SEUF0'
       },
       {
-        id: '342918ca-710f-4800-8460-01e398fc85f4',
-        name: 'Apa itu CSS?',
+        id: '512e586e-8cda-4a84-a952-f4a9a23e6a67',
+        name: 'Penjelasan Service Media',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName(
+          'Service Media & Service User'
+        ),
+        video: 'https://youtu.be/DwTkyMJi890'
+      },
+      {
+        id: 'e9db87ce-e567-4bda-912f-9087dcd439ec',
+        name: 'Penjelasan Service User',
         order_index: 2,
         course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan HTML & CSS'
-        )
+          'Service Media & Service User'
+        ),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: 'a34858de-4585-47f0-892c-3660ad3cc032',
-        name: 'Apa itu Fullstack?',
+        id: 'b579193f-cb57-4e4f-a09e-2722872a52b9',
+        name: 'Tools UI Designer',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Dasar Website'),
+        video: 'https://youtu.be/ixOd42SEUF0'
+      },
+      {
+        id: 'f514f534-31c3-49df-a451-dc51da335c1c',
+        name: 'Persona',
         order_index: 1,
         course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan Fullstack'
-        )
+          'Pengembangan Website'
+        ),
+        video: 'https://youtu.be/DwTkyMJi890'
       },
       {
-        id: '5af29bb7-4a50-4cbe-ba15-f1f08de6e7dc',
-        name: 'Setup dan Tools Course',
+        id: 'ac56106d-967a-464b-822b-dad4196e4631',
+        name: 'Benchmarking',
         order_index: 2,
         course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan Fullstack'
-        )
+          'Pengembangan Website'
+        ),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: 'f2e7693a-4e22-49bc-bfea-4b1752582a5d',
-        name: 'Apa itu Programming?',
+        id: 'e3670ac9-187e-49c3-938c-724545cafc1b',
+        name: 'Provider Fundamental',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Hal Dasar'),
+        video: 'https://youtu.be/ixOd42SEUF0'
+      },
+      {
+        id: 'f6691a76-e474-48ce-b78b-fbd10094cabd',
+        name: 'Memahami Alur Project',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Studi Kasus'),
+        video: 'https://youtu.be/DwTkyMJi890'
+      },
+      {
+        id: '0c3e80c5-96c9-4a6b-b8d0-1f097676f4f3',
+        name: 'Tes & Analisis API',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Studi Kasus'),
+        video: 'https://youtu.be/rd-590n3H6w'
+      },
+      {
+        id: '503e4101-5225-4419-ab51-d18ff4779810',
+        name: 'Apa itu UI/UX',
         order_index: 1,
         course_chapter_id: await getCourseChapterIdByName(
-          'Fundamental Programming'
-        )
+          'Pengenalan UI Design'
+        ),
+        video: 'https://youtu.be/ixOd42SEUF0'
       },
       {
-        id: '7434f4c3-1354-4ca2-8cc4-032c2520b4aa',
-        name: 'Apa itu React Native?',
+        id: '25449801-ff40-40f6-9173-b8c398b68480',
+        name: 'Tipografi & Font',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan React Native'
-        )
+        course_chapter_id: await getCourseChapterIdByName('Tahap UI Design'),
+        video: 'https://youtu.be/DwTkyMJi890'
       },
       {
-        id: '0a94e7b9-d22a-4011-ac20-8b4a09ce9ef6',
-        name: 'Apa itu Component?',
-        order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName(
-          'Pengenalan Component'
-        )
+        id: 'df5179cc-d44b-46ce-946d-a0eb22a52800',
+        name: 'Grid & Jarak',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Tahap UI Design'),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: 'a743589a-0869-43ce-bbe2-2d8d4c0e01c7',
-        name: 'Apa itu Flutter?',
+        id: '24cb0e9e-7d4b-4f03-b36a-041b4aedd38e',
+        name: 'Workspace XCode',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Flutter')
+        course_chapter_id: await getCourseChapterIdByName('Pengenalan XCode'),
+        video: 'https://youtu.be/ixOd42SEUF0'
       },
       {
-        id: '77a87bd4-ee11-4dc5-ab62-359bb1b11e58',
-        name: 'Requirement untuk install Flutter',
+        id: 'd87511ba-42db-4fb7-8e8a-974f9501c1f7',
+        name: 'Membuat Color Pallete',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName('Instalasi Flutter')
+        course_chapter_id: await getCourseChapterIdByName('Memulai Koding'),
+        video: 'https://youtu.be/DwTkyMJi890'
       },
       {
-        id: '44f1da4c-7c2a-4a23-b6b8-198fe7f9ca66',
-        name: 'Apa itu Swift?',
-        order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName('Pengenalan Swift')
+        id: 'ed4e4ee2-87f6-460f-973f-d31b57c719fb',
+        name: 'Kustomisasi Font',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Memulai Koding'),
+        video: 'https://youtu.be/rd-590n3H6w'
       },
       {
-        id: '702ffc93-220e-485a-8e72-762ca756d851',
-        name: 'Pengenalan Xcode',
+        id: '092ae275-9e02-452e-9c22-3a6c3edc2e63',
+        name: 'Apa itu SQL?',
         order_index: 1,
-        course_chapter_id: await getCourseChapterIdByName(
-          'Memulai dengan Swift'
-        )
+        course_chapter_id: await getCourseChapterIdByName('Pengenalan SQL'),
+        video: 'https://youtu.be/ixOd42SEUF0'
+      },
+      {
+        id: '3fe745b5-c82a-43e3-a1b1-0134e15d8004',
+        name: 'Apa itu Database?',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Dasar SQL'),
+        video: 'https://youtu.be/DwTkyMJi890'
+      },
+      {
+        id: '72e75e80-29ad-4114-9672-1771e4a20d06',
+        name: 'Field & Data Type',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Dasar SQL'),
+        video: 'https://youtu.be/rd-590n3H6w'
       }
     ];
 
