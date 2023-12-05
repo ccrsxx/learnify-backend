@@ -14,32 +14,34 @@ export default (app) => {
 
   app.use('/courses', router);
 
-  router
-    .route('/')
-    .get(courseController.getCourses)
-    .post(
-      authMiddleware.isAuthorized,
-      authMiddleware.isAdmin,
-      uploadMiddleware.parseImage,
-      uploadMiddleware.uploadCloudinary,
-      courseController.createCourse
-    );
+  router.get('/', courseController.getCourses);
 
-  router
-    .route('/:id')
-    .get(courseController.getCourseById)
-    .put(
-      authMiddleware.isAuthorized,
-      authMiddleware.isAdmin,
-      validationMiddleware.isCourseExists,
-      uploadMiddleware.parseImage,
-      uploadMiddleware.uploadCloudinary,
-      courseController.updateCourse
-    )
-    .delete(
-      authMiddleware.isAuthorized,
-      authMiddleware.isAdmin,
-      validationMiddleware.isCourseExists,
-      courseController.destroyCourse
-    );
+  router.post(
+    '/',
+    authMiddleware.isAuthorized,
+    authMiddleware.isAdmin,
+    uploadMiddleware.parseImage,
+    uploadMiddleware.uploadCloudinary,
+    courseController.createCourse
+  );
+
+  router.get('/:id', courseController.getCourseById);
+
+  router.put(
+    '/:id',
+    authMiddleware.isAuthorized,
+    authMiddleware.isAdmin,
+    validationMiddleware.isCourseExists,
+    uploadMiddleware.parseImage,
+    uploadMiddleware.uploadCloudinary,
+    courseController.updateCourse
+  );
+
+  router.delete(
+    '/:id',
+    authMiddleware.isAuthorized,
+    authMiddleware.isAdmin,
+    validationMiddleware.isCourseExists,
+    courseController.destroyCourse
+  );
 };

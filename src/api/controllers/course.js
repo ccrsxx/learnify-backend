@@ -73,7 +73,10 @@ export async function createCourse(req, res) {
   }
 }
 
-// @ts-ignore
+/**
+ * @type {Types.AuthorizedController}
+ * @returns {Promise<void>}
+ */
 export async function updateCourse(req, res) {
   const { body } = req;
   const { id } = req.params;
@@ -99,7 +102,10 @@ export async function updateCourse(req, res) {
   }
 }
 
-// @ts-ignore
+/**
+ * @type {Types.AuthorizedController}
+ * @returns {Promise<void>}
+ */
 export async function destroyCourse(req, res) {
   const { id } = req.params;
 
