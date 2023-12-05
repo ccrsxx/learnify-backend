@@ -68,3 +68,46 @@ export async function login(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function loginWithAdmin(req, res) {
+  const { email, phone_number, password } = req.body;
+
+  try {
+    const user = email
+      ? await userService.getAdminUserByEmail(email)
+      : await userService.getAdminUserByPhoneNumber(phone_number);
+
+    const isMatch = await authService.isPasswordMatch(
+      password,
+      user.dataValues.password
+    );
+
+    if (!isMatch) {
+      res.status(401).json({ message: 'Password is not match' });
+      return;
+    }
+
+    const token = await authService.generateToken(user.dataValues.id);
+
+    /** @type {Models.UserAttributes & { token: string }} */
+    const userWithToken = {
+      ...user.dataValues,
+      token
+    };
+
+    res
+      .status(200)
+      .json({ message: 'Login successfully', data: userWithToken });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

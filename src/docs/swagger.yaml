@@ -104,6 +104,57 @@ paths:
                 $ref: '#/components/schemas/PasswordIsNotMatchError'
         '500':
           $ref: '#/components/responses/InternalServerError'
+  /auth/login/admin:
+    post:
+      tags:
+        - auth
+      summary: Login user as an admin
+      description: Login with email / phone number and password
+      operationId: login-admin
+      requestBody:
+        description: Login as admin user
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/UserCredentialsWithEmail'
+                - $ref: '#/components/schemas/UserCredentialsWithPhoneNumber'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Login successfully
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/AdminUser'
+                      - type: object
+                        properties:
+                          token:
+                            type: string
+                            example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImZiOWRlNThjLTIzNTctNDdhOS1iNWU1LWMzM2IwNWE4MzE2NiIsImlhdCI6MTY5Nzk4NjI0OCwiZXhwIjoxNjk4MDcyNjQ4fQ.AeyJQD5-VFCsue5gtwelyTrKKile_zpk1EOCJoarQxY
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MissingCredentialsError'
+                  - $ref: '#/components/schemas/InvalidCredentialsError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordIsNotMatchError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
   /auth/register:
     post:
       tags:
@@ -132,6 +183,67 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
   /courses:
+    get:
+      tags:
+        - courses
+      summary: Get course by query params
+      description: Get course by query params
+      operationId: courses-by-query
+      parameters:
+        - in: query
+          name: type
+          required: false
+          description: Type of course
+          schema:
+            type: string
+            example: all,premium,free
+        - in: query
+          name: filter
+          required: false
+          description: Filter of the course
+          schema:
+            type: string
+            example: new,popular,promo
+        - in: query
+          name: category
+          required: false
+          description: Category of the course
+          schema:
+            type: string
+            example: Web Development, Android Development
+        - in: query
+          name: difficulty
+          required: false
+          description: Difficulty of the course
+          schema:
+            type: string
+            example: all,beginner,intermediate,advanced
+        - in: query
+          name: search
+          required: false
+          description: Course by search
+          schema:
+            type: string
+            example: sql for beginner
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CourseByQueryParams'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /courses/:
     get:
       tags:
         - courses
@@ -246,6 +358,33 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    AdminUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Emilia
+        admin:
+          type: boolean
+          example: true
+        email:
+          type: string
+          example: emilia@rezero.com
+        phone_number:
+          type: string
+          example: '+6287852075425'
+        password:
+          type: string
+          example: $2b$10$m9qQtOm.ilSASXlPIdVaROsO4ExZAs9NQZvZUx7bG7OZqGScy3JMm
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
     EditableUser:
       type: object
       properties:
@@ -343,6 +482,12 @@ components:
           $ref: '#/components/schemas/User'
         course_category:
           $ref: '#/components/schemas/CourseCategory'
+        total_duration:
+          type: integer
+          example: 50
+        total_materials:
+          type: integer
+          example: 3
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -421,6 +566,82 @@ components:
             oneOf:
               - $ref: '#/components/schemas/CourseChapter'
               - $ref: '#/components/schemas/CourseChapter'
+        total_duration:
+          type: integer
+          example: 55
+        total_materials:
+          type: integer
+          example: 3
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    CourseByQueryParams:
+      type: object
+      properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Web Development
+        code:
+          type: string
+          example: ZQosLgGtzB
+        price:
+          type: integer
+          example: 100000
+        author:
+          type: string
+          example: Ronald
+        image:
+          type: string
+          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
+        rating:
+          type: integer
+          example: 5
+        premium:
+          type: boolean
+          example: false
+        telegram:
+          type: string
+          example: https://random-site.com/tele-group
+        difficulty:
+          type: string
+          example: INTERMEDIATE
+          enum:
+            - BEGINNER
+            - INTERMEDIATE
+            - ADVANCED
+        description:
+          type: string
+          example: This course will help you become a great programmer
+        intro_video:
+          type: string
+          example: https://random-site.com/random-video.mkv
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
+        target_audience:
+          type: array
+          items:
+            type: string
+          example:
+            - You want to become a great programmer
+            - You want to become a great programmer
+            - You want to become a great programmer
+        user_id:
+          type: string
+          example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
+        user:
+          $ref: '#/components/schemas/User'
+        course_category_id:
+          type: string
+          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+        course_category:
+          $ref: '#/components/schemas/CourseCategory'
         total_duration:
           type: integer
           example: 55
@@ -556,12 +777,6 @@ components:
         message:
           type: string
           example: Only admin is allowed for this endpoint
-    SuperAdminError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Only superadmin is allowed for this endpoint
     MissingAuthorizationError:
       type: object
       properties:
