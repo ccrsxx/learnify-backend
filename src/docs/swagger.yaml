@@ -153,12 +153,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasswordIsNotMatchError'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OnlyAdminAllowedError'
         '500':
           $ref: '#/components/responses/InternalServerError'
   /auth/register:
@@ -766,12 +760,6 @@ components:
         message:
           type: string
           example: Password is not match
-    OnlyAdminAllowedError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Only admin allowed to login
     InternalServerError:
       type: object
       properties:
@@ -789,12 +777,6 @@ components:
         message:
           type: string
           example: Only admin is allowed for this endpoint
-    SuperAdminError:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Only superadmin is allowed for this endpoint
     MissingAuthorizationError:
       type: object
       properties:

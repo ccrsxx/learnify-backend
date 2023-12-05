@@ -55,8 +55,13 @@ export async function getUserByPhoneNumber(phoneNumber) {
 /** @param {string} email */
 export async function getAdminUserByEmail(email) {
   try {
-    const admin = await userRepository.getAdminUserByEmail(email);
-    return admin;
+    const user = await userRepository.getAdminUserByEmail(email);
+
+    if (!user) {
+      throw new ApplicationError('User not found', 404);
+    }
+
+    return user;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting user', 500);
   }
@@ -65,8 +70,13 @@ export async function getAdminUserByEmail(email) {
 /** @param {string} phoneNumber */
 export async function getAdminUserByPhoneNumber(phoneNumber) {
   try {
-    const admin = await userRepository.getAdminUserByPhoneNumber(phoneNumber);
-    return admin;
+    const user = await userRepository.getAdminUserByPhoneNumber(phoneNumber);
+
+    if (!user) {
+      throw new ApplicationError('User not found', 404);
+    }
+
+    return user;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting user', 500);
   }

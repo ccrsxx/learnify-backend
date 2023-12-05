@@ -78,8 +78,8 @@ export async function loginWithAdmin(req, res) {
 
   try {
     const user = email
-      ? await userService.getUserByEmail(email)
-      : await userService.getUserByPhoneNumber(phone_number);
+      ? await userService.getAdminUserByEmail(email)
+      : await userService.getAdminUserByPhoneNumber(phone_number);
 
     const isMatch = await authService.isPasswordMatch(
       password,
@@ -88,15 +88,6 @@ export async function loginWithAdmin(req, res) {
 
     if (!isMatch) {
       res.status(401).json({ message: 'Password is not match' });
-      return;
-    }
-
-    const isAdmin = email
-      ? await userService.getAdminUserByEmail(email)
-      : await userService.getAdminUserByPhoneNumber(phone_number);
-
-    if (!isAdmin) {
-      res.status(403).json({ message: 'Only admin allowed to login' });
       return;
     }
 
