@@ -83,17 +83,11 @@ export async function updateCourse(id, payload) {
     'updated_at'
   ]);
 
-  /** @type {Partial<Models.CourseAttributes>} */
-  const parsedPayloadWithUpdatedAt = {
-    ...parsedPayload,
-    updated_at: new Date()
-  };
-
   try {
     const [, [course]] = await courseRepository.updateCourse(
       id,
       // @ts-ignore
-      parsedPayloadWithUpdatedAt
+      parsedPayload
     );
 
     return course;
