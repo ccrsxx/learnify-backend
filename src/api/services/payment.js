@@ -5,10 +5,9 @@ import * as courseRepository from '../repositories/course.js';
 /** @param {{ user_id: any; course_id: any; payment_method: any }} params */
 export async function payCourse(params) {
   try {
-    const { user_id, course_id, payment_method } = params;
+    const { user_id, course_id } = params;
     const query = {
       payment_status: 'PENDING',
-      payment_method,
       user_id,
       course_id,
       expired_at: new Date(Date.now() + 5 * 60000).toISOString()
@@ -23,8 +22,15 @@ export async function payCourse(params) {
 /** @param {{ payment_method?: any; course_id?: any }} params */
 export async function updatePayCourse(params) {
   try {
+    // @ts-ignore
     const { course_id } = params;
-    if (!params.payment_method) {
+    // @ts-ignore
+    const [_, updatePay] = await paymentRepository.updatePayCourse({
+      payment_status: 'WAITING_VERIFICATION',
+      ...params
+    });
+    // @ts-ignore
+    if (params.isVerif == true) {
       const material_id = await courseRepository.getCourseMaterialId(course_id);
 
       await Promise.all(
@@ -41,9 +47,14 @@ export async function updatePayCourse(params) {
         )
       );
       // @ts-ignore
-      const [_, updatePay] = await paymentRepository.updatePayCourse(params);
+      const [_, updatePay] = await paymentRepository.updatePayCourse({
+        ...params,
+        payment_status: 'COMPLETED'
+      });
       return updatePay;
     }
+
+    return updatePay;
   } catch (error) {
     throw generateApplicationError(error, 'Payment is not completed', 500);
   }

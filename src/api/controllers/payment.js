@@ -21,7 +21,7 @@ export async function payCourse(req, res) {
 }
 
 /**
- * @param {{ payment_method?: any; course_id?: any }} req
+ * @param {{ body: any }} req
  * @param {{
  *   status: (arg0: number) => {
  *     (): any;
@@ -32,7 +32,9 @@ export async function payCourse(req, res) {
  */
 export async function updatePayCourse(req, res) {
   try {
-    const updateddata = await paymentServices.updatePayCourse(req);
+    // @ts-ignore
+    const body = req.body;
+    const updateddata = await paymentServices.updatePayCourse(body);
     res.status(200).json(updateddata);
   } catch (err) {
     if (err instanceof ApplicationError) {
