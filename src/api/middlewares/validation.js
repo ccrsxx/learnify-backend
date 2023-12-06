@@ -35,8 +35,8 @@ export async function isCourseExists(req, res, next) {
   const { id } = req.params;
 
   try {
-    const car = await courseService.getCourseById(id);
-    res.locals.car = car.dataValues;
+    const course = await courseService.getCourseById(id);
+    res.locals.course = course.dataValues;
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
