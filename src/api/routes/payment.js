@@ -13,4 +13,5 @@ export default (app) => {
   app.use('/user-payments', router);
 
   router.post('/pay-course', paymentController.payCourse);
+  router.put('/pay-course', paymentController.updatePayCourse);
 };
