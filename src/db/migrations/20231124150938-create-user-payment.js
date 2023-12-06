@@ -9,12 +9,12 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      paid: {
-        type: Sequelize.BOOLEAN
+      payment_status: {
+        type: Sequelize.ENUM('PENDING', 'WAITING_VERIFICATION', 'COMPLETED'),
+        allowNull: false
       },
       payment_method: {
-        type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER'),
-        allowNull: false
+        type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER')
       },
       user_id: {
         type: Sequelize.UUID,
@@ -31,6 +31,10 @@ module.exports = {
           model: 'course',
           key: 'id'
         }
+      },
+      expired_at: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,

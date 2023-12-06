@@ -7,6 +7,7 @@ import { Model } from 'sequelize';
  * @property {PaymentMethod} payment_method
  * @property {string} user_id
  * @property {string} course_id
+ * @property {Date} expired_at
  * @property {Date} created_at
  * @property {Date} updated_at
  */
@@ -14,8 +15,17 @@ import { Model } from 'sequelize';
 export const Models = {};
 
 const PAYMENT_METHOD = /** @type {const} */ (['CREDIT_CARD', 'BANK_TRANSFER']);
+const PAYMENT_STATUS = /** @type {const} */ ([
+  'PENDING',
+  'WAITING_VERIFICATION',
+  'COMPLETED'
+]);
 
-/** @typedef {(typeof PAYMENT_METHOD)[number]} PaymentMethod */
+/**
+ * @typedef {(typeof PAYMENT_METHOD)[number]} PaymentMethod
+ *
+ * @typedef {(typeof PAYMENT_STATUS)[number]} Payment_status
+ */
 
 /**
  * @param {import('sequelize').Sequelize} sequelize
@@ -43,15 +53,18 @@ export default (sequelize, DataTypes) => {
   }
 
   UserPayment.init(
-    // @ts-ignore
     {
-      paid: DataTypes.BOOLEAN,
-      payment_method: {
-        type: DataTypes.ENUM(...PAYMENT_METHOD),
+      // @ts-ignore
+      payment_status: {
+        type: DataTypes.ENUM(...PAYMENT_STATUS),
         allowNull: false
       },
+      payment_method: {
+        type: DataTypes.ENUM(...PAYMENT_METHOD)
+      },
       user_id: { type: DataTypes.UUID, allowNull: false },
-      course_id: { type: DataTypes.UUID, allowNull: false }
+      course_id: { type: DataTypes.UUID, allowNull: false },
+      expired_at: { type: DataTypes.DATE, allowNull: false }
     },
     {
       sequelize,

@@ -19,3 +19,25 @@ export async function payCourse(req, res) {
     }
   }
 }
+
+/**
+ * @param {{ payment_method?: any; course_id?: any }} req
+ * @param {{
+ *   status: (arg0: number) => {
+ *     (): any;
+ *     new (): any;
+ *     json: { (arg0: { message: string } | undefined): void; new (): any };
+ *   };
+ * }} res
+ */
+export async function updatePayCourse(req, res) {
+  try {
+    const updateddata = await paymentServices.updatePayCourse(req);
+    res.status(200).json(updateddata);
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+  }
+}

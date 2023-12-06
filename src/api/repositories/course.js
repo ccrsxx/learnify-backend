@@ -77,3 +77,19 @@ function getTotalMaterials() {
     'total_materials'
   ];
 }
+
+/** @param {[{ id: string }[], unknown]} course_id */
+export async function getCourseMaterialId(course_id) {
+  return sequelize.query(
+    `SELECT course_material.id from course_material JOIN course_chapter ON course_material.course_chapter_id = course_chapter.id WHERE course chapter.course_id = ${course_id}`
+  );
+}
+
+/**
+ * @param {sequelize.Optional<import('../models/course.js').CourseAttributes, never>
+ *   | undefined} query
+ */
+export async function setCourseMaterialStatus(query) {
+  // @ts-ignore
+  return Course.create({ ...query });
+}
