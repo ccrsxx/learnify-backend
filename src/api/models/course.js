@@ -49,16 +49,22 @@ export default (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       this.hasMany(models.UserPayment, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        onDelete: 'CASCADE',
+        hooks: true
       });
 
       this.hasMany(models.UserCourse, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        onDelete: 'CASCADE',
+        hooks: true
       });
 
       this.hasMany(models.CourseChapter, {
         foreignKey: 'course_id',
-        as: 'course_chapter'
+        as: 'course_chapter',
+        onDelete: 'CASCADE',
+        hooks: true
       });
 
       this.belongsTo(models.User, {
