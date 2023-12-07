@@ -1,5 +1,10 @@
-import sequelize from 'sequelize';
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
+import Sequelize from 'sequelize';
+import {
+  Course,
+  sequelize,
+  CourseChapter,
+  CourseMaterial
+} from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 
 export function getCourses() {
@@ -42,7 +47,7 @@ export function getCourseById(id) {
   });
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(
@@ -58,7 +63,7 @@ function getTotalDuration() {
   ];
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalMaterials() {
   return [
     sequelize.cast(
@@ -78,18 +83,7 @@ function getTotalMaterials() {
   ];
 }
 
-/** @param {[{ id: string }[], unknown]} course_id */
-export async function getCourseMaterialId(course_id) {
-  return sequelize.query(
-    `SELECT course_material.id from course_material JOIN course_chapter ON course_material.course_chapter_id = course_chapter.id WHERE course chapter.course_id = ${course_id}`
-  );
-}
-
-/**
- * @param {sequelize.Optional<import('../models/course.js').CourseAttributes, never>
- *   | undefined} query
- */
+/** @param {any} query */
 export async function setCourseMaterialStatus(query) {
-  // @ts-ignore
-  return Course.create({ ...query });
+  return Course.create(query);
 }
