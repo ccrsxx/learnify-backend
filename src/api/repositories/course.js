@@ -50,7 +50,7 @@ export function createCourse(payload) {
 
 /**
  * @param {string} id
- * @param {Models.CourseAttributes} payload
+ * @param {Partial<Models.CourseAttributes>} payload
  */
 export function updateCourse(id, payload) {
   return Course.update(payload, {
@@ -60,8 +60,8 @@ export function updateCourse(id, payload) {
 }
 
 /** @param {string} id */
-export async function destroyCourse(id) {
-  return await Course.destroy({ where: { id } });
+export function destroyCourse(id) {
+  return Course.destroy({ where: { id } });
 }
 
 /** @returns {sequelize.ProjectionAlias} */

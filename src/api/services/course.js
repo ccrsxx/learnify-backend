@@ -3,10 +3,10 @@ import {
   generateApplicationError
 } from '../../libs/error.js';
 import { getCourseFilterQuery } from '../../libs/query.js';
+import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
-import { omitPropertiesFromObject } from '../../libs/utils.js';
 
 /** @param {Types.RequestQuery} params */
 export async function getCourses(params) {
@@ -84,11 +84,7 @@ export async function updateCourse(id, payload) {
   ]);
 
   try {
-    const [, [course]] = await courseRepository.updateCourse(
-      id,
-      // @ts-ignore
-      parsedPayload
-    );
+    const [, [course]] = await courseRepository.updateCourse(id, parsedPayload);
 
     return course;
   } catch (err) {

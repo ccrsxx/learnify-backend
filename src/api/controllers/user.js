@@ -18,6 +18,7 @@ export function getCurrentUser(_req, res) {
  */
 export async function updateUser(req, res) {
   const { body } = req;
+
   const { id: userId } = res.locals.user;
 
   try {
