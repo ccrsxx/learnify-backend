@@ -1,6 +1,6 @@
 import { ApplicationError } from '../../libs/error.js';
 import * as Types from '../../libs/types/common.js';
-import * as paymentServices from './../services/payment.js';
+import * as paymentServices from '../services/user-payment.js';
 /**
  * @type {Types.Controller}
  * @returns {Promise<void>}
@@ -17,29 +17,28 @@ export async function payCourse(req, res) {
       res.status(err.statusCode).json({ message: err.message });
       return;
     }
+
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 
 /**
- * @param {{ body: any }} req
- * @param {{
- *   status: (arg0: number) => {
- *     (): any;
- *     new (): any;
- *     json: { (arg0: { message: string } | undefined): void; new (): any };
- *   };
- * }} res
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
  */
 export async function updatePayCourse(req, res) {
   try {
-    // @ts-ignore
     const body = req.body;
-    const updateddata = await paymentServices.updatePayCourse(body);
-    res.status(200).json(updateddata);
+
+    const updatedData = await paymentServices.updatePayCourse(body);
+
+    res.status(200).json(updatedData);
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
       return;
     }
+
+    res.status(500).json({ message: 'Internal server error' });
   }
 }

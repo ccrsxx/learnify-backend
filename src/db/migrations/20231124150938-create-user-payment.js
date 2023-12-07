@@ -14,7 +14,8 @@ module.exports = {
         allowNull: false
       },
       payment_method: {
-        type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER')
+        type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER'),
+        allowNull: true
       },
       user_id: {
         type: Sequelize.UUID,

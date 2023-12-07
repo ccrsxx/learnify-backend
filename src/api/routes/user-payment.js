@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import * as Types from '../../libs/types/common.js';
-import * as paymentController from '../controllers/payment.js';
+import * as userPaymentController from '../controllers/user-payment.js';
 
 /**
  * @type {Types.Route}
@@ -12,6 +12,6 @@ export default (app) => {
 
   app.use('/user-payments', router);
 
-  router.post('/pay-course', paymentController.payCourse);
-  router.put('/pay-course', paymentController.updatePayCourse);
+  router.post('/pay-course', userPaymentController.payCourse);
+  router.put('/pay-course', userPaymentController.updatePayCourse);
 };
