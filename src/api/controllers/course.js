@@ -53,7 +53,7 @@ export async function createCourse(req, res) {
 
   const { id: userId } = res.locals.user;
 
-  const image = res.locals.image ?? 'default image update later';
+  const image = res.locals.image;
 
   try {
     const bodyWithImage = { ...body, image: image };
@@ -80,10 +80,8 @@ export async function createCourse(req, res) {
 export async function updateCourse(req, res) {
   const { body } = req;
   const { id } = req.params;
-  const oldCourseData = await courseService.getCourseById(id);
 
-  // @ts-ignore
-  const image = res.locals.image ?? oldCourseData.image;
+  const image = res.locals.image;
   const bodyWithImage = { ...body, image: image };
 
   try {
