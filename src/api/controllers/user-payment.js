@@ -7,9 +7,11 @@ import * as paymentServices from '../services/user-payment.js';
  */
 
 export async function payCourse(req, res) {
+  const { course_id: courseId } = req.body;
+
+  const { id: userId } = res.locals.user;
   try {
-    const body = req.body;
-    const data = await paymentServices.payCourse(body);
+    const data = await paymentServices.payCourse(courseId, userId);
 
     res.status(201).json(data);
   } catch (err) {
@@ -28,10 +30,13 @@ export async function payCourse(req, res) {
  */
 export async function updatePayCourse(req, res) {
   try {
-    const body = req.body;
+    const id = req.params.id;
+    const { payment_method: paymentMethod } = req.body;
 
-    const updatedData = await paymentServices.updatePayCourse(body);
-
+    const updatedData = await paymentServices.updatePayCourse(
+      paymentMethod,
+      id
+    );
     res.status(200).json(updatedData);
   } catch (err) {
     if (err instanceof ApplicationError) {

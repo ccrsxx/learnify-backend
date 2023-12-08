@@ -1,11 +1,14 @@
 import { UserPayment } from '../models/index.js';
 
-/** @param {any} query */
-export function payCourse(query) {
-  return UserPayment.create(query);
+/** @param {any} payload */
+export function payCourse(payload) {
+  return UserPayment.create(payload);
 }
 
-/** @param {any} query */
-export function updatePayCourse(query) {
-  return UserPayment.update({ ...query }, { where: { id: query.id } });
+/**
+ * @param {any} payload
+ * @param {string} id
+ */
+export function updatePayCourse(payload, id) {
+  return UserPayment.update(payload, { where: { id }, returning: true });
 }

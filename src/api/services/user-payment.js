@@ -1,17 +1,13 @@
 // @ts-nocheck
 import { generateApplicationError } from '../../libs/error.js';
 import * as paymentRepository from '../repositories/user-payment.js';
-import * as courseRepository from '../repositories/course.js';
-import * as courseMaterialRepository from '../repositories/course-material.js';
 
 /** @param {{ user_id: any; course_id: any; payment_method: any }} params */
-export async function payCourse(params) {
+export async function payCourse(courseId, userId) {
   try {
-    const { user_id, course_id } = params;
-
     const query = {
-      user_id,
-      course_id,
+      user_id: userId,
+      course_id: courseId,
       payment_status: 'PENDING',
       expired_at: new Date(Date.now() + 5 * 60000)
     };
@@ -24,39 +20,42 @@ export async function payCourse(params) {
 }
 
 /** @param {{ payment_method?: any; course_id?: any }} params */
-export async function updatePayCourse(params) {
+export async function updatePayCourse(paymentMethod, id) {
   try {
-    const { course_id } = params;
+    const payload = {
+      payment_status: 'COMPLETED',
+      payment_method: paymentMethod
+    };
+    const [, [updatePay]] = await paymentRepository.updatePayCourse(
+      payload,
+      id
+    );
 
-    const [_, updatePay] = await paymentRepository.updatePayCourse({
-      payment_status: 'WAITING_VERIFICATION',
-      ...params
-    });
+    // *transaction pending*
+    // if (params.isVerif == true) {
+    //   const material_id =
+    //     await courseMaterialRepository.getCourseMaterialByCourseId(course_id);
 
-    if (params.isVerif == true) {
-      const material_id =
-        await courseMaterialRepository.getCourseMaterialByCourseId(course_id);
+    //   await Promise.all(
+    //     material_id.map(
+    //       async (course_material_id) =>
+    //         await courseRepository.setCourseMaterialStatus({
+    //           user_id: params.user_id,
+    //           course_material_id
+    //         })
+    //     )
+    //   );
 
-      await Promise.all(
-        material_id.map(
-          async (course_material_id) =>
-            await courseRepository.setCourseMaterialStatus({
-              user_id: params.user_id,
-              course_material_id
-            })
-        )
-      );
+    //   const [_, updatePay] = await paymentRepository.updatePayCourse({
+    //     ...params,
+    //     payment_status: 'COMPLETED'
+    //   });
 
-      const [_, updatePay] = await paymentRepository.updatePayCourse({
-        ...params,
-        payment_status: 'COMPLETED'
-      });
-
-      return updatePay;
-    }
+    //   return updatePay;
+    // }
 
     return updatePay;
   } catch (error) {
-    throw generateApplicationError(error, 'Payment is not completed', 500);
+    throw generateApplicationError(error, 'Payment is error', 500);
   }
 }

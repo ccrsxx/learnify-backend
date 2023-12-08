@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as Types from '../../libs/types/common.js';
+import * as authMiddleware from '../middlewares/auth.js';
 import * as userPaymentController from '../controllers/user-payment.js';
 
 /**
@@ -12,6 +13,15 @@ export default (app) => {
 
   app.use('/user-payments', router);
 
-  router.post('/pay-course', userPaymentController.payCourse);
-  router.put('/pay-course', userPaymentController.updatePayCourse);
+  router.post(
+    '/',
+    authMiddleware.isAuthorized,
+    userPaymentController.payCourse
+  );
+
+  router.put(
+    '/:id',
+    authMiddleware.isAuthorized,
+    userPaymentController.updatePayCourse
+  );
 };
