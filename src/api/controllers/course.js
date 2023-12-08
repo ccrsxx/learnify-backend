@@ -110,9 +110,7 @@ export async function destroyCourse(req, res) {
   try {
     await courseService.destroyCourse(id);
 
-    res
-      .status(204)
-      .json({ message: 'Course deleted successfully', data: null });
+    res.status(200).json({ message: 'Course deleted successfully' });
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
