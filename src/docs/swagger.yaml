@@ -220,7 +220,8 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateUser'
+              $ref: '#/components/schemas/EditableUser'
+
         required: true
       responses:
         '200':
@@ -234,7 +235,13 @@ paths:
                     type: string
                     example: User profile updated successfully
                   data:
-                    $ref: '#/components/schemas/AuthenticatedUser'
+                    allOf:
+                      - $ref: '#/components/schemas/AuthenticatedUser'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            example: Satella
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -244,67 +251,6 @@ paths:
       security:
         - token: []
   /courses:
-    get:
-      tags:
-        - courses
-      summary: Get course by query params
-      description: Get course by query params
-      operationId: courses-by-query
-      parameters:
-        - in: query
-          name: type
-          required: false
-          description: Type of course
-          schema:
-            type: string
-            example: all,premium,free
-        - in: query
-          name: filter
-          required: false
-          description: Filter of the course
-          schema:
-            type: string
-            example: new,popular,promo
-        - in: query
-          name: category
-          required: false
-          description: Category of the course
-          schema:
-            type: string
-            example: Web Development, Android Development
-        - in: query
-          name: difficulty
-          required: false
-          description: Difficulty of the course
-          schema:
-            type: string
-            example: all,beginner,intermediate,advanced
-        - in: query
-          name: search
-          required: false
-          description: Course by search
-          schema:
-            type: string
-            example: sql for beginner
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/CourseByQueryParams'
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
-  /courses/:
     get:
       tags:
         - courses
@@ -357,6 +303,67 @@ paths:
                     example: Course created successfully
                   data:
                     $ref: '#/components/schemas/NewCourse'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /courses/:
+    get:
+      tags:
+        - courses
+      summary: Get course by query params
+      description: Get course by query params
+      operationId: courses-by-query
+      parameters:
+        - in: query
+          name: type
+          required: false
+          description: Type of course (select one)
+          schema:
+            type: string
+            example: all,premium,free
+        - in: query
+          name: filter
+          required: false
+          description: Filter of the course (select one or more)
+          schema:
+            type: string
+            example: new,popular,promo
+        - in: query
+          name: category
+          required: false
+          description: Category of the course (select one or more)
+          schema:
+            type: string
+            example: Web Development,Android Development
+        - in: query
+          name: difficulty
+          required: false
+          description: Difficulty of the course (select one or more)
+          schema:
+            type: string
+            example: all,beginner,intermediate,advanced
+        - in: query
+          name: search
+          required: false
+          description: Course by search (free text)
+          schema:
+            type: string
+            example: sql for beginner
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CourseByQueryParams'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -573,33 +580,12 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-    UpdateUser:
-      type: object
-      properties:
-        name:
-          type: string
-          example: Emilia
-        email:
-          type: string
-          example: emilia@rezero.com
-        phone_number:
-          type: string
-          example: '+6287852075425'
     EditableUser:
       type: object
       properties:
         name:
           type: string
           example: Satella
-        email:
-          type: string
-          example: satella@rezero.com
-        phone_number:
-          type: string
-          example: '+6287852075425'
-        password:
-          type: string
-          example: satella
     UserCredentialsWithEmail:
       type: object
       properties:
