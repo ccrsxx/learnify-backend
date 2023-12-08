@@ -119,8 +119,24 @@ export async function createUser(payload) {
  */
 export async function updateUser(id, payload) {
   try {
-    const user = await userRepository.updateUser(id, payload);
-    return user;
+    const parsedPayload = omitPropertiesFromObject(payload, [
+      'id',
+      'email',
+      'admin',
+      'password',
+      'created_at',
+      'updated_at',
+      'phone_number'
+    ]);
+
+    const [, [user]] = await userRepository.updateUser(id, parsedPayload);
+
+    const parsedUser = omitPropertiesFromObject(user.dataValues, [
+      'admin',
+      'password'
+    ]);
+
+    return parsedUser;
   } catch (err) {
     throw generateApplicationError(err, 'Error while updating user', 500);
   }

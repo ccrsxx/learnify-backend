@@ -28,7 +28,8 @@ module.exports = {
         references: {
           model: 'course_material',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       created_at: {
         type: Sequelize.DATE

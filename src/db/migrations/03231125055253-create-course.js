@@ -15,7 +15,8 @@ module.exports = {
       },
       code: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       price: {
         type: Sequelize.INTEGER,
@@ -23,7 +24,7 @@ module.exports = {
       },
       image: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: true
       },
       author: {
         type: Sequelize.STRING,
@@ -31,7 +32,7 @@ module.exports = {
       },
       rating: {
         type: Sequelize.DECIMAL,
-        allowNull: false
+        allowNull: true
       },
       premium: {
         type: Sequelize.BOOLEAN,

@@ -27,6 +27,8 @@ tags:
     description: Everything about index
   - name: auth
     description: Everything about auth
+  - name: users
+    description: Everything about user
   - name: courses
     description: Everything about courses
   - name: course-categories
@@ -182,49 +184,13 @@ paths:
           $ref: '#/components/responses/ValidationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
-  /courses:
+  /users/me:
     get:
       tags:
-        - courses
-      summary: Get course by query params
-      description: Get course by query params
-      operationId: courses-by-query
-      parameters:
-        - in: query
-          name: type
-          required: false
-          description: Type of course
-          schema:
-            type: string
-            example: all,premium,free
-        - in: query
-          name: filter
-          required: false
-          description: Filter of the course
-          schema:
-            type: string
-            example: new,popular,promo
-        - in: query
-          name: category
-          required: false
-          description: Category of the course
-          schema:
-            type: string
-            example: Web Development, Android Development
-        - in: query
-          name: difficulty
-          required: false
-          description: Difficulty of the course
-          schema:
-            type: string
-            example: all,beginner,intermediate,advanced
-        - in: query
-          name: search
-          required: false
-          description: Course by search
-          schema:
-            type: string
-            example: sql for beginner
+        - users
+      summary: Get authenticated user
+      description: Get authenticated user
+      operationId: user
       responses:
         '200':
           description: Successful operation
@@ -234,7 +200,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/CourseByQueryParams'
+                    $ref: '#/components/schemas/AuthenticatedUser'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -243,7 +209,48 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-  /courses/:
+    put:
+      tags:
+        - users
+      summary: Update user profile
+      description: Update user profile
+      operationId: update-user
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditableUser'
+
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User profile updated successfully
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/AuthenticatedUser'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            example: Satella
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /courses:
     get:
       tags:
         - courses
@@ -262,6 +269,101 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Course'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+    post:
+      tags:
+        - courses
+      summary: Create a new course
+      description: Create a new course
+      operationId: create-courses
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Course created successfully
+                  data:
+                    $ref: '#/components/schemas/NewCourse'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /courses/:
+    get:
+      tags:
+        - courses
+      summary: Get course by query params
+      description: Get course by query params
+      operationId: courses-by-query
+      parameters:
+        - in: query
+          name: type
+          required: false
+          description: Type of course (select one)
+          schema:
+            type: string
+            example: all,premium,free
+        - in: query
+          name: filter
+          required: false
+          description: Filter of the course (select one or more)
+          schema:
+            type: string
+            example: new,popular,promo
+        - in: query
+          name: category
+          required: false
+          description: Category of the course (select one or more)
+          schema:
+            type: string
+            example: Web Development,Android Development
+        - in: query
+          name: difficulty
+          required: false
+          description: Difficulty of the course (select one or more)
+          schema:
+            type: string
+            example: all,beginner,intermediate,advanced
+        - in: query
+          name: search
+          required: false
+          description: Course by search (free text)
+          schema:
+            type: string
+            example: sql for beginner
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CourseByQueryParams'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -294,6 +396,75 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/CourseDetails'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+    put:
+      tags:
+        - courses
+      summary: Update course by ID
+      description: Update course by ID
+      operationId: update-courses
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Course ID
+      requestBody:
+        description: Create a new course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Body'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Course updated successfully
+                  data:
+                    $ref: '#/components/schemas/NewCourse'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+    delete:
+      tags:
+        - courses
+      summary: Delete course by ID
+      description: Delete course by ID
+      operationId: delete-courses
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Course ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Delete'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -385,21 +556,36 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    AuthenticatedUser:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 68a58152-8b12-449f-9eae-ec3485941bad
+        name:
+          type: string
+          example: Emilia
+        admin:
+          type: boolean
+          example: true
+        email:
+          type: string
+          example: emilia@rezero.com
+        phone_number:
+          type: string
+          example: '+6287852075425'
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
     EditableUser:
       type: object
       properties:
         name:
           type: string
           example: Satella
-        email:
-          type: string
-          example: satella@rezero.com
-        phone_number:
-          type: string
-          example: '+6287852075425'
-        password:
-          type: string
-          example: satella
     UserCredentialsWithEmail:
       type: object
       properties:
@@ -488,6 +674,72 @@ components:
         total_materials:
           type: integer
           example: 3
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    NewCourse:
+      type: object
+      properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Web Development
+        code:
+          type: string
+          example: ZQosLgGtzB
+        price:
+          type: integer
+          example: 100000
+        author:
+          type: string
+          example: Ronald
+        image:
+          type: string
+          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
+        rating:
+          type: integer
+          example: 5
+        premium:
+          type: boolean
+          example: false
+        telegram:
+          type: string
+          example: https://random-site.com/tele-group
+        difficulty:
+          type: string
+          example: INTERMEDIATE
+          enum:
+            - BEGINNER
+            - INTERMEDIATE
+            - ADVANCED
+        description:
+          type: string
+          example: This course will help you become a great programmer
+        intro_video:
+          type: string
+          example: https://random-site.com/random-video.mkv
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
+        target_audience:
+          type: array
+          items:
+            type: string
+          example:
+            - You want to become a great programmer
+            - You want to become a great programmer
+            - You want to become a great programmer
+        user_id:
+          type: string
+          example: 68a58152-8b12-449f-9eae-ec3485941bad
+        course_category_id:
+          type: string
+          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -730,6 +982,69 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    Body:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Web Development
+        code:
+          type: string
+          example: ZQosLgGtzB
+        price:
+          type: integer
+          example: 100000
+        author:
+          type: string
+          example: Ronald
+        image:
+          type: string
+          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
+        rating:
+          type: integer
+          example: 5
+        premium:
+          type: boolean
+          example: false
+        telegram:
+          type: string
+          example: https://random-site.com/tele-group
+        difficulty:
+          type: string
+          example: INTERMEDIATE
+          enum:
+            - BEGINNER
+            - INTERMEDIATE
+            - ADVANCED
+        description:
+          type: string
+          example: This course will help you become a great programmer
+        intro_video:
+          type: string
+          example: https://random-site.com/random-video.mkv
+        onboarding_text:
+          type: string
+          example: This course will help you become a great programmer
+        target_audience:
+          type: array
+          items:
+            type: string
+          example:
+            - You want to become a great programmer
+            - You want to become a great programmer
+            - You want to become a great programmer
+        user_id:
+          type: string
+          example: 68a58152-8b12-449f-9eae-ec3485941bad
+        course_category_id:
+          type: string
+          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+    Delete:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Course deleted successfully
     SuccessResponse:
       type: object
       properties:
