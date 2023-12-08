@@ -1,14 +1,4 @@
-# Simple CRUD application for rental cars
-
-All the documentation for the API can be found on [Swagger](https://api-rental-car.risalamin.com/docs).
-
-The API is deployed on [https://api-rental-car.risalamin.com](https://api-rental-car.risalamin.com), you can hit the endpoints directly from there.
-
-Here's the ERD for the database:
-
-<p align='center'>
-  <img src='./.github/assets/erd.png' />
-</p>
+# Learnify Backend
 
 ## Development
 

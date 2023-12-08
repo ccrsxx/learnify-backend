@@ -48,7 +48,7 @@ module.exports = {
         allowNull: false
       },
       description: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       intro_video: {
@@ -56,7 +56,7 @@ module.exports = {
         allowNull: false
       },
       onboarding_text: {
-        type: Sequelize.STRING,
+        type: Sequelize.TEXT,
         allowNull: false
       },
       target_audience: {

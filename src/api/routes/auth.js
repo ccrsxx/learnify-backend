@@ -19,6 +19,12 @@ export default (app) => {
   );
 
   router.post(
+    '/login/admin',
+    validationMiddleware.isValidCredential,
+    authController.loginWithAdmin
+  );
+
+  router.post(
     '/register',
     validationMiddleware.isValidCredential,
     authController.register

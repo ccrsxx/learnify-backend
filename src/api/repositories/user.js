@@ -24,6 +24,20 @@ export function getUserByPhoneNumber(phoneNumber) {
   });
 }
 
+/** @param {string} email */
+export function getAdminUserByEmail(email) {
+  return User.findOne({
+    where: { email, admin: true }
+  });
+}
+
+/** @param {string} phoneNumber */
+export function getAdminUserByPhoneNumber(phoneNumber) {
+  return User.findOne({
+    where: { phone_number: phoneNumber, admin: true }
+  });
+}
+
 /** @param {Models.UserAttributes} payload */
 export function createUser(payload) {
   return User.create(payload);
