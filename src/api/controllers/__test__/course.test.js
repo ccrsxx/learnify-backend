@@ -406,10 +406,9 @@ describe('Course controller', () => {
       // @ts-ignore
       await courseController.destroyCourse(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(204);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Course deleted successfully',
-        data: null
+        message: 'Course deleted successfully'
       });
     });
 
