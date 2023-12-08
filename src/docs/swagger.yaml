@@ -594,7 +594,7 @@ components:
           example: emilia@rezero.com
         password:
           type: string
-          example: emilia
+          example: emilia-rezero
     UserCredentialsWithPhoneNumber:
       type: object
       properties:
@@ -603,7 +603,7 @@ components:
           example: '+6287852075425'
         password:
           type: string
-          example: emilia
+          example: emilia-rezero
     Course:
       type: object
       properties:
