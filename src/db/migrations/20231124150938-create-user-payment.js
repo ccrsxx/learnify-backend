@@ -11,6 +11,7 @@ module.exports = {
       },
       payment_status: {
         type: Sequelize.ENUM('PENDING', 'WAITING_VERIFICATION', 'COMPLETED'),
+        defaultValue: 'PENDING',
         allowNull: false
       },
       payment_method: {

@@ -8,7 +8,6 @@ export async function payCourse(courseId, userId) {
     const query = {
       user_id: userId,
       course_id: courseId,
-      payment_status: 'PENDING',
       expired_at: new Date(Date.now() + 5 * 60000)
     };
 

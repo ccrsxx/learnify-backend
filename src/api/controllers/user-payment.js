@@ -1,5 +1,6 @@
 import { ApplicationError } from '../../libs/error.js';
 import * as Types from '../../libs/types/common.js';
+import course from '../models/course.js';
 import * as paymentServices from '../services/user-payment.js';
 /**
  * @type {Types.Controller}

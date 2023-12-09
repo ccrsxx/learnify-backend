@@ -57,7 +57,8 @@ export default (sequelize, DataTypes) => {
       // @ts-ignore
       payment_status: {
         type: DataTypes.ENUM(...PAYMENT_STATUS),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'PENDING'
       },
       payment_method: {
         type: DataTypes.ENUM(...PAYMENT_METHOD)
