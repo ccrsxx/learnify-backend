@@ -19,3 +19,10 @@ export function getCourseIdByPaymentId(id) {
     (model) => model?.dataValues.course_id
   );
 }
+
+/** @param {string} id */
+export function getUserPaymentStatusById(id) {
+  return UserPayment.findOne({
+    where: { id }
+  });
+}

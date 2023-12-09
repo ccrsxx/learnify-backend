@@ -9,6 +9,15 @@ import { sequelize } from '../models/index.js';
 /** @param {{ user_id: any; course_id: any; payment_method: any }} params */
 export async function payCourse(courseId, userId) {
   try {
+    const existingUserCourse =
+      await userCourseRepository.getUserCourseByUserIdAndCourseId(
+        userId,
+        courseId
+      );
+    if (existingUserCourse) {
+      throw new Error('User is already enrolled in this course.');
+    }
+
     const payload = {
       user_id: userId,
       course_id: courseId,
@@ -40,17 +49,15 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
         course_id: courseId
       };
 
-      // CHECK AND CREATE USER COURSE
-      // Check if userCourse already exists
-      const existingUserCourse =
-        await userCourseRepository.getUserCourseByUserIdAndCourseId(
-          userId,
-          courseId,
-          { transaction: t }
-        );
-      if (existingUserCourse) {
+      // Check if Status is completed
+      const existingUserPayment =
+        await paymentRepository.getUserPaymentStatusById(paymentId, {
+          transaction: t
+        });
+
+      if (existingUserPayment.dataValues.payment_status === 'COMPLETED') {
         throw new Error(
-          'User is already enrolled in this course. Transaction rolled back.'
+          'This Course Payment Already Completed. Transaction rolled back.'
         );
       } else {
         await userCourseRepository.createUserCourse(userCoursePayload, {
