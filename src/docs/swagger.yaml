@@ -1199,7 +1199,13 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreatedUser'
+            allOf:
+              - $ref: '#/components/schemas/CreatedUser'
+              - type: object
+                properties:
+                  password:
+                    type: string
+                    example: password
   securitySchemes:
     token:
       type: apiKey
