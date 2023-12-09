@@ -1,6 +1,5 @@
 import { ApplicationError } from '../../libs/error.js';
 import * as Types from '../../libs/types/common.js';
-import course from '../models/course.js';
 import * as paymentServices from '../services/user-payment.js';
 /**
  * @type {Types.Controller}
@@ -31,12 +30,14 @@ export async function payCourse(req, res) {
  */
 export async function updatePayCourse(req, res) {
   try {
-    const id = req.params.id;
+    const { id: paymentId } = req.params;
+    const { id: userId } = res.locals.user;
     const { payment_method: paymentMethod } = req.body;
 
     const updatedData = await paymentServices.updatePayCourse(
       paymentMethod,
-      id
+      paymentId,
+      userId
     );
     res.status(200).json(updatedData);
   } catch (err) {

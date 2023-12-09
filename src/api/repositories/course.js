@@ -83,7 +83,7 @@ function getTotalMaterials() {
   ];
 }
 
-/** @param {any} query */
-export async function setCourseMaterialStatus(query) {
-  return Course.create(query);
-}
+// /** @param {any} query */
+// export async function setCourseMaterialStatus(query) {
+//   return Course.create(query);
+// }

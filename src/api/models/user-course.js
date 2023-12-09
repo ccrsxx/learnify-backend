@@ -41,7 +41,11 @@ export default (sequelize, DataTypes) => {
     // @ts-ignore
     {
       user_id: { type: DataTypes.UUID, allowNull: false },
-      onboarded: { type: DataTypes.BOOLEAN, allowNull: false },
+      onboarded: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
       course_id: { type: DataTypes.UUID, allowNull: false }
     },
     {
