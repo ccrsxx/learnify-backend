@@ -35,21 +35,12 @@ export async function payCourse(courseId, userId) {
 export async function updatePayCourse(paymentMethod, paymentId, userId) {
   try {
     await sequelize.transaction(async (t) => {
-      // GET COURSE ID
       const courseId = await paymentRepository.getCourseIdByPaymentId(
         paymentId,
-        {
-          transaction: t
-        }
+        { transaction: t }
       );
 
-      // USER COURSE PAYLOAD
-      const userCoursePayload = {
-        user_id: userId,
-        course_id: courseId
-      };
-
-      // Check if Status is completed
+      // CHECK STATUS PAYMENT
       const existingUserPayment =
         await paymentRepository.getUserPaymentStatusById(paymentId, {
           transaction: t
@@ -59,19 +50,14 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
         throw new Error(
           'This Course Payment Already Completed. Transaction rolled back.'
         );
-      } else {
-        await userCourseRepository.createUserCourse(userCoursePayload, {
-          transaction: t
-        });
       }
 
-      // GET ALL MATERIALS ID
+      // BACKFILL COURSE MATERIAL STATUS
       const materialsId =
         await courseMaterialRepository.getCourseMaterialByCourseId(courseId, {
           transaction: t
         });
 
-      // CREATE MATERIAL STATUS
       for (const course_material_id of materialsId) {
         await courseMaterialStatusRepository.setCourseMaterialStatus(
           {
@@ -82,6 +68,7 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
         );
       }
 
+      // PAYMENT
       const payload = {
         payment_status: 'COMPLETED',
         payment_method: paymentMethod
@@ -92,6 +79,16 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
         paymentId,
         { transaction: t }
       );
+
+      // USER COURSE CREATE
+      const userCoursePayload = {
+        user_id: userId,
+        course_id: courseId
+      };
+
+      await userCourseRepository.createUserCourse(userCoursePayload, {
+        transaction: t
+      });
 
       return updatePay;
     });
