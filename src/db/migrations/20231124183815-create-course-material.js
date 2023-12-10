@@ -27,7 +27,8 @@ module.exports = {
         references: {
           model: 'course_chapter',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       created_at: {
         type: Sequelize.DATE

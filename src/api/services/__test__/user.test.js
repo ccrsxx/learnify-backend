@@ -223,7 +223,11 @@ describe('User service', () => {
         name: 'Emilia'
       };
 
-      userRepository.updateUser.mockImplementation((payload) => payload);
+      // @ts-ignore
+      userRepository.updateUser.mockResolvedValue([
+        null,
+        [{ dataValues: mockUser }]
+      ]);
 
       const userResult = await userService.updateUser(mockUser);
 

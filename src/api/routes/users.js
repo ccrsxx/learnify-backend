@@ -13,4 +13,6 @@ export default (app) => {
   app.use('/users', router);
 
   router.get('/me', authMiddleware.isAuthorized, userController.getCurrentUser);
+
+  router.put('/me', authMiddleware.isAuthorized, userController.updateUser);
 };
