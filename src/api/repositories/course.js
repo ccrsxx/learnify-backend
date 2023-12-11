@@ -6,6 +6,7 @@ import {
   CourseMaterial
 } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
+import * as Models from '../models/course.js';
 
 export function getCourses() {
   return Course.findAll({
@@ -47,7 +48,28 @@ export function getCourseById(id) {
   });
 }
 
-/** @returns {Sequelize.ProjectionAlias} */
+/** @param {Models.CourseAttributes} payload */
+export function createCourse(payload) {
+  return Course.create(payload);
+}
+
+/**
+ * @param {string} id
+ * @param {Partial<Models.CourseAttributes>} payload
+ */
+export function updateCourse(id, payload) {
+  return Course.update(payload, {
+    where: { id },
+    returning: true
+  });
+}
+
+/** @param {string} id */
+export function destroyCourse(id) {
+  return Course.destroy({ where: { id } });
+}
+
+/** @returns {sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(

@@ -36,7 +36,8 @@ module.exports = {
         references: {
           model: 'course',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE'
       },
       expired_at: {
         allowNull: false,

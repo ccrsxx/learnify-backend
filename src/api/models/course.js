@@ -82,7 +82,11 @@ export default (sequelize, DataTypes) => {
       },
       code: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: {
+          name: 'code',
+          msg: 'Code must be unique'
+        }
       },
       price: {
         type: DataTypes.INTEGER,
@@ -94,11 +98,11 @@ export default (sequelize, DataTypes) => {
       },
       image: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
       },
       rating: {
         type: DataTypes.DECIMAL,
-        allowNull: false
+        allowNull: true
       },
       premium: {
         type: DataTypes.BOOLEAN,
