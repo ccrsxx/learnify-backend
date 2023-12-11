@@ -12,7 +12,7 @@ import { sequelize } from '../models/index.js';
 /** @param {{ user_id: any; course_id: any; payment_method: any }} params */
 export async function payCourse(courseId, userId) {
   try {
-    // Check if course is enrolled
+    // CHECK IF COURSE IS ENROLLED
     const existingUserCourse =
       await userCourseRepository.getUserCourseByUserIdAndCourseId(
         userId,
@@ -22,7 +22,7 @@ export async function payCourse(courseId, userId) {
       throw new Error('User is already enrolled in this course.');
     }
 
-    // Check if user created the payment before and the payment is not expired yet
+    // CHECK EXISTING USER PAYMENT AND EXPIRED AT
     const existingUserPayment =
       await paymentRepository.getPendingPaymentByUserIdAndCourseId(
         userId,
@@ -37,7 +37,7 @@ export async function payCourse(courseId, userId) {
       return data;
     }
 
-    // Create User Payment
+    // CREATE USER PAYMENT
     const payload = {
       user_id: userId,
       course_id: courseId,
@@ -63,8 +63,7 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
     }
 
     // CHECK EXPIRED
-    const currentDate = new Date();
-    if (existingUserPayment.dataValues.expired_at < currentDate) {
+    if (existingUserPayment.dataValues.expired_at < new Date()) {
       throw new ApplicationError(
         'This Course Payment Already Expired! Please Create The New Payment'
       );
