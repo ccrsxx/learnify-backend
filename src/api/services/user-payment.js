@@ -12,6 +12,7 @@ import { sequelize } from '../models/index.js';
 /** @param {{ user_id: any; course_id: any; payment_method: any }} params */
 export async function payCourse(courseId, userId) {
   try {
+    // Check if course is enrolled
     const existingUserCourse =
       await userCourseRepository.getUserCourseByUserIdAndCourseId(
         userId,
@@ -21,16 +22,32 @@ export async function payCourse(courseId, userId) {
       throw new Error('User is already enrolled in this course.');
     }
 
+    // Check if user created the payment before and the payment is not expired yet
+    const existingUserPayment =
+      await paymentRepository.getPendingPaymentByUserIdAndCourseId(
+        userId,
+        courseId
+      );
+
+    if (existingUserPayment) {
+      const data = {
+        message: 'Payment Already Created Before and Not Expired Yet',
+        data: existingUserPayment.dataValues.id
+      };
+      return data;
+    }
+
+    // Create User Payment
     const payload = {
       user_id: userId,
       course_id: courseId,
-      expired_at: new Date(Date.now() + 5 * 60000)
+      expired_at: new Date(Date.now() + 5 * 30000)
     };
 
     const payment = await paymentRepository.payCourse(payload);
     return payment;
   } catch (err) {
-    throw generateApplicationError(err, 'Payment is not completed', 500);
+    throw generateApplicationError(err, 'Creating payment error', 500);
   }
 }
 
@@ -43,6 +60,14 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
 
     if (existingUserPayment.dataValues.payment_status === 'COMPLETED') {
       throw new ApplicationError('This Course Payment Already Completed');
+    }
+
+    // CHECK EXPIRED
+    const currentDate = new Date();
+    if (existingUserPayment.dataValues.expired_at < currentDate) {
+      throw new ApplicationError(
+        'This Course Payment Already Expired! Please Create The New Payment'
+      );
     }
 
     const courseId = await paymentRepository.getCourseIdByPaymentId(paymentId);
