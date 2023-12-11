@@ -15,7 +15,7 @@ import * as userPaymentModel from '../models/user-payment.js';
  */
 export async function payCourse(courseId, userId) {
   try {
-    // Check if course is enrolled
+    // CHECK IF COURSE IS ENROLLED
     const existingUserCourse =
       await userCourseRepository.getUserCourseByUserIdAndCourseId(
         userId,
@@ -29,7 +29,7 @@ export async function payCourse(courseId, userId) {
       );
     }
 
-    // Check if user created the payment before and the payment is not expired yet
+    // CHECK EXISTING USER PAYMENT AND EXPIRED AT
     const existingUserPayment =
       await paymentRepository.getPendingPaymentByUserIdAndCourseId(
         userId,
@@ -44,7 +44,7 @@ export async function payCourse(courseId, userId) {
 
     expiredAt.setDate(expiredAt.getDate() + 1);
 
-    // Create User Payment
+    // CREATE USER PAYMENT
     const payload = {
       user_id: userId,
       course_id: courseId,
