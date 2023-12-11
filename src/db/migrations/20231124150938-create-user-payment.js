@@ -11,10 +11,15 @@ module.exports = {
       },
       payment_status: {
         type: Sequelize.ENUM('PENDING', 'WAITING_VERIFICATION', 'COMPLETED'),
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'PENDING'
       },
       payment_method: {
         type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER'),
+        allowNull: true
+      },
+      paid_at: {
+        type: Sequelize.DATE,
         allowNull: true
       },
       user_id: {

@@ -63,6 +63,10 @@ export default (sequelize, DataTypes) => {
       payment_method: {
         type: DataTypes.ENUM(...PAYMENT_METHOD)
       },
+      paid_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
       user_id: { type: DataTypes.UUID, allowNull: false },
       course_id: { type: DataTypes.UUID, allowNull: false },
       expired_at: { type: DataTypes.DATE, allowNull: false }

@@ -1,5 +1,8 @@
 // @ts-nocheck
-import { generateApplicationError } from '../../libs/error.js';
+import {
+  ApplicationError,
+  generateApplicationError
+} from '../../libs/error.js';
 import * as paymentRepository from '../repositories/user-payment.js';
 import * as courseMaterialRepository from '../repositories/course-material.js';
 import * as userCourseRepository from '../repositories/user-course.js';
@@ -34,30 +37,21 @@ export async function payCourse(courseId, userId) {
 /** @param {{ payment_method?: any; course_id?: any }} params */
 export async function updatePayCourse(paymentMethod, paymentId, userId) {
   try {
-    await sequelize.transaction(async (t) => {
-      const courseId = await paymentRepository.getCourseIdByPaymentId(
-        paymentId,
-        { transaction: t }
-      );
+    // CHECK STATUS PAYMENT
+    const existingUserPayment =
+      await paymentRepository.getUserPaymentStatusById(paymentId);
 
-      // CHECK STATUS PAYMENT
-      const existingUserPayment =
-        await paymentRepository.getUserPaymentStatusById(paymentId, {
-          transaction: t
-        });
+    if (existingUserPayment.dataValues.payment_status === 'COMPLETED') {
+      throw new ApplicationError('This Course Payment Already Completed');
+    }
 
-      if (existingUserPayment.dataValues.payment_status === 'COMPLETED') {
-        throw new Error(
-          'This Course Payment Already Completed. Transaction rolled back.'
-        );
-      }
+    const courseId = await paymentRepository.getCourseIdByPaymentId(paymentId);
 
+    const materialsId =
+      await courseMaterialRepository.getCourseMaterialByCourseId(courseId);
+
+    const result = await sequelize.transaction(async (t) => {
       // BACKFILL COURSE MATERIAL STATUS
-      const materialsId =
-        await courseMaterialRepository.getCourseMaterialByCourseId(courseId, {
-          transaction: t
-        });
-
       for (const course_material_id of materialsId) {
         await courseMaterialStatusRepository.setCourseMaterialStatus(
           {
@@ -71,7 +65,8 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
       // PAYMENT
       const payload = {
         payment_status: 'COMPLETED',
-        payment_method: paymentMethod
+        payment_method: paymentMethod,
+        paid_at: new Date()
       };
 
       const [, [updatePay]] = await paymentRepository.updatePayCourse(
@@ -92,6 +87,8 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
 
       return updatePay;
     });
+
+    return result;
   } catch (error) {
     throw generateApplicationError(error, 'Payment is error', 500);
   }
