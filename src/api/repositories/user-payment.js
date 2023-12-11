@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import { Op } from 'sequelize';
 import { UserPayment } from '../models/index.js';
 
@@ -9,16 +10,14 @@ export function payCourse(payload) {
 /**
  * @param {any} payload
  * @param {string} id
+ * @param {Sequelize.Transaction} transaction
  */
-export function updatePayCourse(payload, id) {
-  return UserPayment.update(payload, { where: { id }, returning: true });
-}
-
-/** @param {string} id */
-export function getCourseIdByPaymentId(id) {
-  return UserPayment.findOne({ where: { id }, attributes: ['course_id'] }).then(
-    (model) => model?.dataValues.course_id
-  );
+export function updatePayCourse(payload, id, transaction) {
+  return UserPayment.update(payload, {
+    where: { id },
+    returning: true,
+    transaction: transaction
+  });
 }
 
 /** @param {string} id */

@@ -1,8 +1,14 @@
+import Sequelize from 'sequelize';
 import { UserCourse } from '../models/index.js';
 
-/** @param {any} payload */
-export function createUserCourse(payload) {
-  return UserCourse.create(payload);
+/**
+ * @param {any} payload
+ * @param {Sequelize.Transaction} transaction
+ */
+export function createUserCourse(payload, transaction) {
+  return UserCourse.create(payload, {
+    transaction: transaction
+  });
 }
 
 /**

@@ -1,15 +1,18 @@
-// @ts-nocheck
 import {
   ApplicationError,
   generateApplicationError
 } from '../../libs/error.js';
+import { sequelize } from '../models/index.js';
 import * as paymentRepository from '../repositories/user-payment.js';
 import * as courseMaterialRepository from '../repositories/course-material.js';
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
-import { sequelize } from '../models/index.js';
+import * as userPaymentModel from '../models/user-payment.js';
 
-/** @param {{ user_id: any; course_id: any; payment_method: any }} params */
+/**
+ * @param {string} courseId
+ * @param {string} userId
+ */
 export async function payCourse(courseId, userId) {
   try {
     // Check if course is enrolled
@@ -18,8 +21,12 @@ export async function payCourse(courseId, userId) {
         userId,
         courseId
       );
+
     if (existingUserCourse) {
-      throw new Error('User is already enrolled in this course.');
+      throw new ApplicationError(
+        'User is already enrolled in this course',
+        422
+      );
     }
 
     // Check if user created the payment before and the payment is not expired yet
@@ -29,75 +36,86 @@ export async function payCourse(courseId, userId) {
         courseId
       );
 
-    if (existingUserPayment) {
-      const data = {
-        message: 'Payment Already Created Before and Not Expired Yet',
-        data: existingUserPayment.dataValues.id
-      };
-      return data;
-    }
+    // Returns existing payment if exist and not expired
+    if (existingUserPayment)
+      return { ...existingUserPayment.dataValues, newPayment: false };
+
+    const expiredAt = new Date();
+
+    expiredAt.setDate(expiredAt.getDate() + 1);
 
     // Create User Payment
     const payload = {
       user_id: userId,
       course_id: courseId,
-      expired_at: new Date(Date.now() + 5 * 30000)
+      expired_at: expiredAt
     };
 
     const payment = await paymentRepository.payCourse(payload);
-    return payment;
+
+    return { ...payment.dataValues, newPayment: true };
   } catch (err) {
-    throw generateApplicationError(err, 'Creating payment error', 500);
+    throw generateApplicationError(err, 'Error while creating payment', 500);
   }
 }
 
-/** @param {{ payment_method?: any; course_id?: any }} params */
+/**
+ * @param {userPaymentModel.PaymentMethod} paymentMethod
+ * @param {string} paymentId
+ * @param {string} userId
+ */
 export async function updatePayCourse(paymentMethod, paymentId, userId) {
   try {
     // CHECK STATUS PAYMENT
     const existingUserPayment =
       await paymentRepository.getUserPaymentStatusById(paymentId);
 
-    if (existingUserPayment.dataValues.payment_status === 'COMPLETED') {
-      throw new ApplicationError('This Course Payment Already Completed');
+    if (!existingUserPayment) {
+      throw new ApplicationError('Payment not found', 404);
     }
 
-    // CHECK EXPIRED
-    const currentDate = new Date();
-    if (existingUserPayment.dataValues.expired_at < currentDate) {
-      throw new ApplicationError(
-        'This Course Payment Already Expired! Please Create The New Payment'
-      );
+    const isPaymentAlreadyCompleted =
+      existingUserPayment.dataValues.status === 'COMPLETED';
+
+    if (isPaymentAlreadyCompleted) {
+      throw new ApplicationError('This payment is already completed', 422);
     }
 
-    const courseId = await paymentRepository.getCourseIdByPaymentId(paymentId);
+    const isPaymentExpired =
+      new Date() > existingUserPayment.dataValues.expired_at;
 
-    const materialsId =
+    if (isPaymentExpired) {
+      throw new ApplicationError('This course payment is already expired', 422);
+    }
+
+    const courseId = existingUserPayment.dataValues.course_id;
+
+    const courseMaterialIds =
       await courseMaterialRepository.getCourseMaterialByCourseId(courseId);
 
-    const result = await sequelize.transaction(async (t) => {
+    const paymentResult = await sequelize.transaction(async (transaction) => {
       // BACKFILL COURSE MATERIAL STATUS
-      for (const course_material_id of materialsId) {
+      for (const course_material_id of courseMaterialIds) {
         await courseMaterialStatusRepository.setCourseMaterialStatus(
           {
             user_id: userId,
             course_material_id
           },
-          { transaction: t }
+          transaction
         );
       }
 
       // PAYMENT
       const payload = {
-        payment_status: 'COMPLETED',
+        status: 'COMPLETED',
         payment_method: paymentMethod,
         paid_at: new Date()
       };
 
-      const [, [updatePay]] = await paymentRepository.updatePayCourse(
+      const [, [updatedPayment]] = await paymentRepository.updatePayCourse(
         payload,
         paymentId,
-        { transaction: t }
+        transaction
       );
 
       // USER COURSE CREATE
@@ -106,15 +124,16 @@ export async function updatePayCourse(paymentMethod, paymentId, userId) {
         course_id: courseId
       };
 
-      await userCourseRepository.createUserCourse(userCoursePayload, {
-        transaction: t
-      });
+      await userCourseRepository.createUserCourse(
+        userCoursePayload,
+        transaction
+      );
 
-      return updatePay;
+      return updatedPayment;
     });
 
-    return result;
+    return paymentResult;
   } catch (error) {
-    throw generateApplicationError(error, 'Payment is error', 500);
+    throw generateApplicationError(error, 'Error while updating payment', 500);
   }
 }

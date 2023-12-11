@@ -8,7 +8,7 @@ import users from './api/routes/users.js';
 import upload from './api/routes/uploads.js';
 import courses from './api/routes/courses.js';
 import courseCategories from './api/routes/course-categories.js';
-import userPayment from './api/routes/user-payment.js';
+import userPayment from './api/routes/user-payments.js';
 
 /** @returns {void} */
 function main() {

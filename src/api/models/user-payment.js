@@ -3,10 +3,11 @@ import { Model } from 'sequelize';
 /**
  * @typedef UserPaymentAttributes
  * @property {string} id
- * @property {boolean} paid
+ * @property {PaymentStatus} status
  * @property {PaymentMethod} payment_method
  * @property {string} user_id
  * @property {string} course_id
+ * @property {Date} paid_at
  * @property {Date} expired_at
  * @property {Date} created_at
  * @property {Date} updated_at
@@ -21,11 +22,9 @@ const PAYMENT_STATUS = /** @type {const} */ ([
   'COMPLETED'
 ]);
 
-/**
- * @typedef {(typeof PAYMENT_METHOD)[number]} PaymentMethod
- *
- * @typedef {(typeof PAYMENT_STATUS)[number]} Payment_status
- */
+/** @typedef {(typeof PAYMENT_METHOD)[number]} PaymentMethod */
+
+/** @typedef {(typeof PAYMENT_STATUS)[number]} PaymentStatus */
 
 /**
  * @param {import('sequelize').Sequelize} sequelize
@@ -53,9 +52,9 @@ export default (sequelize, DataTypes) => {
   }
 
   UserPayment.init(
+    // @ts-ignore
     {
-      // @ts-ignore
-      payment_status: {
+      status: {
         type: DataTypes.ENUM(...PAYMENT_STATUS),
         allowNull: false,
         defaultValue: 'PENDING'

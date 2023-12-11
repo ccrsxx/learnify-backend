@@ -16,3 +16,22 @@ export function omitPropertiesFromObject(object, properties) {
 
   return newObject;
 }
+
+/**
+ * Pick a property from an object.
+ *
+ * @template {object} T
+ * @template {keyof T} U
+ * @param {T} object
+ * @param {U[]} properties
+ * @returns {Pick<T, U>}
+ */
+export function pickPropertiesFromObject(object, properties) {
+  const newObject = /** @type {T} */ ({});
+
+  for (const property of properties) {
+    newObject[property] = object[property];
+  }
+
+  return newObject;
+}

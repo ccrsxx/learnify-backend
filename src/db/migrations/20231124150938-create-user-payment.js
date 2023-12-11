@@ -9,7 +9,7 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      payment_status: {
+      status: {
         type: Sequelize.ENUM('PENDING', 'WAITING_VERIFICATION', 'COMPLETED'),
         allowNull: false,
         defaultValue: 'PENDING'
