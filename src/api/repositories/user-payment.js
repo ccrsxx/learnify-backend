@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 import { Op } from 'sequelize';
-import { UserPayment } from '../models/index.js';
+import { UserPayment, User, Course, CourseCategory } from '../models/index.js';
 
 /** @param {any} payload */
 export function payCourse(payload) {
@@ -20,10 +20,49 @@ export function updatePayCourse(payload, id, transaction) {
   });
 }
 
+export function getPayments() {
+  return UserPayment.findAll({
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: { exclude: ['admin', 'password'] }
+      },
+      {
+        model: Course,
+        as: 'course',
+        include: [
+          {
+            model: CourseCategory,
+            as: 'course_category'
+          }
+        ]
+      }
+    ]
+  });
+}
+
 /** @param {string} id */
-export function getUserPaymentStatusById(id) {
+export function getUserPaymentById(id) {
   return UserPayment.findOne({
-    where: { id }
+    where: { id },
+    include: [
+      {
+        model: User,
+        as: 'user',
+        attributes: { exclude: ['admin', 'password'] }
+      },
+      {
+        model: Course,
+        as: 'course',
+        include: [
+          {
+            model: CourseCategory,
+            as: 'course_category'
+          }
+        ]
+      }
+    ]
   });
 }
 

@@ -9,6 +9,35 @@ import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as userPaymentModel from '../models/user-payment.js';
 
+export async function getPayments() {
+  try {
+    const payments = await paymentRepository.getPayments();
+
+    return payments;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting payments', 500);
+  }
+}
+
+/** @param {string} id */
+export async function getUserPaymentById(id) {
+  try {
+    const payment = await paymentRepository.getUserPaymentById(id);
+
+    if (!payment) {
+      throw new ApplicationError('Payment not found', 404);
+    }
+
+    return payment;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting payment details',
+      500
+    );
+  }
+}
+
 /**
  * @param {string} courseId
  * @param {string} userId
@@ -60,35 +89,33 @@ export async function payCourse(courseId, userId) {
 }
 
 /**
+ * @param {any} existingUserPayment
  * @param {userPaymentModel.PaymentMethod} paymentMethod
  * @param {string} paymentId
  * @param {string} userId
  */
-export async function updatePayCourse(paymentMethod, paymentId, userId) {
+export async function updatePayCourse(
+  existingUserPayment,
+  paymentMethod,
+  paymentId,
+  userId
+) {
   try {
     // CHECK STATUS PAYMENT
-    const existingUserPayment =
-      await paymentRepository.getUserPaymentStatusById(paymentId);
-
-    if (!existingUserPayment) {
-      throw new ApplicationError('Payment not found', 404);
-    }
-
     const isPaymentAlreadyCompleted =
-      existingUserPayment.dataValues.status === 'COMPLETED';
+      existingUserPayment.status === 'COMPLETED';
 
     if (isPaymentAlreadyCompleted) {
       throw new ApplicationError('This payment is already completed', 422);
     }
 
-    const isPaymentExpired =
-      new Date() > existingUserPayment.dataValues.expired_at;
+    const isPaymentExpired = new Date() > existingUserPayment.expired_at;
 
     if (isPaymentExpired) {
       throw new ApplicationError('This course payment is already expired', 422);
     }
 
-    const courseId = existingUserPayment.dataValues.course_id;
+    const courseId = existingUserPayment.course_id;
 
     const courseMaterialIds =
       await courseMaterialRepository.getCourseMaterialByCourseId(courseId);

@@ -69,7 +69,7 @@ export function destroyCourse(id) {
   return Course.destroy({ where: { id } });
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(
