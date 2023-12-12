@@ -6,8 +6,6 @@ export async function updateCourseMaterialStatus(req, res) {
   const { id } = req.params;
 
   try {
-    await courseMaterialStatusService.getCourseMaterialStatusById(id);
-
     // @ts-ignore
     const CourseMaterialStatus =
       await courseMaterialStatusService.updateCourseMaterialStatus(id);
