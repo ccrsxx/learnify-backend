@@ -32,7 +32,8 @@ export default (sequelize, DataTypes) => {
       });
 
       this.belongsTo(models.Course, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        as: 'course'
       });
     }
   }

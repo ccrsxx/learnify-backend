@@ -26,6 +26,18 @@ export async function getCourses(params) {
   }
 }
 
+// @ts-ignore
+export async function getUserCourses(id) {
+  try {
+    // @ts-ignore
+    const userCourses = await courseRepository.getUserCourses(id);
+
+    return userCourses;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting courses', 500);
+  }
+}
+
 /** @param {string} id */
 export async function getCourseById(id) {
   try {

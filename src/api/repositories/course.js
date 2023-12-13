@@ -1,5 +1,11 @@
 import sequelize from 'sequelize';
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
+import {
+  Course,
+  CourseCategory,
+  CourseChapter,
+  CourseMaterial,
+  UserCourse
+} from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
 
@@ -20,6 +26,26 @@ export async function getCoursesByFilter(whereOptions, sortByNewest = false) {
     include: ['user', 'course_category'],
     ...(sortByNewest && { order: [['created_at', 'DESC']] }),
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+  });
+}
+
+// @ts-ignore
+export function getUserCourses(id) {
+  return UserCourse.findOne({
+    where: { user_id: id },
+    include: [
+      {
+        model: Course,
+        as: 'course',
+        include: [
+          {
+            model: CourseCategory,
+            as: 'course_category'
+          }
+        ]
+      }
+    ],
+    attributes: { include: [getTotalCompletedMaterials()] }
   });
 }
 
@@ -97,5 +123,21 @@ function getTotalMaterials() {
       'integer'
     ),
     'total_materials'
+  ];
+}
+
+/** @returns {sequelize.ProjectionAlias} */
+function getTotalCompletedMaterials() {
+  return [
+    sequelize.cast(
+      sequelize.literal(
+        `(
+          SELECT COUNT(*) FROM course_material_status
+          WHERE completed = true
+        )`
+      ),
+      'integer'
+    ),
+    'total_completed_materials'
   ];
 }
