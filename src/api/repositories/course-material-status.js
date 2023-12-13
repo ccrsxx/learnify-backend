@@ -5,7 +5,7 @@ export function getCourseMaterialStatusById(id) {
   return CourseMaterialStatus.findByPk(id);
 }
 
-// @ts-ignore
+/** @param {string} id */
 export function updateCourseMaterialStatus(id) {
   return CourseMaterialStatus.update(
     { completed: true },

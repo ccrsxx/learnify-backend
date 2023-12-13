@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as Types from '../../libs/types/common.js';
+import * as authMiddleware from '../middlewares/auth.js';
 import * as validationMiddleware from '../middlewares/validation.js';
 import * as courseMaterialStatusController from '../controllers/course-material-status.js';
 
@@ -14,6 +15,7 @@ export default (app) => {
 
   router.put(
     '/:id',
+    authMiddleware.isAuthorized,
     validationMiddleware.isCourseMaterialStatusExists,
     courseMaterialStatusController.updateCourseMaterialStatus
   );
