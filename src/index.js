@@ -7,6 +7,7 @@ import auth from './api/routes/auth.js';
 import users from './api/routes/users.js';
 import upload from './api/routes/uploads.js';
 import courses from './api/routes/courses.js';
+import dashboard from './api/routes/dashboard.js';
 import courseCategories from './api/routes/course-categories.js';
 import courseMaterialStatus from './api/routes/course-material-status.js';
 
@@ -24,6 +25,7 @@ function main() {
   users(app);
   upload(app);
   courses(app);
+  dashboard(app);
   courseCategories(app);
   courseMaterialStatus(app);
 
