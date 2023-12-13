@@ -101,6 +101,10 @@ export async function updatePayCourse(
   userId
 ) {
   try {
+    if (!paymentMethod) {
+      throw new ApplicationError('Payment method cannot be null', 422);
+    }
+
     // CHECK STATUS PAYMENT
     const isPaymentAlreadyCompleted =
       existingUserPayment.status === 'COMPLETED';

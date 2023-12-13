@@ -574,6 +574,100 @@ paths:
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
+        '404':
+          $ref: '#/components/responses/CourseNotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /user-payments/{id}:
+    get:
+      tags:
+        - user-payments
+      summary: Get payment data by ID
+      description: Get payment data by ID
+      operationId: payment-data
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The User Payment ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Payments'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '404':
+          $ref: '#/components/responses/PaymentNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+    put:
+      tags:
+        - user-payments
+      summary: Update payment status completed by ID
+      description: Update payment status completed by ID
+      operationId: update-payment-status
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The User Payment ID
+      requestBody:
+        description: Update status to completed
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                payment_method:
+                  example: BANK_TRANSFER
+                  enum:
+                    - CREDIT_CARD
+                    - BANK_TRANSFER
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Payment successfully updated
+                  data:
+                    $ref: '#/components/schemas/UpdatedPayment'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '404':
+          $ref: '#/components/responses/PaymentNotFound'
+        '422-CourseAlreadyEnrolled':
+          $ref: '#/components/responses/CourseAlreadyEnrolledError'
+        '422-PaymentMethodNotNull':
+          $ref: '#/components/responses/PaymentMethodNotNull'
+        '422-PaymentAlreadyCompleted':
+          $ref: '#/components/responses/PaymentAlreadyCompleted'
+        '422-PaymentExpired':
+          $ref: '#/components/responses/PaymentExpired'
+
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -1219,6 +1313,36 @@ components:
         updated_at:
           type: string
           example: '2023-12-13T17:08:25.120Z'
+    UpdatedPayment:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 'd8c70d3e-0e76-47be-8a93-7995d7eaeff7'
+        status:
+          example: COMPLETED
+          enum:
+            - PENDING
+            - WAITING_VERIFICATION
+            - COMPLETED
+        paid_at:
+          type: string
+          example: '2023-12-13T07:16:48.209Z'
+        user_id:
+          type: string
+          example: '68a58152-8b12-449f-9eae-ec3485941bac'
+        course_id:
+          type: string
+          example: 'f3102f7e-9916-4ff8-a50c-60048f7b634c'
+        expired_at:
+          type: string
+          example: '2023-12-13T17:08:25.116Z'
+        created_at:
+          type: string
+          example: '2023-12-13T17:08:25.120Z'
+        updated_at:
+          type: string
+          example: '2023-12-13T17:08:25.120Z'
     Delete:
       type: object
       properties:
@@ -1284,6 +1408,42 @@ components:
         message:
           type: string
           example: Invalid authorization header
+    CourseNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Error while getting course details: Course not found'
+    CourseAlreadyEnrolledError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'User is already enrolled in this course'
+    PaymentNotFound:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Error while getting payment details: Payment not found'
+    PaymentMethodNotNull:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Payment method cannot be null'
+    PaymentAlreadyCompleted:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'This payment is already completed'
+    PaymentExpired:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'This course payment is already expired'
   responses:
     InvalidAuthorizationError:
       description: Invalid authorization header
@@ -1339,6 +1499,42 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PasswordIsNotMatchError'
+    CourseNotFoundError:
+      description: Course not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CourseNotFoundError'
+    CourseAlreadyEnrolledError:
+      description: Course already enrolled by user before
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CourseAlreadyEnrolledError'
+    PaymentNotFound:
+      description: payment method cannot be null
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentNotFound'
+    PaymentMethodNotNull:
+      description: payment method cannot be null
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentMethodNotNull'
+    PaymentAlreadyCompleted:
+      description: Payment already completed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentAlreadyCompleted'
+    PaymentExpired:
+      description: Payment Expired
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PaymentExpired'
   requestBodies:
     UserBody:
       description: User object that needs to be added
