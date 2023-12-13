@@ -42,6 +42,7 @@ export function isValidCredential(req, res, next) {
  * @returns {Promise<void>}
  */
 export async function isCourseExists(req, res, next) {
+  // req.body is used in case for checking course exist when create payment
   const id = req.params.id || req.body.course_id;
 
   try {

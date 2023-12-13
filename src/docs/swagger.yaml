@@ -566,6 +566,8 @@ paths:
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
+        '403':
+          $ref: '#/components/responses/AdminError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -593,18 +595,9 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Payment created successfully
-                  data:
-                    $ref: '#/components/schemas/NewPayment'
-        '200-PaymentExist':
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    example: Payment already exist and not expired yet
+                    oneOf:
+                      - example: Payment created successfully
+                      - example: Payment already exist and not expired yet
                   data:
                     $ref: '#/components/schemas/NewPayment'
         '400':
@@ -691,20 +684,26 @@ paths:
                   data:
                     $ref: '#/components/schemas/UpdatedPayment'
         '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '400-PaymentMethodNotNull':
-          $ref: '#/components/responses/PaymentMethodNotNull'
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MissingAuthorizationError'
+                  - $ref: '#/components/schemas/PaymentMethodNotNull'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
         '404':
           $ref: '#/components/responses/PaymentNotFound'
-        '422-CourseAlreadyEnrolled':
-          $ref: '#/components/responses/CourseAlreadyEnrolledError'
-        '422-PaymentAlreadyCompleted':
-          $ref: '#/components/responses/PaymentAlreadyCompleted'
-        '422-PaymentExpired':
-          $ref: '#/components/responses/PaymentExpired'
-
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/CourseAlreadyEnrolledError'
+                  - $ref: '#/components/schemas/PaymentAlreadyCompleted'
+                  - $ref: '#/components/schemas/PaymentExpired'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
