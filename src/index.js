@@ -9,6 +9,7 @@ import upload from './api/routes/uploads.js';
 import courses from './api/routes/courses.js';
 import courseCategories from './api/routes/course-categories.js';
 import userPayment from './api/routes/user-payments.js';
+import courseMaterialStatus from './api/routes/course-material-status.js';
 
 /** @returns {void} */
 function main() {
@@ -26,6 +27,7 @@ function main() {
   courses(app);
   courseCategories(app);
   userPayment(app);
+  courseMaterialStatus(app);
 
   app.listen(HOST_PORT, () =>
     // eslint-disable-next-line no-console
