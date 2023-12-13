@@ -1,18 +1,18 @@
-import * as courseMaterialStatusService from '../services/course-material-status.js';
 import { ApplicationError } from '../../libs/error.js';
+import * as courseMaterialStatusService from '../services/course-material-status.js';
+import * as Types from '../../libs/types/common.js';
 
-// @ts-ignore
+/** @type {Types.AuthorizedController} */
 export async function updateCourseMaterialStatus(req, res) {
   const { id } = req.params;
 
   try {
-    // @ts-ignore
-    const CourseMaterialStatus =
+    const courseMaterialStatus =
       await courseMaterialStatusService.updateCourseMaterialStatus(id);
 
     res.status(200).json({
       message: 'Course material status updated successfully',
-      data: CourseMaterialStatus
+      data: courseMaterialStatus
     });
   } catch (err) {
     if (err instanceof ApplicationError) {

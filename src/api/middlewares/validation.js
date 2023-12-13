@@ -1,6 +1,8 @@
 import { ApplicationError } from '../../libs/error.js';
+import { isAuthorized } from './auth.js';
 import * as Types from '../../libs/types/common.js';
 import * as courseService from '../services/course.js';
+import * as CourseMaterialStatusModel from '../models/course-material-status.js';
 import * as courseMaterialStatusService from '../services/course-material-status.js';
 
 /**
@@ -51,7 +53,16 @@ export async function isCourseExists(req, res, next) {
   next();
 }
 
-// @ts-ignore
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isAuthorized> & {
+ *     courseMaterialStatus: CourseMaterialStatusModel.CourseMaterialStatusAttributes;
+ *   }
+ * >}
+ * @returns {void}
+ */
 export async function isCourseMaterialStatusExists(req, res, next) {
   const { id } = req.params;
 

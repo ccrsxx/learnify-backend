@@ -27,10 +27,10 @@ export async function getCourseMaterialStatusById(id) {
 /** @param {string} id */
 export async function updateCourseMaterialStatus(id) {
   try {
-    const CourseMaterialStatus =
+    const courseMaterialStatus =
       await courseMaterialStatusRepository.updateCourseMaterialStatus(id);
 
-    return CourseMaterialStatus;
+    return courseMaterialStatus;
   } catch (err) {
     throw generateApplicationError(
       err,
