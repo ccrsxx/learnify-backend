@@ -523,6 +523,10 @@ paths:
                     $ref: '#/components/schemas/Statistic'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '403':
+          $ref: '#/components/responses/AdminError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
