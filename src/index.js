@@ -8,7 +8,7 @@ import users from './api/routes/users.js';
 import upload from './api/routes/uploads.js';
 import courses from './api/routes/courses.js';
 import courseCategories from './api/routes/course-categories.js';
-import userPayment from './api/routes/user-payments.js';
+import userPayments from './api/routes/user-payments.js';
 import courseMaterialStatus from './api/routes/course-material-status.js';
 
 /** @returns {void} */
@@ -26,7 +26,7 @@ function main() {
   upload(app);
   courses(app);
   courseCategories(app);
-  userPayment(app);
+  userPayments(app);
   courseMaterialStatus(app);
 
   app.listen(HOST_PORT, () =>
