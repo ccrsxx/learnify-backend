@@ -1,21 +1,21 @@
 import { Router } from 'express';
-import { statistic } from '../controllers/statistic.js';
 import * as Types from '../../libs/types/common.js';
 import * as authMiddleware from '../middlewares/auth.js';
+import * as dashboardController from '../controllers/dashboard.js';
+
 /**
  * @type {Types.Route}
  * @returns {void}
  */
-
 export default (app) => {
   const router = Router();
 
   app.use('/dashboard', router);
 
   router.get(
-    '/statistic',
+    '/statistics',
     authMiddleware.isAuthorized,
     authMiddleware.isAdmin,
-    statistic
+    dashboardController.getStatistics
   );
 };
