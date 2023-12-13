@@ -8,6 +8,7 @@ import users from './api/routes/users.js';
 import upload from './api/routes/uploads.js';
 import courses from './api/routes/courses.js';
 import courseCategories from './api/routes/course-categories.js';
+import courseMaterialStatus from './api/routes/course-material-status.js';
 
 /** @returns {void} */
 function main() {
@@ -24,6 +25,7 @@ function main() {
   upload(app);
   courses(app);
   courseCategories(app);
+  courseMaterialStatus(app);
 
   app.listen(HOST_PORT, () =>
     // eslint-disable-next-line no-console
