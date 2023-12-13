@@ -546,6 +546,33 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
+  /dashboard/statistics:
+    get:
+      tags:
+        - dashboard
+      summary: Get statistics for dashboard
+      description: Get total user, total course, and premium course
+      operationId: getStatistics
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Statistic'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '403':
+          $ref: '#/components/responses/AdminError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
   /user-payments:
     get:
       tags:
