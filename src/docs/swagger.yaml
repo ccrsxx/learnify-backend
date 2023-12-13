@@ -504,6 +504,27 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
+  /dashboard/statistic:
+    get:
+      tags:
+        - statistic
+      summary: Get statistic for dashboard
+      description: Get total user, total course, and premium course
+      operationId: getStatistic
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Statistic'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
 components:
   schemas:
     User:
@@ -1022,6 +1043,19 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    Statistic:
+      type: object
+      properties:
+        total_users:
+          type: integer
+          example: 24
+        active_courses:
+          type: integer
+          example: 24
+        premium_courses:
+          type: integer
+          example: 24
+
     Body:
       type: object
       properties:
