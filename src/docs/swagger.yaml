@@ -504,13 +504,13 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-  /dashboard/statistic:
+  /dashboard/statistics:
     get:
       tags:
-        - statistic
-      summary: Get statistic for dashboard
+        - dashboard
+      summary: Get statistics for dashboard
       description: Get total user, total course, and premium course
-      operationId: getStatistic
+      operationId: getStatistics
       responses:
         '200':
           description: Successful operation
@@ -521,6 +521,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Statistic'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
