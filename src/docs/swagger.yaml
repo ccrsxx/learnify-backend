@@ -32,6 +32,9 @@ tags:
   - name: courses
     description: Everything about courses
   - name: course-categories
+  - name: dashboard
+    description: Everything about dashboard
+  - name: course-categories
     description: Everything about course categories
   - name: course-material-status
     description: Everything about course material status
@@ -1247,57 +1250,18 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-    Body:
+    Statistic:
       type: object
       properties:
-        name:
-          type: string
-          example: Web Development
-        code:
-          type: string
-          example: ZQosLgGtzB
-        price:
+        total_users:
           type: integer
-          example: 100000
-        author:
-          type: string
-          example: Ronald
-        image:
-          type: string
-          example: https://loremflickr.com/640/480/animals?lock=5129160257175552
-        premium:
-          type: boolean
-          example: false
-        telegram:
-          type: string
-          example: https://random-site.com/tele-group
-        difficulty:
-          type: string
-          example: INTERMEDIATE
-          enum:
-            - BEGINNER
-            - INTERMEDIATE
-            - ADVANCED
-        description:
-          type: string
-          example: This course will help you become a great programmer
-        intro_video:
-          type: string
-          example: https://random-site.com/random-video.mkv
-        onboarding_text:
-          type: string
-          example: This course will help you become a great programmer
-        target_audience:
-          type: array
-          items:
-            type: string
-          example:
-            - You want to become a great programmer
-            - You want to become a great programmer
-            - You want to become a great programmer
-        course_category_id:
-          type: string
-          example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+          example: 24
+        active_courses:
+          type: integer
+          example: 24
+        premium_courses:
+          type: integer
+          example: 24
     Payments:
       type: object
       properties:
