@@ -33,6 +33,8 @@ tags:
     description: Everything about courses
   - name: course-categories
     description: Everything about course categories
+  - name: course-material-status
+    description: Everything about course material status
 paths:
   /:
     get:
@@ -496,6 +498,41 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/CourseCategory'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /course-material-status/{id}:
+    put:
+      tags:
+        - course-material-status
+      summary: Update course material status by ID
+      description: Update completed progress on course material status
+      operationId: update-course-material-status
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The Course material status ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Course material status updated successfully
+                  data:
+                    $ref: '#/components/schemas/CourseMaterialStatus'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -1025,6 +1062,27 @@ components:
         course_chapter_id:
           type: string
           example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    CourseMaterialStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a34858de-4585-47f0-892c-3660ad3cc032
+        completed:
+          type: boolean
+          example: true
+        user_id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        course_material_id:
+          type: string
+          example: a34858de-4585-47f0-892c-3660ad3cc032
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
