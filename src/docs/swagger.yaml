@@ -655,14 +655,14 @@ paths:
                     $ref: '#/components/schemas/UpdatedPayment'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
+        '400-PaymentMethodNotNull':
+          $ref: '#/components/responses/PaymentMethodNotNull'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
         '404':
           $ref: '#/components/responses/PaymentNotFound'
         '422-CourseAlreadyEnrolled':
           $ref: '#/components/responses/CourseAlreadyEnrolledError'
-        '422-PaymentMethodNotNull':
-          $ref: '#/components/responses/PaymentMethodNotNull'
         '422-PaymentAlreadyCompleted':
           $ref: '#/components/responses/PaymentAlreadyCompleted'
         '422-PaymentExpired':

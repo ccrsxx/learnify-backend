@@ -102,7 +102,7 @@ export async function updatePayCourse(
 ) {
   try {
     if (!paymentMethod) {
-      throw new ApplicationError('Payment method cannot be null', 422);
+      throw new ApplicationError('Payment method cannot be null', 400);
     }
 
     // CHECK STATUS PAYMENT
