@@ -31,6 +31,8 @@ tags:
     description: Everything about user
   - name: courses
     description: Everything about courses
+  - name: dashboard
+    description: Everything about dashboard
   - name: course-categories
     description: Everything about course categories
   - name: course-material-status
