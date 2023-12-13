@@ -1,7 +1,9 @@
 import { ApplicationError } from '../../libs/error.js';
+import { isAuthorized } from './auth.js';
 import * as Types from '../../libs/types/common.js';
 import * as courseService from '../services/course.js';
 import * as paymentServices from '../services/user-payment.js';
+import * as UserPaymentModel from '../models/user-payment.js';
 
 /**
  * Check if valid credentials.
@@ -31,7 +33,12 @@ export function isValidCredential(req, res, next) {
   next();
 }
 
-// @ts-ignore
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware}
+ * @returns {void}
+ */
 export async function isCourseExists(req, res, next) {
   const id = req.params.id || req.body.course_id;
 
@@ -51,8 +58,17 @@ export async function isCourseExists(req, res, next) {
   next();
 }
 
-// @ts-ignore
-export async function isPaymentExist(req, res, next) {
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isAuthorized> & {
+ *     payment: UserPaymentModel.UserPaymentAttributes;
+ *   }
+ * >}
+ * @returns {void}
+ */
+export async function isPaymentExists(req, res, next) {
   const { id } = req.params;
 
   try {

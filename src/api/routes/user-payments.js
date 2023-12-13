@@ -31,14 +31,14 @@ export default (app) => {
   router.get(
     '/:id',
     authMiddleware.isAuthorized,
-    validationMiddleware.isPaymentExist,
+    validationMiddleware.isPaymentExists,
     userPaymentController.getPaymentById
   );
 
   router.put(
     '/:id',
     authMiddleware.isAuthorized,
-    validationMiddleware.isPaymentExist,
+    validationMiddleware.isPaymentExists,
     userPaymentController.updatePayCourse
   );
 };
