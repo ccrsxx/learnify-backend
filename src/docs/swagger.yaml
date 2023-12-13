@@ -559,7 +559,7 @@ paths:
                     example: Payment created successfully
                   data:
                     $ref: '#/components/schemas/NewPayment'
-        '201':
+        '200-PaymentExist':
           content:
             application/json:
               schema:
