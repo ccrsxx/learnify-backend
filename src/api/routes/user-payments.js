@@ -41,4 +41,11 @@ export default (app) => {
     validationMiddleware.isPaymentExists,
     userPaymentController.updatePayCourse
   );
+
+  router.post(
+    '/free',
+    authMiddleware.isAuthorized,
+    validationMiddleware.isCourseExists,
+    userPaymentController.payFreeCourse
+  );
 };

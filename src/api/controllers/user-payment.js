@@ -95,7 +95,8 @@ export async function updatePayCourse(req, res) {
       existingPayment,
       paymentMethod,
       paymentId,
-      userId
+      userId,
+      false
     );
 
     res.status(200).json({
@@ -106,6 +107,43 @@ export async function updatePayCourse(req, res) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
       return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function payFreeCourse(req, res) {
+  const { course_id: courseId } = req.body;
+  const { id: userId } = res.locals.user;
+  try {
+    // eslint-disable-next-line no-unused-vars
+    const { newPayment, ...payment } = await paymentServices.payCourse(
+      courseId,
+      userId
+    );
+
+    const { id: paymentId } = payment;
+    const { payment_method: paymentMethod } = req.body;
+
+    const paymentFreePass = await paymentServices.updatePayCourse(
+      payment,
+      paymentMethod,
+      paymentId,
+      userId,
+      true
+    );
+    res.status(201).json({
+      message: 'Payment created successfully',
+      data: paymentFreePass
+    });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
     }
 
     res.status(500).json({ message: 'Internal server error' });

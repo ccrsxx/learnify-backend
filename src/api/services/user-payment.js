@@ -93,15 +93,17 @@ export async function payCourse(courseId, userId) {
  * @param {userPaymentModel.PaymentMethod} paymentMethod
  * @param {string} paymentId
  * @param {string} userId
+ * @param {boolean} isFree
  */
 export async function updatePayCourse(
   existingUserPayment,
   paymentMethod,
   paymentId,
-  userId
+  userId,
+  isFree
 ) {
   try {
-    if (!paymentMethod) {
+    if (!paymentMethod && !isFree) {
       throw new ApplicationError('Payment method cannot be null', 400);
     }
 
