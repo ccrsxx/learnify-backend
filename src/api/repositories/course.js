@@ -75,7 +75,14 @@ export function getCourseWithUserStatus(id, userId) {
         ]
       }
     ],
-    attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+    // @ts-ignore
+    attributes: {
+      include: [
+        getTotalDuration(),
+        getTotalMaterials(),
+        getTotalCompletedMaterials(id)
+      ]
+    }
   });
 }
 
@@ -133,5 +140,29 @@ function getTotalMaterials() {
       'integer'
     ),
     'total_materials'
+  ];
+}
+
+/** @param {string} courseId */
+function getTotalCompletedMaterials(courseId) {
+  return [
+    sequelize.cast(
+      sequelize.literal(
+        `(
+          SELECT COUNT(*) FROM course_material_status
+          WHERE course_material_status.completed = true AND course_material_status.course_material_id
+          IN (
+            SELECT id FROM course_material
+            WHERE course_material.course_chapter_id
+            IN (
+              SELECT id FROM course_chapter
+              WHERE course_chapter.course_id = '${courseId}'
+            )
+          )
+        )`
+      ),
+      'integer'
+    ),
+    'total_completed_materials'
   ];
 }

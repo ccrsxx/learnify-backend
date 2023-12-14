@@ -59,60 +59,60 @@ describe('Courses service', () => {
     });
   });
 
-  // describe('Get course', () => {
-  //   it('returns course data', async () => {
-  //     const mockCourse = {
-  //       id: '1',
-  //       name: 'Emilia'
-  //     };
+  describe.skip('Get course', () => {
+    it('returns course data', async () => {
+      const mockCourse = {
+        id: '1',
+        name: 'Emilia'
+      };
 
-  //     courseRepository.getCourseById.mockResolvedValue(
-  //       /** @ts-ignore */
-  //       mockCourse
-  //     );
+      courseRepository.getCourseById.mockResolvedValue(
+        /** @ts-ignore */
+        mockCourse
+      );
 
-  //     const course = await courseService.getCourseById('1');
+      const course = await courseService.getCourseById('1');
 
-  //     expect(course).toEqual(mockCourse);
-  //   });
+      expect(course).toEqual(mockCourse);
+    });
 
-  //   it('throws application error when getting course details fails', async () => {
-  //     const mockError = new ApplicationError('Failed to get course', 500);
+    it('throws application error when getting course details fails', async () => {
+      const mockError = new ApplicationError('Failed to get course', 500);
 
-  //     courseRepository.getCourseById.mockRejectedValue(
-  //       /** @ts-ignore */
-  //       mockError
-  //     );
+      courseRepository.getCourseById.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
 
-  //     await expect(courseService.getCourseById('1')).rejects.toThrow(
-  //       `Error while getting course details: ${mockError.message}`
-  //     );
-  //   });
+      await expect(courseService.getCourseById('1')).rejects.toThrow(
+        `Error while getting course details: ${mockError.message}`
+      );
+    });
 
-  //   it('throws application error when course is not found', async () => {
-  //     courseRepository.getCourseById.mockResolvedValue(
-  //       /** @ts-ignore */
-  //       null
-  //     );
+    it('throws application error when course is not found', async () => {
+      courseRepository.getCourseById.mockResolvedValue(
+        /** @ts-ignore */
+        null
+      );
 
-  //     await expect(courseService.getCourseById('1')).rejects.toThrow(
-  //       'Error while getting course details: Course not found'
-  //     );
-  //   });
+      await expect(courseService.getCourseById('1')).rejects.toThrow(
+        'Error while getting course details: Course not found'
+      );
+    });
 
-  //   it('throws application error when getting course fails', async () => {
-  //     const mockError = new ApplicationError('Failed to get course', 500);
+    it('throws application error when getting course fails', async () => {
+      const mockError = new ApplicationError('Failed to get course', 500);
 
-  //     courseRepository.getCourseById.mockRejectedValue(
-  //       /** @ts-ignore */
-  //       mockError
-  //     );
+      courseRepository.getCourseById.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
 
-  //     await expect(courseService.getCourseById('1')).rejects.toThrow(
-  //       `Error while getting course details: ${mockError.message}`
-  //     );
-  //   });
-  // });
+      await expect(courseService.getCourseById('1')).rejects.toThrow(
+        `Error while getting course details: ${mockError.message}`
+      );
+    });
+  });
 
   describe('Create course', () => {
     it('returns created course data with the user id that creates', async () => {

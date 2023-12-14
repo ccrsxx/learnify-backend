@@ -5,7 +5,6 @@ import {
 import { getCourseFilterQuery } from '../../libs/query.js';
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
-import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
@@ -38,25 +37,13 @@ export async function getCourseById(id, userId) {
     const existingUserCourse =
       await userCourseRepository.getUserCourseByUserIdAndCourseId(userId, id);
 
-    const courseData = await (existingUserCourse
+    const course = await (existingUserCourse
       ? courseRepository.getCourseWithUserStatus(id, userId)
       : courseRepository.getCourseById(id));
 
-    if (!courseData) {
+    if (!course) {
       throw new ApplicationError('Course not found', 404);
     }
-
-    const total_completed_materials =
-      await courseMaterialStatusRepository.getCompletedMaterialStatusCount(
-        userId
-      );
-
-    const course = existingUserCourse
-      ? {
-          ...courseData.dataValues,
-          total_completed_materials
-        }
-      : courseData;
 
     return course;
   } catch (err) {

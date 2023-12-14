@@ -26,13 +26,3 @@ export function updateCourseMaterialStatus(id) {
     }
   );
 }
-
-/** @param {string} userId */
-export async function getCompletedMaterialStatusCount(userId) {
-  return CourseMaterialStatus.count({
-    where: {
-      completed: true,
-      user_id: userId
-    }
-  });
-}
