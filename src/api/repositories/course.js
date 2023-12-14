@@ -1,10 +1,11 @@
-import sequelize from 'sequelize';
+import Sequelize from 'sequelize';
 import {
   Course,
-  CourseCategory,
+  sequelize,
+  UserCourse,
   CourseChapter,
   CourseMaterial,
-  UserCourse
+  CourseCategory
 } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
@@ -29,7 +30,7 @@ export async function getCoursesByFilter(whereOptions, sortByNewest = false) {
   });
 }
 
-// @ts-ignore
+/** @param {string} id */
 export function getUserCourses(id) {
   return UserCourse.findOne({
     where: { user_id: id },
@@ -90,7 +91,7 @@ export function destroyCourse(id) {
   return Course.destroy({ where: { id } });
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(
@@ -106,7 +107,7 @@ function getTotalDuration() {
   ];
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalMaterials() {
   return [
     sequelize.cast(
@@ -126,7 +127,7 @@ function getTotalMaterials() {
   ];
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalCompletedMaterials() {
   return [
     sequelize.cast(

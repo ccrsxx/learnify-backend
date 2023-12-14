@@ -1,10 +1,10 @@
 import {
-  CourseCategory,
+  User,
   Course,
   CourseChapter,
-  CourseMaterial,
-  User
+  CourseCategory
 } from '../api/models/index.js';
+import * as userPaymentService from '../api/services/user-payment.js';
 import { faker } from '@faker-js/faker';
 
 export function generateRandomUser() {
@@ -74,26 +74,6 @@ export function generateRandomCourseMaterial() {
   };
 }
 
-export function generateRandomCourseMaterialStatus() {
-  return {
-    completed: faker.datatype.boolean(),
-    user_id: faker.string.uuid(),
-    course_material_id: faker.string.uuid(),
-    created_at: faker.date.recent(),
-    updated_at: faker.date.recent()
-  };
-}
-
-export function generateRandomUserCourse() {
-  return {
-    onboarded: faker.datatype.boolean(),
-    user_id: faker.string.uuid(),
-    course_id: faker.string.uuid(),
-    created_at: faker.date.recent(),
-    updated_at: faker.date.recent()
-  };
-}
-
 /**
  * @param {string} tableName
  * @param {import('sequelize').QueryInterface} queryInterface
@@ -104,6 +84,20 @@ export async function isTableHasRecords(tableName, queryInterface) {
       // @ts-ignore
       .select(null, tableName, { limit: 1 })
       .then((data) => data.length === 1)
+  );
+}
+
+/** @param {string} courseId */
+export async function backfillUserCourse(courseId) {
+  const userId = /** @type {string} */ (await getNormalUserId());
+
+  const payment = await userPaymentService.payCourse(courseId, userId);
+
+  await userPaymentService.updatePayCourse(
+    payment,
+    'CREDIT_CARD',
+    payment.id,
+    userId
   );
 }
 
@@ -128,15 +122,14 @@ export async function getCourseChapterIdByName(name) {
   }).then((model) => model?.dataValues.id);
 }
 
-/** @param {string} name */
-export async function getCourseMaterialIdByName(name) {
-  return CourseMaterial.findOne({
-    where: { name }
+export async function getAdminUserId() {
+  return User.findOne({
+    where: { admin: true, email: 'emilia@rezero.com' }
   }).then((model) => model?.dataValues.id);
 }
 
-export async function getUserIdByAdmin() {
+export async function getNormalUserId() {
   return User.findOne({
-    where: { admin: true }
+    where: { admin: false, email: 'rem@rezero.com' }
   }).then((model) => model?.dataValues.id);
 }
