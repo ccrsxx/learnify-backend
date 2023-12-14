@@ -2,6 +2,7 @@ import {
   CourseCategory,
   Course,
   CourseChapter,
+  CourseMaterial,
   User
 } from '../api/models/index.js';
 import { faker } from '@faker-js/faker';
@@ -73,6 +74,26 @@ export function generateRandomCourseMaterial() {
   };
 }
 
+export function generateRandomCourseMaterialStatus() {
+  return {
+    completed: faker.datatype.boolean(),
+    user_id: faker.string.uuid(),
+    course_material_id: faker.string.uuid(),
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
+  };
+}
+
+export function generateRandomUserCourse() {
+  return {
+    onboarded: faker.datatype.boolean(),
+    user_id: faker.string.uuid(),
+    course_id: faker.string.uuid(),
+    created_at: faker.date.recent(),
+    updated_at: faker.date.recent()
+  };
+}
+
 /**
  * @param {string} tableName
  * @param {import('sequelize').QueryInterface} queryInterface
@@ -103,6 +124,13 @@ export async function getCourseIdByName(name) {
 /** @param {string} name */
 export async function getCourseChapterIdByName(name) {
   return CourseChapter.findOne({
+    where: { name }
+  }).then((model) => model?.dataValues.id);
+}
+
+/** @param {string} name */
+export async function getCourseMaterialIdByName(name) {
+  return CourseMaterial.findOne({
     where: { name }
   }).then((model) => model?.dataValues.id);
 }

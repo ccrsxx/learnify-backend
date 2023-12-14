@@ -133,7 +133,19 @@ function getTotalCompletedMaterials() {
       sequelize.literal(
         `(
           SELECT COUNT(*) FROM course_material_status
-          WHERE completed = true
+          WHERE course_material_status.completed = true AND course_material_status.course_material_id
+          IN (
+            SELECT id FROM course_material
+            WHERE course_material.course_chapter_id
+            IN (
+              SELECT id FROM course_chapter
+              WHERE course_chapter.course_id
+              IN (
+                SELECT id FROM course
+                WHERE course.id = "UserCourse".course_id
+              )
+            )
+          )
         )`
       ),
       'integer'
