@@ -13,7 +13,7 @@ module.exports = {
       name: 'Emilia',
       admin: true,
       email: 'emilia@rezero.com',
-      password: '$2b$10$S5jendkv1xbBWqPrZxqN7.PtnPAPPHoa94/8LzmjEZQp2ZdiWTB3u',
+      password: '$2b$10$S5jendkv1xbBWqPrZxqN7.PtnPAPPHoa94/8LzmjEZQp2ZdiWTB3u', // emilia-rezero
       phone_number: '+6289876543210'
     };
 
@@ -23,7 +23,7 @@ module.exports = {
       name: 'Rem',
       admin: false,
       email: 'rem@rezero.com',
-      password: '$2b$10$8sk6Ypf8lO2OylTRM69oCuqqRAU9gQm4tbn9kwHf7iBNeoVdqUeaK',
+      password: '$2b$10$8sk6Ypf8lO2OylTRM69oCuqqRAU9gQm4tbn9kwHf7iBNeoVdqUeaK', // rem-rezero
       phone_number: '+6281234567890'
     };
 

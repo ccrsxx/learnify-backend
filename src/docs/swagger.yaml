@@ -126,8 +126,8 @@ paths:
           application/json:
             schema:
               oneOf:
-                - $ref: '#/components/schemas/UserCredentialsWithEmail'
-                - $ref: '#/components/schemas/UserCredentialsWithPhoneNumber'
+                - $ref: '#/components/schemas/UserAdminCredentialsWithEmail'
+                - $ref: '#/components/schemas/UserAdminCredentialsWithPhoneNumber'
         required: true
       responses:
         '200':
@@ -865,16 +865,34 @@ components:
       properties:
         email:
           type: string
-          example: emilia@rezero.com
+          example: rem@rezero.com
         password:
           type: string
-          example: emilia-rezero
+          example: rem-rezero
     UserCredentialsWithPhoneNumber:
       type: object
       properties:
         phone_number:
           type: string
-          example: '+6287852075425'
+          example: '+6281234567890'
+        password:
+          type: string
+          example: rem-rezero
+    UserAdminCredentialsWithEmail:
+      type: object
+      properties:
+        email:
+          type: string
+          example: emilia@rezero.com
+        password:
+          type: string
+          example: emilia-rezero
+    UserAdminCredentialsWithPhoneNumber:
+      type: object
+      properties:
+        phone_number:
+          type: string
+          example: '+6289876543210'
         password:
           type: string
           example: emilia-rezero
