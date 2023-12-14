@@ -1,9 +1,10 @@
 import {
-  CourseCategory,
+  User,
   Course,
   CourseChapter,
-  User
+  CourseCategory
 } from '../api/models/index.js';
+import * as userPaymentService from '../api/services/user-payment.js';
 import { faker } from '@faker-js/faker';
 
 export function generateRandomUser() {
@@ -86,6 +87,20 @@ export async function isTableHasRecords(tableName, queryInterface) {
   );
 }
 
+/** @param {string} courseId */
+export async function backfillUserCourse(courseId) {
+  const userId = /** @type {string} */ (await getNormalUserId());
+
+  const payment = await userPaymentService.payCourse(courseId, userId);
+
+  await userPaymentService.updatePayCourse(
+    payment,
+    'CREDIT_CARD',
+    payment.id,
+    userId
+  );
+}
+
 /** @param {string} name */
 export async function getCategoryIdByName(name) {
   return CourseCategory.findOne({
@@ -107,8 +122,14 @@ export async function getCourseChapterIdByName(name) {
   }).then((model) => model?.dataValues.id);
 }
 
-export async function getUserIdByAdmin() {
+export async function getAdminUserId() {
   return User.findOne({
-    where: { admin: true }
+    where: { admin: true, email: 'emilia@rezero.com' }
+  }).then((model) => model?.dataValues.id);
+}
+
+export async function getNormalUserId() {
+  return User.findOne({
+    where: { admin: false, email: 'rem@rezero.com' }
   }).then((model) => model?.dataValues.id);
 }

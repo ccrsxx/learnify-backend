@@ -2,7 +2,7 @@
 module.exports = {
   async up(queryInterface, _Sequelize) {
     const {
-      getUserIdByAdmin,
+      getAdminUserId,
       isTableHasRecords,
       getCategoryIdByName,
       generateRandomCourse
@@ -10,7 +10,7 @@ module.exports = {
 
     if (await isTableHasRecords('course', queryInterface)) return;
 
-    const userAdminId = await getUserIdByAdmin();
+    const userAdminId = await getAdminUserId();
 
     const courses = [
       {
