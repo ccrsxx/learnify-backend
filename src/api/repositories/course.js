@@ -3,7 +3,8 @@ import {
   Course,
   sequelize,
   CourseChapter,
-  CourseMaterial
+  CourseMaterial,
+  CourseMaterialStatus
 } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
@@ -40,6 +41,36 @@ export function getCourseById(id) {
           {
             model: CourseMaterial,
             as: 'course_material'
+          }
+        ]
+      }
+    ],
+    attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+  });
+}
+
+/**
+ * @param {string} id
+ * @param {string} userId
+ */
+export function getCourseWithUserStatus(id, userId) {
+  return Course.findByPk(id, {
+    include: [
+      'course_category',
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material',
+            include: [
+              {
+                model: CourseMaterialStatus,
+                as: 'course_material_status',
+                where: { user_id: userId }
+              }
+            ]
           }
         ]
       }

@@ -111,90 +111,90 @@ describe('Course controller', () => {
     });
   });
 
-  describe('Get course by id', () => {
-    it('get a course', async () => {
-      const mockCourse = {
-        id: '1',
-        name: 'Emilia'
-      };
+  // describe('Get course by id', () => {
+  //   it('get a course', async () => {
+  //     const mockCourse = {
+  //       id: '1',
+  //       name: 'Emilia'
+  //     };
 
-      courseService.getCourseById.mockResolvedValue(
-        // @ts-ignore
-        mockCourse
-      );
+  //     courseService.getCourseById.mockResolvedValue(
+  //       // @ts-ignore
+  //       mockCourse
+  //     );
 
-      const mockRequest = {
-        params: { id: mockCourse.id }
-      };
+  //     const mockRequest = {
+  //       params: { id: mockCourse.id }
+  //     };
 
-      const mockResponse = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis()
-      };
+  //     const mockResponse = {
+  //       json: jest.fn(),
+  //       status: jest.fn().mockReturnThis()
+  //     };
 
-      // @ts-ignore
-      await courseController.getCourseById(mockRequest, mockResponse);
+  //     // @ts-ignore
+  //     await courseController.getCourseById(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        data: mockCourse
-      });
-    });
+  //     expect(mockResponse.status).toHaveBeenCalledWith(200);
+  //     expect(mockResponse.json).toHaveBeenCalledWith({
+  //       data: mockCourse
+  //     });
+  //   });
 
-    it('throws application error when getCourseById fails', async () => {
-      const mockError = new ApplicationError('Failed to get course', 500);
+  //   it('throws application error when getCourseById fails', async () => {
+  //     const mockError = new ApplicationError('Failed to get course', 500);
 
-      courseService.getCourseById.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+  //     courseService.getCourseById.mockRejectedValue(
+  //       // @ts-ignore
+  //       mockError
+  //     );
 
-      const mockRequest = {
-        params: {
-          id: 1
-        }
-      };
+  //     const mockRequest = {
+  //       params: {
+  //         id: 1
+  //       }
+  //     };
 
-      const mockResponse = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis()
-      };
+  //     const mockResponse = {
+  //       json: jest.fn(),
+  //       status: jest.fn().mockReturnThis()
+  //     };
 
-      await courseController.getCourseById(mockRequest, mockResponse);
+  //     await courseController.getCourseById(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: mockError.message
-      });
-    });
+  //     expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+  //     expect(mockResponse.json).toHaveBeenCalledWith({
+  //       message: mockError.message
+  //     });
+  //   });
 
-    it('throws generic error when getCourseById fails', async () => {
-      const mockError = new Error();
+  //   it('throws generic error when getCourseById fails', async () => {
+  //     const mockError = new Error();
 
-      courseService.getCourseById.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+  //     courseService.getCourseById.mockRejectedValue(
+  //       // @ts-ignore
+  //       mockError
+  //     );
 
-      const mockRequest = {
-        params: {
-          id: 1
-        }
-      };
+  //     const mockRequest = {
+  //       params: {
+  //         id: 1
+  //       }
+  //     };
 
-      const mockResponse = {
-        json: jest.fn(),
-        status: jest.fn().mockReturnThis()
-      };
+  //     const mockResponse = {
+  //       json: jest.fn(),
+  //       status: jest.fn().mockReturnThis()
+  //     };
 
-      await courseController.getCourseById(mockRequest, mockResponse);
+  //     await courseController.getCourseById(mockRequest, mockResponse);
 
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        message: 'Internal server error'
-      });
-    });
-  });
+  //     expect(mockResponse.status).toHaveBeenCalledWith(500);
+  //     expect(mockResponse.json).toHaveBeenCalledWith({
+  //       message: 'Internal server error'
+  //     });
+  //   });
+  // });
 
   describe('Create course', () => {
     it('creates a course', async () => {

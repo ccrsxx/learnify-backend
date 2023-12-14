@@ -31,7 +31,10 @@ export async function getCourses(req, res) {
 export async function getCourseById(req, res) {
   try {
     const { id } = req.params;
-    const data = await courseService.getCourseById(id);
+
+    const userId = res.locals.user ? res.locals.user.id : null;
+
+    const data = await courseService.getCourseById(id, userId);
 
     res.status(200).json({ data });
   } catch (err) {

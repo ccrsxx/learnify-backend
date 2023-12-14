@@ -5,6 +5,8 @@ import {
 import { getCourseFilterQuery } from '../../libs/query.js';
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
+import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
+import * as userCourseRepository from '../repositories/user-course.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
 
@@ -26,14 +28,35 @@ export async function getCourses(params) {
   }
 }
 
-/** @param {string} id */
-export async function getCourseById(id) {
+/**
+ * @param {string} id
+ * @param {string} userId
+ */
+export async function getCourseById(id, userId) {
   try {
-    const course = await courseRepository.getCourseById(id);
+    // CHECK IF COURSE IS ENROLLED
+    const existingUserCourse =
+      await userCourseRepository.getUserCourseByUserIdAndCourseId(userId, id);
 
-    if (!course) {
+    const courseData = await (existingUserCourse
+      ? courseRepository.getCourseWithUserStatus(id, userId)
+      : courseRepository.getCourseById(id));
+
+    if (!courseData) {
       throw new ApplicationError('Course not found', 404);
     }
+
+    const total_completed_materials =
+      await courseMaterialStatusRepository.getCompletedMaterialStatusCount(
+        userId
+      );
+
+    const course = existingUserCourse
+      ? {
+          ...courseData.dataValues,
+          total_completed_materials
+        }
+      : courseData;
 
     return course;
   } catch (err) {

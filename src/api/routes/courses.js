@@ -25,7 +25,7 @@ export default (app) => {
     courseController.createCourse
   );
 
-  router.get('/:id', courseController.getCourseById);
+  router.get('/:id', authMiddleware.isLoggedIn, courseController.getCourseById);
 
   router.put(
     '/:id',
