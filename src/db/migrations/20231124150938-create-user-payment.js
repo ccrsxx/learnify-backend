@@ -9,12 +9,18 @@ module.exports = {
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      paid: {
-        type: Sequelize.BOOLEAN
+      status: {
+        type: Sequelize.ENUM('PENDING', 'WAITING_VERIFICATION', 'COMPLETED'),
+        allowNull: false,
+        defaultValue: 'PENDING'
       },
       payment_method: {
         type: Sequelize.ENUM('CREDIT_CARD', 'BANK_TRANSFER'),
-        allowNull: false
+        allowNull: true
+      },
+      paid_at: {
+        type: Sequelize.DATE,
+        allowNull: true
       },
       user_id: {
         type: Sequelize.UUID,
@@ -32,6 +38,10 @@ module.exports = {
           key: 'id'
         },
         onDelete: 'CASCADE'
+      },
+      expired_at: {
+        allowNull: false,
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,

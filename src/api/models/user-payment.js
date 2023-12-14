@@ -3,10 +3,12 @@ import { Model } from 'sequelize';
 /**
  * @typedef UserPaymentAttributes
  * @property {string} id
- * @property {boolean} paid
+ * @property {PaymentStatus} status
  * @property {PaymentMethod} payment_method
  * @property {string} user_id
  * @property {string} course_id
+ * @property {Date} paid_at
+ * @property {Date} expired_at
  * @property {Date} created_at
  * @property {Date} updated_at
  */
@@ -14,8 +16,15 @@ import { Model } from 'sequelize';
 export const Models = {};
 
 const PAYMENT_METHOD = /** @type {const} */ (['CREDIT_CARD', 'BANK_TRANSFER']);
+const PAYMENT_STATUS = /** @type {const} */ ([
+  'PENDING',
+  'WAITING_VERIFICATION',
+  'COMPLETED'
+]);
 
 /** @typedef {(typeof PAYMENT_METHOD)[number]} PaymentMethod */
+
+/** @typedef {(typeof PAYMENT_STATUS)[number]} PaymentStatus */
 
 /**
  * @param {import('sequelize').Sequelize} sequelize
@@ -33,11 +42,13 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsTo(models.User, {
-        foreignKey: 'user_id'
+        foreignKey: 'user_id',
+        as: 'user'
       });
 
       this.belongsTo(models.Course, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        as: 'course'
       });
     }
   }
@@ -45,13 +56,21 @@ export default (sequelize, DataTypes) => {
   UserPayment.init(
     // @ts-ignore
     {
-      paid: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.ENUM(...PAYMENT_STATUS),
+        allowNull: false,
+        defaultValue: 'PENDING'
+      },
       payment_method: {
-        type: DataTypes.ENUM(...PAYMENT_METHOD),
-        allowNull: false
+        type: DataTypes.ENUM(...PAYMENT_METHOD)
+      },
+      paid_at: {
+        type: DataTypes.DATE,
+        allowNull: true
       },
       user_id: { type: DataTypes.UUID, allowNull: false },
-      course_id: { type: DataTypes.UUID, allowNull: false }
+      course_id: { type: DataTypes.UUID, allowNull: false },
+      expired_at: { type: DataTypes.DATE, allowNull: false }
     },
     {
       sequelize,

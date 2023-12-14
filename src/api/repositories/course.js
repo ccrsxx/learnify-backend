@@ -1,5 +1,10 @@
-import sequelize from 'sequelize';
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
+import Sequelize from 'sequelize';
+import {
+  Course,
+  sequelize,
+  CourseChapter,
+  CourseMaterial
+} from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
 
@@ -64,7 +69,7 @@ export function destroyCourse(id) {
   return Course.destroy({ where: { id } });
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalDuration() {
   return [
     sequelize.cast(
@@ -80,7 +85,7 @@ function getTotalDuration() {
   ];
 }
 
-/** @returns {sequelize.ProjectionAlias} */
+/** @returns {Sequelize.ProjectionAlias} */
 function getTotalMaterials() {
   return [
     sequelize.cast(
