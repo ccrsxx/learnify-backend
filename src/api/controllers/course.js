@@ -24,7 +24,10 @@ export async function getCourses(req, res) {
   }
 }
 
-// @ts-ignore
+/**
+ * @type {Types.AuthorizedController}
+ * @returns {Promise<void>}
+ */
 export async function getUserCourses(_req, res) {
   try {
     const { id } = res.locals.user;
