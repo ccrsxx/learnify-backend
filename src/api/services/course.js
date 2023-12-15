@@ -27,6 +27,17 @@ export async function getCourses(params) {
   }
 }
 
+/** @param {string} id */
+export async function getUserCourses(id) {
+  try {
+    const userCourses = await courseRepository.getUserCourses(id);
+
+    return userCourses;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting courses', 500);
+  }
+}
+
 /**
  * @param {string} id
  * @param {string} userId
