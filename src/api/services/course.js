@@ -40,18 +40,29 @@ export async function getUserCourses(id) {
 
 /**
  * @param {string} id
- * @param {string} userId
+ * @param {string | null} [userId=null] Default is `null`
  */
-export async function getCourseById(id, userId) {
+export async function getCourseById(id, userId = null) {
   try {
-    // CHECK IF COURSE IS ENROLLED
-    const existingUserCourse =
-      await userCourseRepository.getUserCourseByUserIdAndCourseId(userId, id);
+    let course;
 
-    const course = await (existingUserCourse
-      ? courseRepository.getCourseWithUserStatus(id, userId)
-      : courseRepository.getCourseById(id));
+    // Check if user is logged in
+    if (userId) {
+      // Check if user is enrolled in course
+      const existingUserCourse =
+        await userCourseRepository.getUserCourseByUserIdAndCourseId(userId, id);
 
+      if (existingUserCourse) {
+        course = await courseRepository.getCourseWithUserStatus(id, userId);
+      }
+    }
+
+    // If user is not logged in or not enrolled in course
+    if (!course) {
+      course = await courseRepository.getCourseById(id);
+    }
+
+    // If course is not found
     if (!course) {
       throw new ApplicationError('Course not found', 404);
     }
