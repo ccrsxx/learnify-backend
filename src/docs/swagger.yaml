@@ -742,11 +742,11 @@ paths:
     post:
       tags:
         - user-payments
-      summary: Create a free payment
-      description: Create a free payment
-      operationId: create-free-payment
+      summary: Create enrolling free course
+      description: Create enrolling free course
+      operationId: enroll-free-course
       requestBody:
-        description: Create a new free payment
+        description: Create enroll free course
         content:
           application/json:
             schema:
@@ -762,7 +762,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Payment successfully updated
+                    example: Free course successfully enrolled
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':

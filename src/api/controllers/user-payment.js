@@ -95,8 +95,7 @@ export async function updatePayCourse(req, res) {
       existingPayment,
       paymentMethod,
       paymentId,
-      userId,
-      false
+      userId
     );
 
     res.status(200).json({
@@ -121,25 +120,9 @@ export async function payFreeCourse(req, res) {
   const { course_id: courseId } = req.body;
   const { id: userId } = res.locals.user;
   try {
-    // eslint-disable-next-line no-unused-vars
-    const { newPayment, ...payment } = await paymentServices.payCourse(
-      courseId,
-      userId
-    );
-
-    const { id: paymentId } = payment;
-    const { payment_method: paymentMethod } = req.body;
-
-    const paymentFreePass = await paymentServices.updatePayCourse(
-      payment,
-      paymentMethod,
-      paymentId,
-      userId,
-      true
-    );
+    await paymentServices.paymentFreePass(courseId, userId);
     res.status(200).json({
-      message: 'Payment successfully updated',
-      data: paymentFreePass
+      message: 'Free course successfully enrolled'
     });
   } catch (err) {
     if (err instanceof ApplicationError) {

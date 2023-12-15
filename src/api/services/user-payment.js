@@ -93,17 +93,15 @@ export async function payCourse(courseId, userId) {
  * @param {userPaymentModel.PaymentMethod} paymentMethod
  * @param {string} paymentId
  * @param {string} userId
- * @param {boolean} isFree
  */
 export async function updatePayCourse(
   existingUserPayment,
   paymentMethod,
   paymentId,
-  userId,
-  isFree
+  userId
 ) {
   try {
-    if (!paymentMethod && !isFree) {
+    if (!paymentMethod) {
       throw new ApplicationError('Payment method cannot be null', 400);
     }
 
@@ -138,20 +136,57 @@ export async function updatePayCourse(
         );
       }
 
-      if (!isFree) {
-        // PAYMENT
-        const payload = {
-          status: 'COMPLETED',
-          payment_method: paymentMethod,
-          paid_at: new Date()
-        };
+      // PAYMENT
+      const payload = {
+        status: 'COMPLETED',
+        payment_method: paymentMethod,
+        paid_at: new Date()
+      };
 
-        const [, [updatedPayment]] = await paymentRepository.updatePayCourse(
-          payload,
-          paymentId,
+      const [, [updatedPayment]] = await paymentRepository.updatePayCourse(
+        payload,
+        paymentId,
+        transaction
+      );
+
+      // USER COURSE CREATE
+      const userCoursePayload = {
+        user_id: userId,
+        course_id: courseId
+      };
+
+      await userCourseRepository.createUserCourse(
+        userCoursePayload,
+        transaction
+      );
+      return updatedPayment;
+    });
+
+    return paymentResult;
+  } catch (error) {
+    throw generateApplicationError(error, 'Error while updating payment', 500);
+  }
+}
+
+/**
+ * @param {string} courseId
+ * @param {string} userId
+ */
+export async function paymentFreePass(courseId, userId) {
+  try {
+    const courseMaterialIds =
+      await courseMaterialRepository.getCourseMaterialByCourseId(courseId);
+
+    await sequelize.transaction(async (transaction) => {
+      // BACKFILL COURSE MATERIAL STATUS
+      for (const course_material_id of courseMaterialIds) {
+        await courseMaterialStatusRepository.setCourseMaterialStatus(
+          {
+            user_id: userId,
+            course_material_id
+          },
           transaction
         );
-        return updatedPayment;
       }
 
       // USER COURSE CREATE
@@ -165,9 +200,7 @@ export async function updatePayCourse(
         transaction
       );
     });
-
-    return paymentResult;
   } catch (error) {
-    throw generateApplicationError(error, 'Error while updating payment', 500);
+    throw generateApplicationError(error, 'Error while enroll course', 500);
   }
 }
