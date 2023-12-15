@@ -5,8 +5,8 @@ import {
   UserCourse,
   CourseChapter,
   CourseMaterial,
-  CourseMaterialStatus,
-  CourseCategory
+  CourseCategory,
+  CourseMaterialStatus
 } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
@@ -103,7 +103,6 @@ export function getCourseWithUserStatus(id, userId) {
         ]
       }
     ],
-    // @ts-ignore
     attributes: {
       include: [
         getTotalDuration(),

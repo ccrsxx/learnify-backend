@@ -69,14 +69,13 @@ export function isAdmin(_req, res, next) {
 /**
  * Check if user is logged in when access course details
  *
- * @type {Types.Middleware<{ user: Models.UserAttributes }>}
+ * @type {Types.Middleware<{ user: Models.UserAttributes | null }>}
  * @returns {Promise<void>}
  */
 export async function isLoggedIn(req, res, next) {
   const authorization = req.get('authorization');
 
   if (!authorization) {
-    // @ts-ignore
     res.locals.user = null;
     return next();
   }
@@ -90,7 +89,6 @@ export async function isLoggedIn(req, res, next) {
 
   try {
     const user = await authService.verifyToken(token);
-
     res.locals.user = user.dataValues;
   } catch (err) {
     if (err instanceof ApplicationError) {

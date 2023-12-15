@@ -1,6 +1,7 @@
 import * as courseService from '../services/course.js';
 import * as Types from '../../libs/types/common.js';
 import { ApplicationError } from '../../libs/error.js';
+import { isLoggedIn } from '../middlewares/auth.js';
 import { uploadCloudinary } from '../middlewares/upload.js';
 
 /**
@@ -46,7 +47,7 @@ export async function getUserCourses(_req, res) {
 }
 
 /**
- * @type {Types.Controller}
+ * @type {Types.Controller<typeof isLoggedIn>}
  * @returns {Promise<void>}
  */
 export async function getCourseById(req, res) {
