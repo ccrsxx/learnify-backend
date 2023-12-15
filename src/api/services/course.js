@@ -26,10 +26,9 @@ export async function getCourses(params) {
   }
 }
 
-// @ts-ignore
+/** @param {string} id */
 export async function getUserCourses(id) {
   try {
-    // @ts-ignore
     const userCourses = await courseRepository.getUserCourses(id);
 
     return userCourses;
