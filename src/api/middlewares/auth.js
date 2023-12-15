@@ -7,7 +7,7 @@ import * as Types from '../../libs/types/common.js';
  * Check if user is authorized.
  *
  * @type {Types.Middleware<{ user: Models.UserAttributes }>}
- * @returns {void}
+ * @returns {Promise<void>}
  */
 export async function isAuthorized(req, res, next) {
   const authorization = req.get('authorization');
@@ -62,6 +62,43 @@ export function isAdmin(_req, res, next) {
   }
 
   res.locals.isAdmin = admin;
+
+  next();
+}
+
+/**
+ * Check if user is logged in when access course details
+ *
+ * @type {Types.Middleware<{ user: Models.UserAttributes | null }>}
+ * @returns {Promise<void>}
+ */
+export async function isLoggedIn(req, res, next) {
+  const authorization = req.get('authorization');
+
+  if (!authorization) {
+    res.locals.user = null;
+    return next();
+  }
+
+  const [type, token] = authorization.split(' ');
+
+  if (type.toLocaleLowerCase() !== 'bearer') {
+    res.status(401).json({ message: 'Invalid authorization token' });
+    return;
+  }
+
+  try {
+    const user = await authService.verifyToken(token);
+    res.locals.user = user.dataValues;
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+    return;
+  }
 
   next();
 }

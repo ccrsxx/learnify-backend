@@ -1139,9 +1139,7 @@ components:
           type: array
           items:
             type: object
-            oneOf:
-              - $ref: '#/components/schemas/CourseChapter'
-              - $ref: '#/components/schemas/CourseChapter'
+            $ref: '#/components/schemas/CourseChapter'
         total_duration:
           type: integer
           example: 55
@@ -1257,7 +1255,7 @@ components:
             type: object
             oneOf:
               - $ref: '#/components/schemas/CourseMaterial'
-              - $ref: '#/components/schemas/CourseMaterial'
+              - $ref: '#/components/schemas/CourseMaterialWithStatus'
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -1288,6 +1286,34 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    CourseMaterialWithStatus:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a34858de-4585-47f0-892c-3660ad3cc032
+        name:
+          type: string
+          example: Apa itu Fullstack?
+        video:
+          type: string
+          example: https://overcooked-weight.org
+        order_index:
+          type: integer
+          example: 1
+        course_chapter_id:
+          type: string
+          example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        course_material_status:
+          type: array
+          items:
+            $ref: '#/components/schemas/CourseMaterialStatus'
     CourseMaterialStatus:
       type: object
       properties:
