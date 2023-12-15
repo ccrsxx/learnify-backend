@@ -76,6 +76,8 @@ export async function isLoggedIn(req, res, next) {
   const authorization = req.get('authorization');
 
   if (!authorization) {
+    // @ts-ignore
+    res.locals.user = null;
     return next();
   }
 
