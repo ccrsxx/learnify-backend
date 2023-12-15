@@ -67,9 +67,20 @@ export async function createCourse(payload, userId) {
     'updated_at'
   ]);
 
+  const { target_audience } = parsedPayload;
+
   const parsedPayloadWithCategoryAndUser =
     /** @type {Models.CourseAttributes} */ ({
       ...parsedPayload,
+      /**
+       * Parse target_audience from string to Array of string, because array
+       * that is sent from client with form-data will get converted to string
+       */
+      ...(target_audience && {
+        target_audience: JSON.parse(
+          /** @type {string} */ (/** @type {unknown} */ (target_audience))
+        )
+      }),
       user_id: userId
     });
 
