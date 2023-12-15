@@ -185,7 +185,8 @@ module.exports = {
 
     const seedCourses = courses.map((category) => ({
       ...generateRandomCourse(),
-      ...category
+      ...category,
+      image: null
     }));
 
     return queryInterface.bulkInsert('course', seedCourses);
