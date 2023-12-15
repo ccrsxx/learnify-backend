@@ -91,8 +91,6 @@ export async function isPaymentExists(req, res, next) {
 }
 
 /**
- * Check if valid credentials.
- *
  * @type {Types.Middleware<
  *   Types.ExtractLocalsMiddleware<typeof isAuthorized> & {
  *     courseMaterialStatus: CourseMaterialStatusModel.CourseMaterialStatusAttributes;
@@ -106,6 +104,7 @@ export async function isCourseMaterialStatusExists(req, res, next) {
   try {
     const courseMaterialStatus =
       await courseMaterialStatusService.getCourseMaterialStatusById(id);
+
     res.locals.courseMaterialStatus = courseMaterialStatus.dataValues;
   } catch (err) {
     if (err instanceof ApplicationError) {
