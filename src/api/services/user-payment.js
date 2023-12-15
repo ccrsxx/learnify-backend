@@ -138,18 +138,21 @@ export async function updatePayCourse(
         );
       }
 
-      // PAYMENT
-      const payload = {
-        status: 'COMPLETED',
-        payment_method: paymentMethod,
-        paid_at: new Date()
-      };
+      if (!isFree) {
+        // PAYMENT
+        const payload = {
+          status: 'COMPLETED',
+          payment_method: paymentMethod,
+          paid_at: new Date()
+        };
 
-      const [, [updatedPayment]] = await paymentRepository.updatePayCourse(
-        payload,
-        paymentId,
-        transaction
-      );
+        const [, [updatedPayment]] = await paymentRepository.updatePayCourse(
+          payload,
+          paymentId,
+          transaction
+        );
+        return updatedPayment;
+      }
 
       // USER COURSE CREATE
       const userCoursePayload = {
@@ -161,8 +164,6 @@ export async function updatePayCourse(
         userCoursePayload,
         transaction
       );
-
-      return updatedPayment;
     });
 
     return paymentResult;

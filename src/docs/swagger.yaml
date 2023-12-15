@@ -738,6 +738,42 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
+  /user-payments/free:
+    post:
+      tags:
+        - user-payments
+      summary: Create a free payment
+      description: Create a free payment
+      operationId: create-free-payment
+      requestBody:
+        description: Create a new free payment
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentBody'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Payment successfully updated
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '404':
+          $ref: '#/components/responses/CourseNotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+
 components:
   schemas:
     User:

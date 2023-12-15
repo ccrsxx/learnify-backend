@@ -137,8 +137,8 @@ export async function payFreeCourse(req, res) {
       userId,
       true
     );
-    res.status(201).json({
-      message: 'Payment created successfully',
+    res.status(200).json({
+      message: 'Payment successfully updated',
       data: paymentFreePass
     });
   } catch (err) {
