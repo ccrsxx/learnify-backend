@@ -1828,7 +1828,7 @@ components:
           schema:
             $ref: '#/components/schemas/PaymentNotFound'
     UserCourseNotFound:
-      description: UserCourse not Found
+      description: User Course not Found
       content:
         application/json:
           schema:
