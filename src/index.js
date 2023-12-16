@@ -10,6 +10,7 @@ import courses from './api/routes/courses.js';
 import dashboard from './api/routes/dashboard.js';
 import courseCategories from './api/routes/course-categories.js';
 import userPayments from './api/routes/user-payments.js';
+import userCourses from './api/routes/user-courses.js';
 import courseMaterialStatus from './api/routes/course-material-status.js';
 
 /** @returns {void} */
@@ -29,6 +30,7 @@ function main() {
   dashboard(app);
   courseCategories(app);
   userPayments(app);
+  userCourses(app);
   courseMaterialStatus(app);
 
   app.listen(HOST_PORT, () =>

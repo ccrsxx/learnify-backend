@@ -20,3 +20,14 @@ export function getUserCourseByUserIdAndCourseId(userId, courseId) {
     where: { user_id: userId, course_id: courseId }
   });
 }
+
+/** @param {string} id */
+export function setOnboardedTrue(id) {
+  return UserCourse.update(
+    { onboarded: true },
+    {
+      where: { id: id },
+      returning: true
+    }
+  );
+}
