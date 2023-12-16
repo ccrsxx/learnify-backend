@@ -46,6 +46,26 @@ export async function getPaymentById(req, res) {
  * @type {Types.Controller}
  * @returns {Promise<void>}
  */
+export async function getPaymentsHistory(_req, res) {
+  try {
+    const { id: userId } = res.locals.user;
+    const data = await paymentServices.getPaymentsHistory(userId);
+
+    res.status(200).json({ data });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
 export async function payCourse(req, res) {
   const { course_id: courseId } = req.body;
 

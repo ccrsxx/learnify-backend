@@ -38,6 +38,21 @@ export async function getUserPaymentById(id) {
   }
 }
 
+/** @param {string} userId */
+export async function getPaymentsHistory(userId) {
+  try {
+    const payments = await paymentRepository.getPaymentsHistory(userId);
+
+    return payments;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting payments History',
+      500
+    );
+  }
+}
+
 /**
  * @param {string} courseId
  * @param {string} userId

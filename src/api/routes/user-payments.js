@@ -29,6 +29,12 @@ export default (app) => {
   );
 
   router.get(
+    '/me',
+    authMiddleware.isAuthorized,
+    userPaymentController.getPaymentsHistory
+  );
+
+  router.get(
     '/:id',
     authMiddleware.isAuthorized,
     validationMiddleware.isPaymentExists,
