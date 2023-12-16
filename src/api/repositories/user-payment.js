@@ -76,6 +76,7 @@ export function getUserPaymentById(id) {
 export function getPaymentsHistory(userId) {
   return UserPayment.findAll({
     where: { user_id: userId },
+    order: [['created_at', 'DESC']],
     include: [
       {
         model: Course,
