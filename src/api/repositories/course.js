@@ -101,6 +101,13 @@ export function getCourseWithUserStatus(id, userId) {
             ]
           }
         ]
+      },
+      {
+        model: UserCourse,
+        as: 'user_course',
+        where: { user_id: userId },
+        required: true,
+        limit: 1
       }
     ],
     attributes: {
