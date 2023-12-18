@@ -1,12 +1,7 @@
 import Sequelize from 'sequelize';
 import { Op } from 'sequelize';
-import {
-  UserPayment,
-  User,
-  Course,
-  CourseCategory,
-  sequelize
-} from '../models/index.js';
+import { User, Course, UserPayment, CourseCategory } from '../models/index.js';
+import { getTotalDuration, getTotalMaterials } from './course.js';
 
 /** @param {any} payload */
 export function payCourse(payload) {
@@ -87,7 +82,9 @@ export function getPaymentsHistory(userId) {
             as: 'course_category'
           }
         ],
-        attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+        attributes: {
+          include: [getTotalDuration(true), getTotalMaterials(true)]
+        }
       }
     ]
   });
@@ -107,48 +104,4 @@ export function getPendingPaymentByUserIdAndCourseId(userId, courseId) {
       }
     }
   });
-}
-
-/** @returns {Sequelize.ProjectionAlias} */
-function getTotalDuration() {
-  return [
-    sequelize.cast(
-      sequelize.literal(
-        `(
-          SELECT SUM(cc.duration)
-
-          FROM course_chapter as cc
-
-          WHERE cc.course_id = "course".id
-        )`
-      ),
-      'integer'
-    ),
-    'total_duration'
-  ];
-}
-
-/** @returns {Sequelize.ProjectionAlias} */
-function getTotalMaterials() {
-  return [
-    sequelize.cast(
-      sequelize.literal(
-        `(
-          SELECT COUNT(*)
-
-          FROM course_material AS cm
-
-          JOIN course_chapter AS cc
-            ON cm.course_chapter_id = cc.id
-
-          JOIN course AS c
-            ON cc.course_id = c.id
-
-          WHERE c.id = "course".id
-        )`
-      ),
-      'integer'
-    ),
-    'total_materials'
-  ];
 }

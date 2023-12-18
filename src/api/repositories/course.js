@@ -105,9 +105,7 @@ export function getCourseWithUserStatus(id, userId) {
       {
         model: UserCourse,
         as: 'user_course',
-        where: { user_id: userId },
-        required: true,
-        limit: 1
+        where: { user_id: userId }
       }
     ],
     attributes: {
@@ -143,7 +141,11 @@ export function destroyCourse(id) {
 }
 
 /** @returns {Sequelize.ProjectionAlias} */
-function getTotalDuration() {
+export function getTotalDuration(fromUserPaymentModel = false) {
+  const referencedCourseIdFrom = fromUserPaymentModel
+    ? '"UserPayment".course_id'
+    : '"Course".id';
+
   return [
     sequelize.cast(
       sequelize.literal(
@@ -152,7 +154,7 @@ function getTotalDuration() {
           
           FROM course_chapter as cc
 
-          WHERE cc.course_id = "Course".id
+          WHERE cc.course_id = ${referencedCourseIdFrom}
         )`
       ),
       'integer'
@@ -162,7 +164,11 @@ function getTotalDuration() {
 }
 
 /** @returns {Sequelize.ProjectionAlias} */
-function getTotalMaterials() {
+export function getTotalMaterials(fromUserPaymentModel = false) {
+  const referencedCourseIdFrom = fromUserPaymentModel
+    ? '"UserPayment".course_id'
+    : '"Course".id';
+
   return [
     sequelize.cast(
       sequelize.literal(
@@ -177,7 +183,7 @@ function getTotalMaterials() {
           JOIN course AS c
             ON cc.course_id = c.id
 
-          WHERE c.id = "Course".id
+          WHERE c.id = ${referencedCourseIdFrom}
         )`
       ),
       'integer'

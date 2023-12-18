@@ -7,7 +7,6 @@ import * as userCourseController from '../controllers/user-course.js';
  * @type {Types.Route}
  * @returns {void}
  */
-
 export default (app) => {
   const router = Router();
 

@@ -28,9 +28,9 @@ function main() {
   upload(app);
   courses(app);
   dashboard(app);
-  courseCategories(app);
-  userPayments(app);
   userCourses(app);
+  userPayments(app);
+  courseCategories(app);
   courseMaterialStatus(app);
 
   app.listen(HOST_PORT, () =>

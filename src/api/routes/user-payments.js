@@ -8,7 +8,6 @@ import * as validationMiddleware from '../middlewares/validation.js';
  * @type {Types.Route}
  * @returns {void}
  */
-
 export default (app) => {
   const router = Router();
 
