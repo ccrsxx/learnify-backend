@@ -119,8 +119,10 @@ export async function updatePayCourse(req, res) {
 export async function payFreeCourse(req, res) {
   const { course_id: courseId } = req.body;
   const { id: userId } = res.locals.user;
+
   try {
     await paymentServices.paymentFreePass(courseId, userId);
+
     res.status(200).json({
       message: 'Free course successfully enrolled'
     });

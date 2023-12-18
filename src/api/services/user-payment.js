@@ -159,6 +159,7 @@ export async function updatePayCourse(
         userCoursePayload,
         transaction
       );
+
       return updatedPayment;
     });
 
@@ -174,6 +175,20 @@ export async function updatePayCourse(
  */
 export async function paymentFreePass(courseId, userId) {
   try {
+    // CHECK IF COURSE IS ENROLLED
+    const existingUserCourse =
+      await userCourseRepository.getUserCourseByUserIdAndCourseId(
+        userId,
+        courseId
+      );
+
+    if (existingUserCourse) {
+      throw new ApplicationError(
+        'User is already enrolled in this course',
+        422
+      );
+    }
+
     const courseMaterialIds =
       await courseMaterialRepository.getCourseMaterialByCourseId(courseId);
 
@@ -201,6 +216,6 @@ export async function paymentFreePass(courseId, userId) {
       );
     });
   } catch (error) {
-    throw generateApplicationError(error, 'Error while enroll course', 500);
+    throw generateApplicationError(error, 'Error while enrolling course', 500);
   }
 }
