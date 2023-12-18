@@ -11,6 +11,7 @@ import config from '../../db/config/database.js';
  * @property {ReturnType<typeof import('./user.js').default>} User
  * @property {ReturnType<typeof import('./user-course.js').default>} UserCourse
  * @property {ReturnType<typeof import('./user-payment.js').default>} UserPayment
+ * @property {ReturnType<typeof import('./user-notification.js').default>} UserNotification
  * @property {ReturnType<typeof import('./course.js').default>} Course
  * @property {ReturnType<typeof import('./course-chapter.js').default>} CourseChapter
  * @property {ReturnType<typeof import('./course-category.js').default>} CourseCategory
@@ -64,6 +65,7 @@ export const {
   User,
   UserCourse,
   UserPayment,
+  UserNotification,
   Course,
   CourseChapter,
   CourseCategory,
