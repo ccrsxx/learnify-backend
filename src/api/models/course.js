@@ -53,7 +53,8 @@ export default (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.UserCourse, {
-        foreignKey: 'course_id'
+        foreignKey: 'course_id',
+        as: 'user_course'
       });
 
       this.hasMany(models.CourseChapter, {

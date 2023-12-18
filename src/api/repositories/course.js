@@ -2,15 +2,18 @@ import Sequelize from 'sequelize';
 import {
   Course,
   sequelize,
+  UserCourse,
   CourseChapter,
-  CourseMaterial
+  CourseMaterial,
+  CourseCategory,
+  CourseMaterialStatus
 } from '../models/index.js';
 import * as Types from '../../libs/types/common.js';
 import * as Models from '../models/course.js';
 
 export function getCourses() {
   return Course.findAll({
-    include: ['user', 'course_category'],
+    include: ['course_category'],
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
   });
 }
@@ -22,9 +25,35 @@ export function getCourses() {
 export async function getCoursesByFilter(whereOptions, sortByNewest = false) {
   return Course.findAll({
     where: whereOptions,
-    include: ['user', 'course_category'],
+    include: ['course_category'],
     ...(sortByNewest && { order: [['created_at', 'DESC']] }),
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+  });
+}
+
+/** @param {string} userId */
+export function getUserCourses(userId) {
+  return Course.findAll({
+    include: [
+      {
+        model: UserCourse,
+        as: 'user_course',
+        where: { user_id: userId },
+        attributes: []
+      },
+      {
+        model: CourseCategory,
+        as: 'course_category'
+      }
+    ],
+    attributes: {
+      include: [
+        getTotalDuration(),
+        getTotalMaterials(),
+        getUserTotalCompletedMaterials()
+      ]
+    },
+    replacements: { user_id: userId }
   });
 }
 
@@ -45,6 +74,43 @@ export function getCourseById(id) {
       }
     ],
     attributes: { include: [getTotalDuration(), getTotalMaterials()] }
+  });
+}
+
+/**
+ * @param {string} id
+ * @param {string} userId
+ */
+export function getCourseWithUserStatus(id, userId) {
+  return Course.findByPk(id, {
+    include: [
+      'course_category',
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material',
+            include: [
+              {
+                model: CourseMaterialStatus,
+                as: 'course_material_status',
+                where: { user_id: userId }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    attributes: {
+      include: [
+        getTotalDuration(),
+        getTotalMaterials(),
+        getUserTotalCompletedMaterials()
+      ]
+    },
+    replacements: { user_id: userId }
   });
 }
 
@@ -75,8 +141,11 @@ function getTotalDuration() {
     sequelize.cast(
       sequelize.literal(
         `(
-          SELECT SUM(duration) FROM course_chapter
-          WHERE course_chapter.course_id = "Course".id
+          SELECT SUM(cc.duration)
+          
+          FROM course_chapter as cc
+
+          WHERE cc.course_id = "Course".id
         )`
       ),
       'integer'
@@ -91,16 +160,51 @@ function getTotalMaterials() {
     sequelize.cast(
       sequelize.literal(
         `(
-          SELECT COUNT(*) FROM course_material
-          WHERE course_material.course_chapter_id
-          IN (
-            SELECT id FROM course_chapter
-            WHERE course_chapter.course_id = "Course".id
-          )
-         )`
+          SELECT COUNT(*)
+
+          FROM course_material AS cm
+
+          JOIN course_chapter AS cc
+            ON cm.course_chapter_id = cc.id
+
+          JOIN course AS c
+            ON cc.course_id = c.id
+
+          WHERE c.id = "Course".id
+        )`
       ),
       'integer'
     ),
     'total_materials'
+  ];
+}
+
+/** @returns {Sequelize.ProjectionAlias} */
+function getUserTotalCompletedMaterials() {
+  return [
+    sequelize.cast(
+      sequelize.literal(
+        `(
+          SELECT COUNT(*)
+
+          FROM course_material_status AS cms
+
+          JOIN course_material AS cm
+            ON cms.course_material_id = cm.id
+
+          JOIN course_chapter AS cc
+            ON cm.course_chapter_id = cc.id
+
+          JOIN course AS c
+            ON cc.course_id = c.id
+
+          WHERE cms.user_id = :user_id
+            AND cms.completed = true
+            AND c.id = "Course".id
+        )`
+      ),
+      'integer'
+    ),
+    'total_completed_materials'
   ];
 }

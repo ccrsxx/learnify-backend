@@ -5,6 +5,7 @@ import {
 import { getCourseFilterQuery } from '../../libs/query.js';
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
+import * as userCourseRepository from '../repositories/user-course.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
 
@@ -27,10 +28,41 @@ export async function getCourses(params) {
 }
 
 /** @param {string} id */
-export async function getCourseById(id) {
+export async function getUserCourses(id) {
   try {
-    const course = await courseRepository.getCourseById(id);
+    const userCourses = await courseRepository.getUserCourses(id);
 
+    return userCourses;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting courses', 500);
+  }
+}
+
+/**
+ * @param {string} id
+ * @param {string | null} [userId=null] Default is `null`
+ */
+export async function getCourseById(id, userId = null) {
+  try {
+    let course;
+
+    // Check if user is logged in
+    if (userId) {
+      // Check if user is enrolled in course
+      const existingUserCourse =
+        await userCourseRepository.getUserCourseByUserIdAndCourseId(userId, id);
+
+      if (existingUserCourse) {
+        course = await courseRepository.getCourseWithUserStatus(id, userId);
+      }
+    }
+
+    // If user is not logged in or not enrolled in course
+    if (!course) {
+      course = await courseRepository.getCourseById(id);
+    }
+
+    // If course is not found
     if (!course) {
       throw new ApplicationError('Course not found', 404);
     }
@@ -56,9 +88,20 @@ export async function createCourse(payload, userId) {
     'updated_at'
   ]);
 
+  const { target_audience } = parsedPayload;
+
   const parsedPayloadWithCategoryAndUser =
     /** @type {Models.CourseAttributes} */ ({
       ...parsedPayload,
+      /**
+       * Parse target_audience from string to Array of string, because array
+       * that is sent from client with form-data will get converted to string
+       */
+      ...(target_audience && {
+        target_audience: JSON.parse(
+          /** @type {string} */ (/** @type {unknown} */ (target_audience))
+        )
+      }),
       user_id: userId
     });
 

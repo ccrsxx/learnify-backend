@@ -27,7 +27,7 @@ export async function getCourseMaterialStatusById(id) {
 /** @param {string} id */
 export async function updateCourseMaterialStatus(id) {
   try {
-    const courseMaterialStatus =
+    const [, [courseMaterialStatus]] =
       await courseMaterialStatusRepository.updateCourseMaterialStatus(id);
 
     return courseMaterialStatus;

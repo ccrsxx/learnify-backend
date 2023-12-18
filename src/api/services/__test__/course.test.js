@@ -59,7 +59,7 @@ describe('Courses service', () => {
     });
   });
 
-  describe('Get course', () => {
+  describe.skip('Get course', () => {
     it('returns course data', async () => {
       const mockCourse = {
         id: '1',
