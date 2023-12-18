@@ -33,6 +33,13 @@ export default (app) => {
     userPaymentController.getPaymentsHistory
   );
 
+  router.post(
+    '/free',
+    authMiddleware.isAuthorized,
+    validationMiddleware.isCourseExists,
+    userPaymentController.payFreeCourse
+  );
+
   router.get(
     '/:id',
     authMiddleware.isAuthorized,
