@@ -795,6 +795,8 @@ paths:
           $ref: '#/components/responses/InvalidAuthorizationError'
         '404':
           $ref: '#/components/responses/CourseNotFoundError'
+        '422':
+          $ref: '#/components/schemas/CourseAlreadyEnrolledError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
