@@ -168,3 +168,54 @@ export async function updatePayCourse(
     throw generateApplicationError(error, 'Error while updating payment', 500);
   }
 }
+
+/**
+ * @param {string} courseId
+ * @param {string} userId
+ */
+export async function paymentFreePass(courseId, userId) {
+  try {
+    // CHECK IF COURSE IS ENROLLED
+    const existingUserCourse =
+      await userCourseRepository.getUserCourseByUserIdAndCourseId(
+        userId,
+        courseId
+      );
+
+    if (existingUserCourse) {
+      throw new ApplicationError(
+        'User is already enrolled in this course',
+        422
+      );
+    }
+
+    const courseMaterialIds =
+      await courseMaterialRepository.getCourseMaterialByCourseId(courseId);
+
+    await sequelize.transaction(async (transaction) => {
+      // BACKFILL COURSE MATERIAL STATUS
+      for (const course_material_id of courseMaterialIds) {
+        await courseMaterialStatusRepository.setCourseMaterialStatus(
+          {
+            user_id: userId,
+            course_material_id
+          },
+          transaction
+        );
+      }
+
+      // USER COURSE CREATE
+      const userCoursePayload = {
+        user_id: userId,
+        course_id: courseId
+      };
+
+      await userCourseRepository.createUserCourse(
+        userCoursePayload,
+        transaction
+      );
+    });
+  } catch (error) {
+    throw generateApplicationError(error, 'Error while enrolling course', 500);
+  }
+}

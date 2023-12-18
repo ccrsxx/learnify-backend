@@ -111,3 +111,26 @@ export async function updatePayCourse(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function payFreeCourse(req, res) {
+  const { course_id: courseId } = req.body;
+  const { id: userId } = res.locals.user;
+
+  try {
+    await paymentServices.paymentFreePass(courseId, userId);
+
+    res.status(200).json({
+      message: 'Free course successfully enrolled'
+    });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

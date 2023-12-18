@@ -764,6 +764,44 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
+  /user-payments/free:
+    post:
+      tags:
+        - user-payments
+      summary: Create enrolling free course
+      description: Create enrolling free course
+      operationId: enroll-free-course
+      requestBody:
+        description: Create enroll free course
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentBody'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Free course successfully enrolled
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '404':
+          $ref: '#/components/responses/CourseNotFoundError'
+        '422':
+          $ref: '#/components/schemas/CourseAlreadyEnrolledError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+
 components:
   schemas:
     User:
