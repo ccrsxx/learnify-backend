@@ -99,7 +99,7 @@ export async function createCourse(req, res) {
 }
 
 /**
- * @type {Types.AuthorizedController}
+ * @type {Types.AuthorizedController<typeof uploadCloudinary>}
  * @returns {Promise<void>}
  */
 export async function updateCourse(req, res) {
@@ -107,6 +107,7 @@ export async function updateCourse(req, res) {
   const { id } = req.params;
 
   const image = res.locals.image;
+
   const bodyWithImage = { ...body, image: image };
 
   try {

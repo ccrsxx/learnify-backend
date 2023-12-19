@@ -8,7 +8,6 @@ import * as validationMiddleware from '../middlewares/validation.js';
  * @type {Types.Route}
  * @returns {void}
  */
-
 export default (app) => {
   const router = Router();
 
@@ -29,6 +28,19 @@ export default (app) => {
   );
 
   router.get(
+    '/me',
+    authMiddleware.isAuthorized,
+    userPaymentController.getPaymentsHistory
+  );
+
+  router.post(
+    '/free',
+    authMiddleware.isAuthorized,
+    validationMiddleware.isCourseExists,
+    userPaymentController.payFreeCourse
+  );
+
+  router.get(
     '/:id',
     authMiddleware.isAuthorized,
     validationMiddleware.isPaymentExists,
@@ -40,12 +52,5 @@ export default (app) => {
     authMiddleware.isAuthorized,
     validationMiddleware.isPaymentExists,
     userPaymentController.updatePayCourse
-  );
-
-  router.post(
-    '/free',
-    authMiddleware.isAuthorized,
-    validationMiddleware.isCourseExists,
-    userPaymentController.payFreeCourse
   );
 };

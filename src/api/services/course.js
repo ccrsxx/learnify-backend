@@ -126,8 +126,27 @@ export async function updateCourse(id, payload) {
     'updated_at'
   ]);
 
+  const { target_audience } = parsedPayload;
+
+  const parsedPayloadWithCategoryAndUser =
+    /** @type {Models.CourseAttributes} */ ({
+      ...parsedPayload,
+      /**
+       * Parse target_audience from string to Array of string, because array
+       * that is sent from client with form-data will get converted to string
+       */
+      ...(target_audience && {
+        target_audience: JSON.parse(
+          /** @type {string} */ (/** @type {unknown} */ (target_audience))
+        )
+      })
+    });
+
   try {
-    const [, [course]] = await courseRepository.updateCourse(id, parsedPayload);
+    const [, [course]] = await courseRepository.updateCourse(
+      id,
+      parsedPayloadWithCategoryAndUser
+    );
 
     return course;
   } catch (err) {

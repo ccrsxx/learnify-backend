@@ -1,10 +1,11 @@
 import { ApplicationError } from '../../libs/error.js';
-import { isAuthorized } from './auth.js';
+import { isAdmin, isAuthorized } from './auth.js';
 import * as Types from '../../libs/types/common.js';
 import * as courseService from '../services/course.js';
 import * as paymentServices from '../services/user-payment.js';
 import * as UserPaymentModel from '../models/user-payment.js';
 import * as userNotificationService from '../services/user-notification.js';
+import * as CourseModel from '../models/course.js';
 import * as CourseMaterialStatusModel from '../models/course-material-status.js';
 import * as courseMaterialStatusService from '../services/course-material-status.js';
 
@@ -39,7 +40,11 @@ export function isValidCredential(req, res, next) {
 /**
  * Check if valid credentials.
  *
- * @type {Types.Middleware}
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isAdmin> & {
+ *     course: CourseModel.CourseAttributes;
+ *   }
+ * >}
  * @returns {Promise<void>}
  */
 export async function isCourseExists(req, res, next) {
