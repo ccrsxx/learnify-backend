@@ -1,5 +1,11 @@
 import Sequelize from 'sequelize';
 import { sequelize, CourseMaterial } from '../models/index.js';
+import * as Models from '../models/course-material.js';
+
+/** @param {Models.CourseMaterialAttributes} payload */
+export function createMaterial(payload) {
+  return CourseMaterial.create(payload);
+}
 
 /** @param {string} courseId */
 export async function getCourseMaterialByCourseId(courseId) {

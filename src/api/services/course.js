@@ -5,6 +5,9 @@ import {
 import { getCourseFilterQuery } from '../../libs/query.js';
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
+import * as courseChapterRepository from '../repositories/course-chapter.js';
+import * as courseMaterialRepository from '../repositories/course-material.js';
+
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as Models from '../models/course.js';
@@ -90,7 +93,8 @@ export async function createCourse(payload, userId) {
     'updated_at'
   ]);
 
-  const { target_audience } = parsedPayload;
+  // @ts-ignore
+  const { target_audience, course_chapter } = payload;
 
   const parsedPayloadWithCategoryAndUser =
     /** @type {Models.CourseAttributes} */ ({
@@ -108,10 +112,30 @@ export async function createCourse(payload, userId) {
     });
 
   try {
-    const car = await courseRepository.createCourse(
+    const course = await courseRepository.createCourse(
       parsedPayloadWithCategoryAndUser
     );
-    return car;
+    for (const chapter of course_chapter) {
+      const { course_material } = chapter;
+
+      // Create the chapter
+      const newChapter = await courseChapterRepository.createChapter({
+        ...chapter,
+        // @ts-ignore
+        course_id: course.id
+      });
+
+      // Create the chapter materials
+      for (const material of course_material) {
+        await courseMaterialRepository.createMaterial({
+          ...material,
+          // @ts-ignore
+          course_chapter_id: newChapter.id
+        });
+      }
+    }
+
+    return course;
   } catch (err) {
     throw generateApplicationError(err, 'Error while creating course', 500);
   }
