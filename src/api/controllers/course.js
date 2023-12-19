@@ -106,7 +106,7 @@ export async function updateCourse(req, res) {
   const { body } = req;
   const { id } = req.params;
 
-  const image = res.locals.image ?? res.locals.course.image;
+  const image = res.locals.image;
 
   const bodyWithImage = { ...body, image: image };
 

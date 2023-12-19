@@ -49,7 +49,7 @@ export async function uploadCloudinary(req, res, next) {
   const imageFromRequest = req.file;
 
   if (!imageFromRequest) {
-    res.locals.image = null;
+    res.locals.image = req.body?.image ?? null;
 
     next();
     return;
