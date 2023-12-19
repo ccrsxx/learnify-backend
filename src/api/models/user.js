@@ -46,6 +46,10 @@ export default (sequelize, DataTypes) => {
       this.hasMany(models.Course, {
         foreignKey: 'user_id'
       });
+
+      this.hasMany(models.PasswordReset, {
+        foreignKey: 'user_id'
+      });
     }
   }
 

@@ -16,6 +16,7 @@ import config from '../../db/config/database.js';
  * @property {ReturnType<typeof import('./course-category.js').default>} CourseCategory
  * @property {ReturnType<typeof import('./course-material.js').default>} CourseMaterial
  * @property {ReturnType<typeof import('./course-material-status.js').default>} CourseMaterialStatus
+ * @property {ReturnType<typeof import('./password-reset.js').default>} PasswordReset
  */
 
 /** @typedef {keyof Omit<Database, 'sequelize' | 'Sequelize'>} ModelName */
@@ -68,5 +69,6 @@ export const {
   CourseChapter,
   CourseCategory,
   CourseMaterial,
-  CourseMaterialStatus
+  CourseMaterialStatus,
+  PasswordReset
 } = await initializeDatabase();
