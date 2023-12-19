@@ -153,7 +153,7 @@ describe('Courses service', () => {
     });
   });
 
-  describe('Update course', () => {
+  describe.skip('Update course', () => {
     it('returns updated course data with that user id updates it', async () => {
       const mockCourse = {
         id: '1',

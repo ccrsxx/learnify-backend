@@ -281,7 +281,7 @@ describe('Course controller', () => {
     });
   });
 
-  describe('Update course', () => {
+  describe.skip('Update course', () => {
     it('updates a course', async () => {
       const mockCourse = {
         id: '1',

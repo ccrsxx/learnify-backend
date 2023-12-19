@@ -6,8 +6,10 @@ import { getCourseFilterQuery } from '../../libs/query.js';
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
 import * as userCourseRepository from '../repositories/user-course.js';
+import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
+import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
 
 /** @param {Types.RequestQuery} params */
 export async function getCourses(params) {
@@ -120,35 +122,94 @@ export async function createCourse(payload, userId) {
  * @param {string} id
  */
 export async function updateCourse(id, payload) {
-  const parsedPayload = omitPropertiesFromObject(payload, [
-    'id',
-    'created_at',
-    'updated_at'
-  ]);
+  // @ts-ignore
+  const { course_chapter } = payload;
+  try {
+    const course = await Course.findByPk(id);
 
-  const { target_audience } = parsedPayload;
+    // If course is not found
+    if (!course) {
+      throw new ApplicationError('Course not found', 404);
+    }
 
-  const parsedPayloadWithCategoryAndUser =
-    /** @type {Models.CourseAttributes} */ ({
-      ...parsedPayload,
-      /**
-       * Parse target_audience from string to Array of string, because array
-       * that is sent from client with form-data will get converted to string
-       */
-      ...(target_audience && {
-        target_audience: JSON.parse(
-          /** @type {string} */ (/** @type {unknown} */ (target_audience))
-        )
-      })
+    // Retrieve the list of chapters from the database
+    const existingChapters = await CourseChapter.findAll({
+      where: { course_id: id },
+      attributes: ['id']
     });
 
-  try {
-    const [, [course]] = await courseRepository.updateCourse(
-      id,
-      parsedPayloadWithCategoryAndUser
-    );
+    // Delete any chapters that are in the database but not in the payload
+    // @ts-ignore
+    const chapterIdsInPayload = course_chapter.map((chapter) => chapter.id);
+    const chapterIdsToDelete = existingChapters
+      // @ts-ignore
+      .filter((chapter) => !chapterIdsInPayload.includes(chapter.id))
+      // @ts-ignore
+      .map((chapter) => chapter.id);
+    await CourseChapter.destroy({ where: { id: chapterIdsToDelete } });
 
-    return course;
+    await course.update(payload);
+
+    for (const chapter of course_chapter) {
+      const { id: chapterId, course_material } = chapter;
+
+      // Retrieve the list of chapters from the database
+      const existingMaterials = await CourseMaterial.findAll({
+        where: { course_chapter_id: chapterId },
+        attributes: ['id']
+      });
+
+      // Delete any materials that are in the database but not in the payload
+      const materialIdsInPayload = course_material.map(
+        // @ts-ignore
+        (material) => material.id
+      );
+      const materialIdsToDelete = existingMaterials
+        // @ts-ignore
+        .filter((material) => !materialIdsInPayload.includes(material.id))
+        // @ts-ignore
+        .map((material) => material.id);
+      await CourseMaterial.destroy({ where: { id: materialIdsToDelete } });
+
+      const courseChapter = await CourseChapter.findByPk(chapterId);
+
+      if (courseChapter) {
+        await courseChapter.update(chapter);
+
+        for (const material of course_material) {
+          const { id: materialId } = material;
+
+          const courseMaterial = await CourseMaterial.findByPk(materialId);
+
+          if (courseMaterial) {
+            await courseMaterial.update(material);
+          } else {
+            const newMaterial = await CourseMaterial.create(material);
+            await courseMaterialStatusRepository.backfillCourseMaterialStatus(
+              id,
+              newMaterial.dataValues.id
+            );
+          }
+        }
+      } else {
+        const newChapter = await CourseChapter.create(chapter);
+
+        for (const material of course_material) {
+          const newMaterial = await CourseMaterial.create({
+            ...material,
+            course_chapter_id: newChapter.dataValues.id
+          });
+          await courseMaterialStatusRepository.backfillCourseMaterialStatus(
+            id,
+            newMaterial.dataValues.id
+          );
+        }
+      }
+    }
+
+    const updatedCourse = await courseRepository.getCourseById(id);
+
+    return updatedCourse;
   } catch (err) {
     throw generateApplicationError(err, 'Error while updating course', 500);
   }
