@@ -1,6 +1,7 @@
 import Sequelize from 'sequelize';
 import { Op } from 'sequelize';
-import { UserPayment, User, Course, CourseCategory } from '../models/index.js';
+import { User, Course, UserPayment, CourseCategory } from '../models/index.js';
+import { getTotalDuration, getTotalMaterials } from './course.js';
 
 /** @param {any} payload */
 export function payCourse(payload) {
@@ -61,6 +62,29 @@ export function getUserPaymentById(id) {
             as: 'course_category'
           }
         ]
+      }
+    ]
+  });
+}
+
+/** @param {string} userId */
+export function getPaymentsHistory(userId) {
+  return UserPayment.findAll({
+    where: { user_id: userId },
+    order: [['created_at', 'DESC']],
+    include: [
+      {
+        model: Course,
+        as: 'course',
+        include: [
+          {
+            model: CourseCategory,
+            as: 'course_category'
+          }
+        ],
+        attributes: {
+          include: [getTotalDuration(true), getTotalMaterials(true)]
+        }
       }
     ]
   });
