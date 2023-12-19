@@ -99,14 +99,15 @@ export async function createCourse(req, res) {
 }
 
 /**
- * @type {Types.AuthorizedController}
+ * @type {Types.AuthorizedController<typeof uploadCloudinary>}
  * @returns {Promise<void>}
  */
 export async function updateCourse(req, res) {
   const { body } = req;
   const { id } = req.params;
 
-  const image = res.locals.image;
+  const image = res.locals.image ?? res.locals.course.image;
+
   const bodyWithImage = { ...body, image: image };
 
   try {
