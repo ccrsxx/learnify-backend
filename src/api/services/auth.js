@@ -97,14 +97,39 @@ export async function sendVerifToResetPassword(email) {
     const verifyToReset =
       await resetPasswordRepositories.setPasswordReset(payload);
     const mailInfo = {
-      to: email,
+      to: 'luthfiyanto1425@gmail.com',
       subject: 'Password Reset Verification Required',
-      html: `<p>Hi ${email},<br>
-
-      To reset your password for Learnify, please use the following verification link:</p><a href='localhost:3000/auth/password-reset/${verifyToReset.dataValues.token}'>Click here to verify</a><p>If you didn't request this, please contact us immediately at [Your Customer Support Email/Phone].</p><p>Thank you</p><p>Learnify</p>`
+      html: `<p>Hi ${email},<br>To reset your password for Learnify, please use the following verification link:</p><a href='localhost:3000/auth/password-reset/${verifyToReset.dataValues.token}'>Click here to verify</a><p>If you didn't request this, please contact us immediately at [Your Customer Support Email/Phone].</p><p>Thank you</p><p>Learnify</p>`
     };
+
     mailer.sendEmail(mailInfo);
     return verifyToReset;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting user', 500);
+  }
+}
+
+/** @param {string} token */
+export async function checkLinkToResetPassword(token) {
+  try {
+    const resetPasswordData =
+      await resetPasswordRepositories.getDataPasswordResetByToken(token);
+
+    if (!resetPasswordData) {
+      throw new ApplicationError('Reset Password Request not found', 404);
+    }
+    if (!resetPasswordData.dataValues.used) {
+      throw new ApplicationError('Link was used', 400);
+    }
+    const expired = resetPasswordData.dataValues.expired_at;
+    const linkAccessedDate = new Date();
+    if (linkAccessedDate > expired) {
+      throw new ApplicationError('Link was expired', 400);
+    }
+
+    await resetPasswordRepositories.updateUsedPasswordResetLink(
+      resetPasswordData.dataValues.id
+    );
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting user', 500);
   }

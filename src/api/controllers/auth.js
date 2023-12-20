@@ -133,3 +133,23 @@ export async function sendVerifToResetPassword(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function checkLinkToResetPassword(req, res) {
+  const token = req.params.token;
+  try {
+    // @ts-ignore
+    await authService.checkLinkToResetPassword(token);
+    res.status(200).json({ message: 'Verification is valid' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

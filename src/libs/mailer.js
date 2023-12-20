@@ -17,7 +17,7 @@ export function sendEmail(mailInfo) {
     {
       from: 'Learnify Security <noreplay@gmail.com>',
       // @ts-ignore
-      mailInfo
+      ...mailInfo
     },
     (err) => {
       if (err) {
