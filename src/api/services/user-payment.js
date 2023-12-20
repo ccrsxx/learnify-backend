@@ -8,6 +8,7 @@ import * as courseMaterialRepository from '../repositories/course-material.js';
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as userPaymentModel from '../models/user-payment.js';
+import * as UserNotificationService from '../services/user-notification.js';
 
 export async function getPayments() {
   try {
@@ -176,6 +177,11 @@ export async function updatePayCourse(
       );
 
       return updatedPayment;
+    });
+
+    await UserNotificationService.createUserNotification(userId, {
+      name: 'Kelas',
+      description: `Kamu berhasil masuk di kelas ${existingUserPayment.course.name}`
     });
 
     return paymentResult;

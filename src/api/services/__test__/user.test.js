@@ -4,6 +4,7 @@ import { ApplicationError } from '../../../libs/error.js';
 /** @typedef {Record<keyof import('../../repositories/user.js'), jest.Mock>} UserRepositoryMock */
 /** @typedef {Record<keyof import('../user.js'), jest.Mock>} UserServiceMock */
 /** @typedef {Record<keyof import('../auth.js'), jest.Mock>} AuthServiceMock */
+/** @typedef {Record<keyof import('../user-notification.js'), jest.Mock>} UserNotificationMock */
 
 jest.unstable_mockModule(
   '../../repositories/user.js',
@@ -12,6 +13,8 @@ jest.unstable_mockModule(
       getUser: jest.fn(),
       getUserByEmail: jest.fn(),
       getUserByPhoneNumber: jest.fn(),
+      getAdminUserByEmail: jest.fn(),
+      getAdminUserByPhoneNumber: jest.fn(),
       createUser: jest.fn(),
       updateUser: jest.fn(),
       destroyUser: jest.fn(),
@@ -27,6 +30,14 @@ jest.unstable_mockModule(
     })
 );
 
+jest.unstable_mockModule(
+  '../user-notification.js',
+  () =>
+    /** @type {UserNotificationMock} */ ({
+      createUserNotification: jest.fn()
+    })
+);
+
 const userRepository = /** @type {UserRepositoryMock} */ (
   await import('../../repositories/user.js')
 );
@@ -34,6 +45,10 @@ const userRepository = /** @type {UserRepositoryMock} */ (
 const authService = /** @type {AuthServiceMock} */ (await import('../auth.js'));
 
 const userService = /** @type {UserServiceMock} */ (await import('../user.js'));
+
+const userNotificationService = /** @type {UserNotificationMock} */ (
+  await import('../user-notification.js')
+);
 
 describe('User service', () => {
   describe('Get user', () => {
@@ -178,7 +193,8 @@ describe('User service', () => {
     it('returns user data with admin false when member creates it', async () => {
       const mockUser = {
         name: 'Emilia',
-        password: 'Emilia'
+        password: 'Emilia',
+        dataValues: { id: '1' }
       };
 
       const mockHashedPassword = 'Emilia-tan';
@@ -195,6 +211,9 @@ describe('User service', () => {
       );
 
       userRepository.createUser.mockImplementation((payload) => payload);
+      userNotificationService.createUserNotification.mockReturnValue(
+        () => undefined
+      );
 
       const userResult = await userService.createUser(mockUser);
 
