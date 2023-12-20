@@ -7,12 +7,10 @@ import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as courseRepository from '../repositories/course.js';
 import * as courseChapterRepository from '../repositories/course-chapter.js';
 import * as courseMaterialRepository from '../repositories/course-material.js';
-
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as Models from '../models/course.js';
 import * as Types from '../../libs/types/common.js';
-import { Course, CourseChapter, CourseMaterial } from '../models/index.js';
 
 /** @param {Types.RequestQuery} params */
 export async function getCourses(params) {
@@ -94,7 +92,7 @@ export async function createCourse(payload, userId) {
   ]);
 
   // @ts-ignore
-  const { target_audience, course_chapter } = payload;
+  const { target_audience } = payload;
 
   const parsedPayloadWithCategoryAndUser =
     /** @type {Models.CourseAttributes} */ ({
@@ -115,25 +113,6 @@ export async function createCourse(payload, userId) {
     const course = await courseRepository.createCourse(
       parsedPayloadWithCategoryAndUser
     );
-    for (const chapter of course_chapter) {
-      const { course_material } = chapter;
-
-      // Create the chapter
-      const newChapter = await courseChapterRepository.createChapter({
-        ...chapter,
-        // @ts-ignore
-        course_id: course.id
-      });
-
-      // Create the chapter materials
-      for (const material of course_material) {
-        await courseMaterialRepository.createMaterial({
-          ...material,
-          // @ts-ignore
-          course_chapter_id: newChapter.id
-        });
-      }
-    }
 
     return course;
   } catch (err) {
@@ -149,7 +128,7 @@ export async function updateCourse(id, payload) {
   // @ts-ignore
   const { course_chapter } = payload;
   try {
-    const course = await Course.findByPk(id);
+    const course = await courseRepository.getCourseById(id);
 
     // If course is not found
     if (!course) {
@@ -157,10 +136,8 @@ export async function updateCourse(id, payload) {
     }
 
     // Retrieve the list of chapters from the database
-    const existingChapters = await CourseChapter.findAll({
-      where: { course_id: id },
-      attributes: ['id']
-    });
+    const existingChapters =
+      await courseChapterRepository.getChaptersByCourseId(id);
 
     // Delete any chapters that are in the database but not in the payload
     // @ts-ignore
@@ -170,7 +147,8 @@ export async function updateCourse(id, payload) {
       .filter((chapter) => !chapterIdsInPayload.includes(chapter.id))
       // @ts-ignore
       .map((chapter) => chapter.id);
-    await CourseChapter.destroy({ where: { id: chapterIdsToDelete } });
+
+    await courseChapterRepository.destroyChapter(chapterIdsToDelete);
 
     await course.update(payload);
 
@@ -178,11 +156,9 @@ export async function updateCourse(id, payload) {
       const { id: chapterId, course_material } = chapter;
 
       // Retrieve the list of chapters from the database
-      const existingMaterials = await CourseMaterial.findAll({
-        where: { course_chapter_id: chapterId },
-        attributes: ['id']
-      });
-
+      const existingMaterials = chapterId
+        ? await courseMaterialRepository.getMaterialsByChapterId(chapterId)
+        : [];
       // Delete any materials that are in the database but not in the payload
       const materialIdsInPayload = course_material.map(
         // @ts-ignore
@@ -193,22 +169,30 @@ export async function updateCourse(id, payload) {
         .filter((material) => !materialIdsInPayload.includes(material.id))
         // @ts-ignore
         .map((material) => material.id);
-      await CourseMaterial.destroy({ where: { id: materialIdsToDelete } });
+      // @ts-ignore
+      await courseMaterialRepository.destroyMaterial(materialIdsToDelete);
 
-      const courseChapter = await CourseChapter.findByPk(chapterId);
-
+      const courseChapter = chapterId
+        ? await courseChapterRepository.getChapterById(chapterId)
+        : null;
       if (courseChapter) {
-        await courseChapter.update(chapter);
+        await courseChapterRepository.updateChapter(chapter, chapterId);
 
         for (const material of course_material) {
           const { id: materialId } = material;
+          if (materialId) {
+            const courseMaterial =
+              await courseMaterialRepository.getMaterialById(materialId);
 
-          const courseMaterial = await CourseMaterial.findByPk(materialId);
-
-          if (courseMaterial) {
-            await courseMaterial.update(material);
+            if (courseMaterial) {
+              await courseMaterialRepository.updateMaterial(
+                material,
+                materialId
+              );
+            }
           } else {
-            const newMaterial = await CourseMaterial.create(material);
+            const newMaterial =
+              await courseMaterialRepository.createMaterial(material);
             await courseMaterialStatusRepository.backfillCourseMaterialStatus(
               id,
               newMaterial.dataValues.id
@@ -216,10 +200,10 @@ export async function updateCourse(id, payload) {
           }
         }
       } else {
-        const newChapter = await CourseChapter.create(chapter);
+        const newChapter = await courseChapterRepository.createChapter(chapter);
 
         for (const material of course_material) {
-          const newMaterial = await CourseMaterial.create({
+          const newMaterial = await courseMaterialRepository.createMaterial({
             ...material,
             course_chapter_id: newChapter.dataValues.id
           });
