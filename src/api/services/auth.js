@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto';
 import { JWT_SECRET } from '../../libs/env.js';
 import * as resetPasswordRepositories from '../repositories/password-reset.js';
 import * as userService from '../services/user.js';
+import * as userRepository from '../repositories/user.js';
 import * as mailer from './../../libs/mailer.js';
 import {
   ApplicationError,
@@ -116,21 +117,31 @@ export async function checkLinkToResetPassword(token) {
       await resetPasswordRepositories.getDataPasswordResetByToken(token);
 
     if (!resetPasswordData) {
-      throw new ApplicationError('Reset Password Request not found', 404);
+      throw new ApplicationError('Verification invalid', 404);
     }
-    if (!resetPasswordData.dataValues.used) {
-      throw new ApplicationError('Link was used', 400);
-    }
-    const expired = resetPasswordData.dataValues.expired_at;
-    const linkAccessedDate = new Date();
-    if (linkAccessedDate > expired) {
-      throw new ApplicationError('Link was expired', 400);
-    }
-
-    await resetPasswordRepositories.updateUsedPasswordResetLink(
-      resetPasswordData.dataValues.id
-    );
+    return resetPasswordData;
   } catch (err) {
     throw generateApplicationError(err, 'Error while getting user', 500);
+  }
+}
+
+/** @param {{ token: string; password: string }} payload */
+export async function changePassword(payload) {
+  const { token, password } = payload;
+  try {
+    const resetPasswordData = await checkLinkToResetPassword(token);
+    const user_id = resetPasswordData.dataValues.user_id;
+    const encryptedPassword = await hashPassword(password);
+
+    const updatePassword = {
+      password: encryptedPassword
+    };
+
+    await Promise.all([
+      userRepository.updateUser(user_id, updatePassword),
+      resetPasswordRepositories.updateUsedPasswordResetLink(token)
+    ]);
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while verify user', 500);
   }
 }

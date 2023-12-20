@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { PasswordReset } from '../models/index.js';
 
 // @ts-ignore
@@ -11,13 +12,15 @@ export async function setPasswordReset(payload) {
 
 /** @param {string} token */
 export async function getDataPasswordResetByToken(token) {
-  return await PasswordReset.findOne({ where: { token } });
+  return await PasswordReset.findOne({
+    where: { token, used: false, expired_at: { [Op.gt]: new Date() } }
+  });
 }
 
-/** @param {string} id */
-export async function updateUsedPasswordResetLink(id) {
+/** @param {string} token */
+export async function updateUsedPasswordResetLink(token) {
   return await PasswordReset.update(
     { used: true },
-    { where: { id }, returning: true }
+    { where: { token }, returning: true }
   );
 }

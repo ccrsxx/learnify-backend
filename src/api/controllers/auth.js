@@ -153,3 +153,22 @@ export async function checkLinkToResetPassword(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function changePassword(req, res) {
+  try {
+    const payload = req.body;
+    await authService.changePassword(payload);
+    res.status(200).json({ message: 'Password successfully updated' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
