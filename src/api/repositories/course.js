@@ -121,7 +121,20 @@ export function getCourseWithUserStatus(id, userId) {
 
 /** @param {Models.CourseAttributes} payload */
 export function createCourse(payload) {
-  return Course.create(payload);
+  return Course.create(payload, {
+    include: [
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material'
+          }
+        ]
+      }
+    ]
+  });
 }
 
 /**
