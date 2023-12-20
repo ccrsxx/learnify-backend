@@ -38,9 +38,9 @@ tags:
   - name: course-material-status
     description: Everything about course material status
   - name: user-payments
-    description: Everything about user-payments
-  - name: user-courses
-    description: Everything about user-payments
+    description: Everything about user payments
+  - name: user-notifications
+    description: Everything about user notifications
 paths:
   /:
     get:
@@ -668,31 +668,6 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-  /user-payments/me:
-    get:
-      tags:
-        - user-payments
-      summary: Get user payments history
-      description: Get user payments history
-      operationId: payment-data
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    $ref: '#/components/schemas/PaymentsHistory'
-        '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
-        '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
-      security:
-        - token: []
   /user-payments/{id}:
     get:
       tags:
@@ -828,20 +803,40 @@ paths:
           $ref: '#/components/responses/InternalServerError'
       security:
         - token: []
-  /user-courses/{id}:
-    put:
+  /user-notifications:
+    get:
       tags:
-        - user-courses
-      summary: Set onboarded true
-      description: Set onboarded true
-      operationId: set-onboarded-true
-      parameters:
-        - in: path
-          name: id
-          schema:
-            type: string
-          required: true
-          description: The User Course ID
+        - user-notifications
+      summary: Get all user notifications
+      description: Get all user notifications
+      operationId: user-notifications
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserNotification'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /user-notifications/read-all:
+    post:
+      tags:
+        - user-notifications
+      summary: Update all user notifications status viewed
+      description: Update the status viewed on all user notifications
+      operationId: update-all-notifications-status
       responses:
         '200':
           description: Successful operation
@@ -852,21 +847,78 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Onboarded updated successfully
+                    example: All notifications have been read
                   data:
-                    $ref: '#/components/schemas/UpdatedOnboardedTrue'
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserNotificationUpdated'
         '400':
-          description: Bad request
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /user-notifications/{id}:
+    put:
+      tags:
+        - user-notifications
+      summary: Update user notifications status viewed by ID
+      description: Update status viewed in user notifications by ID
+      operationId: update-notifications-status
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The User notification ID
+      responses:
+        '200':
+          description: Successful operation
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/MissingAuthorizationError'
-                  - $ref: '#/components/schemas/PaymentMethodNotNull'
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: User notification updated successfully
+                  data:
+                    $ref: '#/components/schemas/UserNotificationUpdated'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
-        '404':
-          $ref: '#/components/responses/UserCourseNotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+    delete:
+      tags:
+        - user-notifications
+      summary: Delete user notifications by ID
+      description: Delete user notifications by ID
+      operationId: delete-notifications
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The User notification ID
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserNotificationDeleted'
+        '400':
+          $ref: '#/components/responses/MissingAuthorizationError'
+        '401':
+          $ref: '#/components/responses/InvalidAuthorizationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -993,6 +1045,60 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    UserNotification:
+      type: object
+      properties:
+        id:
+          type: string
+          example: fc376e1d-b409-450f-9f6d-a96eba4ba73c
+        name:
+          type: string
+          example: Promosi
+        viewed:
+          type: boolean
+          example: false
+        description:
+          type: string
+          example: 'Dapatkan potongan 50% selama bulan januari!'
+        user_id:
+          type: string
+          example: 68a58152-8b12-449f-9eae-ec3485941bad
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    UserNotificationUpdated:
+      type: object
+      properties:
+        id:
+          type: string
+          example: fc376e1d-b409-450f-9f6d-a96eba4ba73c
+        name:
+          type: string
+          example: Notifikasi
+        viewed:
+          type: boolean
+          example: true
+        description:
+          type: string
+          example: 'Password berhasil diubah'
+        user_id:
+          type: string
+          example: 68a58152-8b12-449f-9eae-ec3485941bad
+        created_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+        updated_at:
+          type: string
+          example: '2021-01-01T00:00:00.000Z'
+    UserNotificationDeleted:
+      type: object
+      properties:
+        message:
+          type: string
+          example: User notification deleted successfully
     UserCredentialsWithEmail:
       type: object
       properties:
@@ -1511,43 +1617,6 @@ components:
           $ref: '#/components/schemas/User'
         course:
           $ref: '#/components/schemas/Course'
-    PaymentsHistory:
-      type: object
-      properties:
-        id:
-          type: string
-          example: 16e6834c-c6db-4ba9-a720-2223d0b4a5e4
-        status:
-          example: COMPLETED
-          enum:
-            - PENDING
-            - WAITING_VERIFICATION
-            - COMPLETED
-        payment_method:
-          example: BANK_TRANSFER
-          enum:
-            - CREDIT_CARD
-            - BANK_TRANSFER
-        paid_at:
-          type: string
-          example: '2023-12-12T14:05:02.542Z'
-        user_id:
-          type: string
-          example: 68a58152-8b12-449f-9eae-ec3485941bac
-        course_id:
-          type: string
-          example: 5db0a017-6041-4d9a-8f44-5fca03d5378a
-        expired_at:
-          type: string
-          example: '2023-12-13T14:04:41.177Z'
-        created_at:
-          type: string
-          example: '2023-12-12T14:04:41.182Z'
-        updated_at:
-          type: string
-          example: '2023-12-12T14:05:02.545Z'
-        course:
-          $ref: '#/components/schemas/Course'
     PaymentBody:
       type: object
       properties:
@@ -1611,28 +1680,6 @@ components:
         updated_at:
           type: string
           example: '2023-12-13T17:08:25.120Z'
-    UpdatedOnboardedTrue:
-      type: object
-      properties:
-        id:
-          type: string
-          example: a8a38855-4a2e-492a-96d0-f493974a328b
-        user_id:
-          type: string
-          example: 68a58152-8b12-449f-9eae-ec3485941bac
-        onboarded:
-          type: boolean
-          example: true
-        course_id:
-          type: string
-          example: c63a172f-4eb1-44b2-8c90-66336b016d8f
-
-        created_at:
-          type: string
-          example: '2023-12-12T13:25:00.680Z'
-        updated_at:
-          type: string
-          example: '2023-12-16T15:12:49.940Z'
     Body:
       type: object
       properties:
@@ -1767,12 +1814,6 @@ components:
         message:
           type: string
           example: 'Error while getting payment details: Payment not found'
-    UserCourseNotFound:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'Error while getting payment details: User Course not found'
     PaymentMethodNotNull:
       type: object
       properties:
@@ -1859,17 +1900,11 @@ components:
           schema:
             $ref: '#/components/schemas/CourseAlreadyEnrolledError'
     PaymentNotFound:
-      description: payment not found
+      description: payment method cannot be null
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/PaymentNotFound'
-    UserCourseNotFound:
-      description: User Course not Found
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UserCourseNotFound'
     PaymentMethodNotNull:
       description: payment method cannot be null
       content:
