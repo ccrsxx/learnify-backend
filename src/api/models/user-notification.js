@@ -1,6 +1,17 @@
 import { Model } from 'sequelize';
 
 /**
+ * @typedef UserNotificationAttributes
+ * @property {string} id
+ * @property {string} name
+ * @property {boolean} viewed
+ * @property {string} description
+ * @property {string} user_id
+ * @property {Date} created_at
+ * @property {Date} updated_at
+ */
+
+/**
  * @param {import('sequelize').Sequelize} sequelize
  * @param {import('sequelize').DataTypes} DataTypes
  */

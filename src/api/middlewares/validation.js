@@ -1,13 +1,14 @@
 import { ApplicationError } from '../../libs/error.js';
 import { isAdmin, isAuthorized } from './auth.js';
 import * as Types from '../../libs/types/common.js';
+import * as CourseModel from '../models/course.js';
 import * as courseService from '../services/course.js';
 import * as paymentServices from '../services/user-payment.js';
 import * as UserPaymentModel from '../models/user-payment.js';
 import * as userNotificationService from '../services/user-notification.js';
-import * as CourseModel from '../models/course.js';
-import * as CourseMaterialStatusModel from '../models/course-material-status.js';
 import * as courseMaterialStatusService from '../services/course-material-status.js';
+import * as CourseMaterialStatusModel from '../models/course-material-status.js';
+import * as UserNotificationModel from '../models/user-notification.js';
 
 /**
  * Check if valid credentials.
@@ -125,14 +126,20 @@ export async function isCourseMaterialStatusExists(req, res, next) {
   next();
 }
 
-// @ts-ignore
+/**
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isAuthorized> & {
+ *     userNotification: UserNotificationModel.UserNotificationAttributes;
+ *   }
+ * >}
+ * @returns {Promise<void>}
+ */
 export async function isUserNotificationExists(req, res, next) {
   const { id } = req.params;
 
   try {
     const userNotification =
       await userNotificationService.getUserNotificationById(id);
-
     res.locals.userNotification = userNotification.dataValues;
   } catch (err) {
     if (err instanceof ApplicationError) {
