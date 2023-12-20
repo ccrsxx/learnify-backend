@@ -3,6 +3,7 @@ import {
   generateApplicationError
 } from '../../libs/error.js';
 import * as userNotificationRepository from '../repositories/user-notification.js';
+import * as UserNotificationModel from '../models/user-notification.js';
 
 /** @param {string} id */
 export async function getUserNotification(id) {
@@ -35,6 +36,28 @@ export async function getUserNotificationById(id) {
     throw generateApplicationError(
       err,
       'Error while getting user notification details',
+      500
+    );
+  }
+}
+
+/**
+ * @param {string} userId
+ * @param {Partial<UserNotificationModel.UserNotificationAttributes>} payload
+ */
+export async function createUserNotification(userId, payload) {
+  try {
+    const notification =
+      await userNotificationRepository.createUserNotification({
+        ...payload,
+        user_id: userId
+      });
+
+    return notification;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while creating user notification',
       500
     );
   }

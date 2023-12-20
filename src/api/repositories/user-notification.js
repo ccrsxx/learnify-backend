@@ -1,4 +1,5 @@
 import { UserNotification } from '../models/index.js';
+import * as UserNotificationModel from '../models/user-notification.js';
 
 /** @param {string} userId */
 export function getUserNotification(userId) {
@@ -30,6 +31,11 @@ export function updateUserNotification(id) {
       returning: true
     }
   );
+}
+
+/** @param {Partial<UserNotificationModel.UserNotificationAttributes>} payload */
+export function createUserNotification(payload) {
+  return UserNotification.create(payload);
 }
 
 /** @param {string} id */
