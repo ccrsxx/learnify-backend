@@ -24,3 +24,11 @@ export async function updateUsedPasswordResetLink(token) {
     { where: { token }, returning: true }
   );
 }
+
+/** @param {string} user_id */
+export async function setUsedTrueByUserId(user_id) {
+  return await PasswordReset.update(
+    { used: true },
+    { where: { user_id, expired_at: { [Op.gt]: new Date() } }, returning: true }
+  );
+}

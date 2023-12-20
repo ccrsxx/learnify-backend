@@ -87,6 +87,8 @@ export async function sendVerifToResetPassword(email) {
     if (!user) {
       throw new ApplicationError('User not found', 404);
     }
+    await resetPasswordRepositories.setUsedTrueByUserId(user.dataValues.id);
+
     const nextHourDate = new Date();
     const payload = {
       used: false,
