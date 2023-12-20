@@ -111,3 +111,25 @@ export async function loginWithAdmin(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function sendVerifToResetPassword(req, res) {
+  const { email } = req.body;
+  try {
+    const verification = await authService.sendVerifToResetPassword(email);
+    res.status(200).json({
+      message: 'Account verification sent successfully',
+      data: verification
+    });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

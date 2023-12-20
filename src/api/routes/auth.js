@@ -29,4 +29,6 @@ export default (app) => {
     validationMiddleware.isValidCredential,
     authController.register
   );
+
+  router.post('/password-reset', authController.sendVerifToResetPassword);
 };
