@@ -222,8 +222,6 @@ paths:
                   message:
                     type: string
                     example: Account verification sent successfully
-                  data:
-                    $ref: '#/components/schemas/ResetPasswordRequest'
         '400':
           $ref: '#/components/responses/ValidationError'
         '500':
@@ -1297,30 +1295,6 @@ components:
         password:
           type: string
           example: emilia-rezero
-    ResetPasswordRequest:
-      type: object
-      properties:
-        id:
-          type: string
-          example: '7bf3cc8e-3be6-451e-aaae-a5fae28bf388'
-        used:
-          type: boolean
-          example: false
-        token:
-          type: string
-          example: 'Z27Q0Ye5MEpVjuFKzFCTAqkbZKYuPEVr'
-        expired_at:
-          type: date
-          example: '2023-12-20T13:14:18.622Z'
-        user_id:
-          type: string
-          example: '9d4b9334-cfac-4418-9b7a-0f9832548a0d'
-        created_at:
-          type: date
-          example: '2023-12-20T12:14:18.623Z'
-        updated_at:
-          type: date
-          example: '2023-12-20T12:14:18.623Z'
     Course:
       type: object
       properties:

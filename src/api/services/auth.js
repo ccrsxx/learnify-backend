@@ -90,7 +90,7 @@ export async function sendVerifyToResetPassword(email) {
       throw new ApplicationError('User not found', 404);
     }
 
-    const verifyToReset = await sequelize.transaction(async (transaction) => {
+    await sequelize.transaction(async (transaction) => {
       await resetPasswordRepository.setUsedTrueByUserId(
         user.dataValues.id,
         transaction
@@ -112,11 +112,7 @@ export async function sendVerifyToResetPassword(email) {
       );
 
       await sendResetPasswordEmail(email, verifyToReset.dataValues.token);
-
-      return verifyToReset;
     });
-
-    return verifyToReset;
   } catch (err) {
     throw generateApplicationError(
       err,

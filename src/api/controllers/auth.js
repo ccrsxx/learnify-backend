@@ -120,11 +120,10 @@ export async function sendVerifyToResetPassword(req, res) {
   const { email } = req.body;
 
   try {
-    const verification = await authService.sendVerifyToResetPassword(email);
+    await authService.sendVerifyToResetPassword(email);
 
     res.status(201).json({
-      message: 'Account verification sent successfully',
-      data: verification
+      message: 'Account verification sent successfully'
     });
   } catch (err) {
     if (err instanceof ApplicationError) {
