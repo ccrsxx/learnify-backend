@@ -918,10 +918,7 @@ paths:
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/CourseAlreadyEnrolledError'
-                  - $ref: '#/components/schemas/PaymentAlreadyCompleted'
-                  - $ref: '#/components/schemas/PaymentExpired'
+                $ref: '#/components/schemas/CourseAlreadyEnrolledError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -1904,18 +1901,6 @@ components:
         message:
           type: string
           example: 'Payment method cannot be null'
-    PaymentAlreadyCompleted:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'This payment is already completed'
-    PaymentExpired:
-      type: object
-      properties:
-        message:
-          type: string
-          example: 'This course payment is already expired'
   responses:
     InvalidAuthorizationError:
       description: Invalid authorization header
@@ -1995,18 +1980,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PaymentMethodNotNull'
-    PaymentAlreadyCompleted:
-      description: Payment already completed
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentAlreadyCompleted'
-    PaymentExpired:
-      description: Payment Expired
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/PaymentExpired'
   requestBodies:
     UserBody:
       description: User object that needs to be added

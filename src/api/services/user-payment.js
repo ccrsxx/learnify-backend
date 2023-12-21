@@ -8,6 +8,7 @@ import * as courseMaterialRepository from '../repositories/course-material.js';
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as userPaymentModel from '../models/user-payment.js';
+import * as CourseModel from '../models/course.js';
 import * as UserNotificationService from '../services/user-notification.js';
 
 export async function getPayments() {
@@ -121,20 +122,6 @@ export async function updatePayCourse(
       throw new ApplicationError('Payment method cannot be null', 400);
     }
 
-    // CHECK STATUS PAYMENT
-    const isPaymentAlreadyCompleted =
-      existingUserPayment.status === 'COMPLETED';
-
-    if (isPaymentAlreadyCompleted) {
-      throw new ApplicationError('This payment is already completed', 422);
-    }
-
-    const isPaymentExpired = new Date() > existingUserPayment.expired_at;
-
-    if (isPaymentExpired) {
-      throw new ApplicationError('This course payment is already expired', 422);
-    }
-
     const courseId = existingUserPayment.course_id;
 
     const courseMaterialIds =
@@ -176,12 +163,12 @@ export async function updatePayCourse(
         transaction
       );
 
-      return updatedPayment;
-    });
+      await UserNotificationService.createUserNotification(userId, {
+        name: 'Kelas',
+        description: `Kamu berhasil masuk di kelas ${existingUserPayment.course.name}`
+      });
 
-    await UserNotificationService.createUserNotification(userId, {
-      name: 'Kelas',
-      description: `Kamu berhasil masuk di kelas ${existingUserPayment.course.name}`
+      return updatedPayment;
     });
 
     return paymentResult;
@@ -191,11 +178,13 @@ export async function updatePayCourse(
 }
 
 /**
- * @param {string} courseId
+ * @param {CourseModel.CourseAttributes} course
  * @param {string} userId
  */
-export async function paymentFreePass(courseId, userId) {
+export async function paymentFreePass(course, userId) {
   try {
+    const { id: courseId } = course;
+
     // CHECK IF COURSE IS ENROLLED
     const existingUserCourse =
       await userCourseRepository.getUserCourseByUserIdAndCourseId(
@@ -235,6 +224,11 @@ export async function paymentFreePass(courseId, userId) {
         userCoursePayload,
         transaction
       );
+
+      await UserNotificationService.createUserNotification(userId, {
+        name: 'Kelas',
+        description: `Kamu berhasil masuk di kelas ${course.name}`
+      });
     });
   } catch (error) {
     throw generateApplicationError(error, 'Error while enrolling course', 500);
