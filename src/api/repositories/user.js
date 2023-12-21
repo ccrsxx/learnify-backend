@@ -1,3 +1,4 @@
+import Sequelize from 'sequelize';
 import { User } from '../models/index.js';
 import * as Models from '../models/user.js';
 
@@ -46,11 +47,13 @@ export function createUser(payload) {
 /**
  * @param {string} id
  * @param {Partial<Models.UserAttributes>} payload
+ * @param {Sequelize.Transaction} [transaction]
  */
-export function updateUser(id, payload) {
+export function updateUser(id, payload, transaction) {
   return User.update(payload, {
     where: { id },
-    returning: true
+    returning: true,
+    transaction: transaction
   });
 }
 

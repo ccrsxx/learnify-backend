@@ -41,6 +41,50 @@ export function isValidCredential(req, res, next) {
 /**
  * Check if valid credentials.
  *
+ * @type {Types.Middleware}
+ * @returns {void}
+ */
+export function isValidEmail(req, res, next) {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(400).json({ message: 'Email is required' });
+    return;
+  }
+
+  if (typeof email !== 'string') {
+    res.status(400).json({ message: 'Email must be string' });
+    return;
+  }
+
+  next();
+}
+
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware}
+ * @returns {void}
+ */
+export function isValidResetPasswordPayload(req, res, next) {
+  const { token, password } = req.body;
+
+  if (!token || !password) {
+    res.status(400).json({ message: 'Token and password are required' });
+    return;
+  }
+
+  if (typeof token !== 'string' || typeof password !== 'string') {
+    res.status(400).json({ message: 'Token and password must be string' });
+    return;
+  }
+
+  next();
+}
+
+/**
+ * Check if valid credentials.
+ *
  * @type {Types.Middleware<
  *   Types.ExtractLocalsMiddleware<typeof isAdmin> & {
  *     course: CourseModel.CourseAttributes;

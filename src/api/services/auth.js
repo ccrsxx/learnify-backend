@@ -2,9 +2,17 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Model } from 'sequelize';
 import { JWT_SECRET } from '../../libs/env.js';
+import * as resetPasswordRepository from '../repositories/password-reset.js';
 import * as userService from '../services/user.js';
-import { generateApplicationError } from '../../libs/error.js';
-import * as Models from '../models/user.js';
+import * as userRepository from '../repositories/user.js';
+import {
+  ApplicationError,
+  generateApplicationError
+} from '../../libs/error.js';
+import * as UserModel from '../models/user.js';
+import { sequelize } from '../models/index.js';
+import { generateRandomToken } from '../../libs/utils.js';
+import { sendResetPasswordEmail } from '../../libs/mail.js';
 
 /**
  * Generate hash password with bcrypt
@@ -58,7 +66,7 @@ export async function generateToken(id) {
  * Verify token with JWT
  *
  * @param {string} token
- * @returns {Promise<Model<Models.UserAttributes>>}
+ * @returns {Promise<Model<UserModel.UserAttributes>>}
  */
 export async function verifyToken(token) {
   try {
@@ -70,5 +78,91 @@ export async function verifyToken(token) {
     return user;
   } catch (err) {
     throw generateApplicationError(err, 'Error while verifying token', 500);
+  }
+}
+
+/** @param {string} email */
+export async function sendVerifyToResetPassword(email) {
+  try {
+    const user = await userService.getUserByEmail(email);
+
+    if (!user) {
+      throw new ApplicationError('User not found', 404);
+    }
+
+    await sequelize.transaction(async (transaction) => {
+      await resetPasswordRepository.setUsedTrueByUserId(
+        user.dataValues.id,
+        transaction
+      );
+
+      const nextHourDate = new Date();
+
+      nextHourDate.setHours(nextHourDate.getHours() + 1);
+
+      const payload = {
+        token: generateRandomToken(),
+        user_id: user.dataValues.id,
+        expired_at: nextHourDate
+      };
+
+      const verifyToReset = await resetPasswordRepository.setPasswordReset(
+        payload,
+        transaction
+      );
+
+      await sendResetPasswordEmail(email, verifyToReset.dataValues.token);
+    });
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while creating reset password link',
+      500
+    );
+  }
+}
+
+/** @param {string} token */
+export async function checkLinkToResetPassword(token) {
+  try {
+    const resetPasswordData =
+      await resetPasswordRepository.getDataPasswordResetByToken(token);
+
+    if (!resetPasswordData) {
+      throw new ApplicationError('Verification invalid', 404);
+    }
+
+    return resetPasswordData;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while checking reset password link',
+      500
+    );
+  }
+}
+
+/** @param {{ token: string; password: string }} payload */
+export async function changePassword(payload) {
+  const { token, password } = payload;
+
+  try {
+    const resetPasswordData = await checkLinkToResetPassword(token);
+    const user_id = resetPasswordData.dataValues.user_id;
+    const encryptedPassword = await hashPassword(password);
+
+    const updatePassword = {
+      password: encryptedPassword
+    };
+
+    await sequelize.transaction(async (transaction) => {
+      await userRepository.updateUser(user_id, updatePassword, transaction);
+      await resetPasswordRepository.updateUsedPasswordResetLink(
+        token,
+        transaction
+      );
+    });
+  } catch (err) {
+    throw generateApplicationError(err, 'Error changing password', 500);
   }
 }

@@ -111,3 +111,68 @@ export async function loginWithAdmin(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function sendVerifyToResetPassword(req, res) {
+  const { email } = req.body;
+
+  try {
+    await authService.sendVerifyToResetPassword(email);
+
+    res.status(201).json({
+      message: 'Account verification sent successfully'
+    });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function checkLinkToResetPassword(req, res) {
+  const token = req.params.token;
+
+  try {
+    await authService.checkLinkToResetPassword(token);
+
+    res.status(200).json({ message: 'Verification is valid' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function changePassword(req, res) {
+  try {
+    const payload = req.body;
+
+    await authService.changePassword(payload);
+
+    res.status(200).json({ message: 'Password successfully updated' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
