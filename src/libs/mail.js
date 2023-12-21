@@ -33,6 +33,8 @@ export async function sendResetPasswordEmail(email, token) {
     html: `
       <h1>Reset Password</h1>
       <p>Click <a href="${resetPasswordUrl}">this link</a> to reset your password.</p>
+      <p>This link will expire in 1 hour.</p>
+      <p>If you didn't request a password reset, you can ignore this email.</p>
     `
   });
 }

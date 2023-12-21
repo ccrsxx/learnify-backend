@@ -9,7 +9,8 @@ import {
   ApplicationError,
   generateApplicationError
 } from '../../libs/error.js';
-import * as Models from '../models/user.js';
+import * as UserModel from '../models/user.js';
+import { sequelize } from '../models/index.js';
 import { generateRandomToken } from '../../libs/utils.js';
 import { sendResetPasswordEmail } from '../../libs/mail.js';
 
@@ -65,7 +66,7 @@ export async function generateToken(id) {
  * Verify token with JWT
  *
  * @param {string} token
- * @returns {Promise<Model<Models.UserAttributes>>}
+ * @returns {Promise<Model<UserModel.UserAttributes>>}
  */
 export async function verifyToken(token) {
   try {
@@ -89,22 +90,31 @@ export async function sendVerifyToResetPassword(email) {
       throw new ApplicationError('User not found', 404);
     }
 
-    await resetPasswordRepository.setUsedTrueByUserId(user.dataValues.id);
+    const verifyToReset = await sequelize.transaction(async (transaction) => {
+      await resetPasswordRepository.setUsedTrueByUserId(
+        user.dataValues.id,
+        transaction
+      );
 
-    const nextHourDate = new Date();
+      const nextHourDate = new Date();
 
-    nextHourDate.setHours(nextHourDate.getHours() + 1);
+      nextHourDate.setHours(nextHourDate.getHours() + 1);
 
-    const payload = {
-      token: generateRandomToken(),
-      user_id: user.dataValues.id,
-      expired_at: nextHourDate
-    };
+      const payload = {
+        token: generateRandomToken(),
+        user_id: user.dataValues.id,
+        expired_at: nextHourDate
+      };
 
-    const verifyToReset =
-      await resetPasswordRepository.setPasswordReset(payload);
+      const verifyToReset = await resetPasswordRepository.setPasswordReset(
+        payload,
+        transaction
+      );
 
-    await sendResetPasswordEmail(email, verifyToReset.dataValues.token);
+      await sendResetPasswordEmail(email, verifyToReset.dataValues.token);
+
+      return verifyToReset;
+    });
 
     return verifyToReset;
   } catch (err) {
@@ -149,10 +159,13 @@ export async function changePassword(payload) {
       password: encryptedPassword
     };
 
-    await Promise.all([
-      userRepository.updateUser(user_id, updatePassword),
-      resetPasswordRepository.updateUsedPasswordResetLink(token)
-    ]);
+    await sequelize.transaction(async (transaction) => {
+      await userRepository.updateUser(user_id, updatePassword, transaction);
+      await resetPasswordRepository.updateUsedPasswordResetLink(
+        token,
+        transaction
+      );
+    });
   } catch (err) {
     throw generateApplicationError(err, 'Error changing password', 500);
   }
