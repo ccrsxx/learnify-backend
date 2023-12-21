@@ -1,12 +1,16 @@
 import { uploadToMemory } from '../../libs/multer.js';
 import { isAdmin } from './auth.js';
+import { isCourseExists } from './validation.js';
 import { cloudinary } from '../../libs/cloudinary.js';
 import * as Types from '../../libs/types/common.js';
 
 /**
  * Parse image from request body
  *
- * @type {Types.Middleware<Types.ExtractLocalsMiddleware<typeof isAdmin>>}
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isAdmin> &
+ *     Types.ExtractLocalsMiddleware<typeof isCourseExists>
+ * >}
  * @returns {void}
  */
 export function parseImage(req, res, next) {
@@ -35,7 +39,9 @@ export function parseImage(req, res, next) {
  * Upload image to cloudinary
  *
  * @type {Types.Middleware<
- *   Types.ExtractLocalsMiddleware<typeof parseImage> & { image: string | null }
+ *   Types.ExtractLocalsMiddleware<typeof parseImage> & {
+ *     image: string | null;
+ *   }
  * >}
  * @returns {Promise<void>}
  */
@@ -43,7 +49,7 @@ export async function uploadCloudinary(req, res, next) {
   const imageFromRequest = req.file;
 
   if (!imageFromRequest) {
-    res.locals.image = null;
+    res.locals.image = req.body?.image ?? null;
 
     next();
     return;

@@ -57,6 +57,38 @@ export function getUserCourses(userId) {
   });
 }
 
+/**
+ * @param {string} userId
+ * @param {Types.WhereOptions<Course>} whereOptions
+ * @param {boolean} [sortByNewest=false] Default is `false`
+ */
+export function getUserCoursesWithFilter(userId, whereOptions, sortByNewest) {
+  return Course.findAll({
+    where: whereOptions,
+    include: [
+      {
+        model: UserCourse,
+        as: 'user_course',
+        where: { user_id: userId },
+        attributes: []
+      },
+      {
+        model: CourseCategory,
+        as: 'course_category'
+      }
+    ],
+    ...(sortByNewest && { order: [['created_at', 'DESC']] }),
+    attributes: {
+      include: [
+        getTotalDuration(),
+        getTotalMaterials(),
+        getUserTotalCompletedMaterials()
+      ]
+    },
+    replacements: { user_id: userId }
+  });
+}
+
 /** @param {string} id */
 export function getCourseById(id) {
   return Course.findByPk(id, {
@@ -101,6 +133,11 @@ export function getCourseWithUserStatus(id, userId) {
             ]
           }
         ]
+      },
+      {
+        model: UserCourse,
+        as: 'user_course',
+        where: { user_id: userId }
       }
     ],
     attributes: {
@@ -136,7 +173,11 @@ export function destroyCourse(id) {
 }
 
 /** @returns {Sequelize.ProjectionAlias} */
-function getTotalDuration() {
+export function getTotalDuration(fromUserPaymentModel = false) {
+  const referencedCourseIdFrom = fromUserPaymentModel
+    ? '"UserPayment".course_id'
+    : '"Course".id';
+
   return [
     sequelize.cast(
       sequelize.literal(
@@ -145,7 +186,7 @@ function getTotalDuration() {
           
           FROM course_chapter as cc
 
-          WHERE cc.course_id = "Course".id
+          WHERE cc.course_id = ${referencedCourseIdFrom}
         )`
       ),
       'integer'
@@ -155,7 +196,11 @@ function getTotalDuration() {
 }
 
 /** @returns {Sequelize.ProjectionAlias} */
-function getTotalMaterials() {
+export function getTotalMaterials(fromUserPaymentModel = false) {
+  const referencedCourseIdFrom = fromUserPaymentModel
+    ? '"UserPayment".course_id'
+    : '"Course".id';
+
   return [
     sequelize.cast(
       sequelize.literal(
@@ -170,7 +215,7 @@ function getTotalMaterials() {
           JOIN course AS c
             ON cc.course_id = c.id
 
-          WHERE c.id = "Course".id
+          WHERE c.id = ${referencedCourseIdFrom}
         )`
       ),
       'integer'

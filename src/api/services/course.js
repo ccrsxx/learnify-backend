@@ -27,10 +27,42 @@ export async function getCourses(params) {
   }
 }
 
-/** @param {string} id */
-export async function getUserCourses(id) {
+/**
+ * @param {string} id
+ * @param {Types.RequestQuery} params
+ */
+export async function getUserCourses(id, params) {
   try {
-    const userCourses = await courseRepository.getUserCourses(id);
+    const queryFilters = await getCourseFilterQuery(params);
+
+    // @ts-ignore
+    const sortByNewest = params.filter?.includes?.('new');
+
+    let userCourses = await (queryFilters
+      ? courseRepository.getUserCoursesWithFilter(
+          id,
+          queryFilters,
+          sortByNewest
+        )
+      : courseRepository.getUserCourses(id));
+
+    // @ts-ignore
+    const trimmedMyCourseType = params.type?.trim?.();
+
+    const hasMyCourseTypeFilter =
+      trimmedMyCourseType &&
+      ['ongoing', 'completed'].includes(trimmedMyCourseType);
+
+    if (hasMyCourseTypeFilter) {
+      userCourses = userCourses.filter(
+        ({ dataValues: { total_materials, total_completed_materials } }) => {
+          const isOngoing = total_materials > total_completed_materials;
+          const isCompleted = total_materials === total_completed_materials;
+
+          return trimmedMyCourseType === 'ongoing' ? isOngoing : isCompleted;
+        }
+      );
+    }
 
     return userCourses;
   } catch (err) {
@@ -126,8 +158,27 @@ export async function updateCourse(id, payload) {
     'updated_at'
   ]);
 
+  const { target_audience } = parsedPayload;
+
+  const parsedPayloadWithCategoryAndUser =
+    /** @type {Models.CourseAttributes} */ ({
+      ...parsedPayload,
+      /**
+       * Parse target_audience from string to Array of string, because array
+       * that is sent from client with form-data will get converted to string
+       */
+      ...(target_audience && {
+        target_audience: JSON.parse(
+          /** @type {string} */ (/** @type {unknown} */ (target_audience))
+        )
+      })
+    });
+
   try {
-    const [, [course]] = await courseRepository.updateCourse(id, parsedPayload);
+    const [, [course]] = await courseRepository.updateCourse(
+      id,
+      parsedPayloadWithCategoryAndUser
+    );
 
     return course;
   } catch (err) {

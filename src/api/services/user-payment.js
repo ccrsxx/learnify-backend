@@ -8,6 +8,7 @@ import * as courseMaterialRepository from '../repositories/course-material.js';
 import * as userCourseRepository from '../repositories/user-course.js';
 import * as courseMaterialStatusRepository from '../repositories/course-material-status.js';
 import * as userPaymentModel from '../models/user-payment.js';
+import * as UserNotificationService from '../services/user-notification.js';
 
 export async function getPayments() {
   try {
@@ -33,6 +34,21 @@ export async function getUserPaymentById(id) {
     throw generateApplicationError(
       err,
       'Error while getting payment details',
+      500
+    );
+  }
+}
+
+/** @param {string} userId */
+export async function getPaymentsHistory(userId) {
+  try {
+    const payments = await paymentRepository.getPaymentsHistory(userId);
+
+    return payments;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting payments History',
       500
     );
   }
@@ -161,6 +177,11 @@ export async function updatePayCourse(
       );
 
       return updatedPayment;
+    });
+
+    await UserNotificationService.createUserNotification(userId, {
+      name: 'Kelas',
+      description: `Kamu berhasil masuk di kelas ${existingUserPayment.course.name}`
     });
 
     return paymentResult;

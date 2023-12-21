@@ -29,11 +29,13 @@ export async function getCourses(req, res) {
  * @type {Types.AuthorizedController}
  * @returns {Promise<void>}
  */
-export async function getUserCourses(_req, res) {
+export async function getUserCourses(req, res) {
   try {
     const { id } = res.locals.user;
 
-    const data = await courseService.getUserCourses(id);
+    const params = req.query;
+
+    const data = await courseService.getUserCourses(id, params);
 
     res.status(200).json({ data });
   } catch (err) {
@@ -99,7 +101,7 @@ export async function createCourse(req, res) {
 }
 
 /**
- * @type {Types.AuthorizedController}
+ * @type {Types.AuthorizedController<typeof uploadCloudinary>}
  * @returns {Promise<void>}
  */
 export async function updateCourse(req, res) {
@@ -107,6 +109,7 @@ export async function updateCourse(req, res) {
   const { id } = req.params;
 
   const image = res.locals.image;
+
   const bodyWithImage = { ...body, image: image };
 
   try {

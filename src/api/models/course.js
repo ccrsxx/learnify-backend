@@ -16,6 +16,9 @@ import { Model } from 'sequelize';
  * @property {string} intro_video
  * @property {string} onboarding_text
  * @property {string[]} target_audience
+ * @property {number} total_duration
+ * @property {number} total_materials
+ * @property {number} total_completed_materials
  * @property {string} user_id
  * @property {string} course_category_id
  * @property {Date} created_at

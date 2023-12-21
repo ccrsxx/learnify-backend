@@ -93,8 +93,12 @@ export async function backfillUserCourse(courseId) {
 
   const payment = await userPaymentService.payCourse(courseId, userId);
 
+  const course = await Course.findByPk(courseId);
+
+  const existingPayment = { ...payment, course };
+
   await userPaymentService.updatePayCourse(
-    payment,
+    existingPayment,
     'CREDIT_CARD',
     payment.id,
     userId
