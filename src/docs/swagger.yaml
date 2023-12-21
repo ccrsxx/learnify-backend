@@ -212,7 +212,7 @@ paths:
                   example: 'rem@rezero.com'
         required: true
       responses:
-        '200':
+        '201':
           description: Successful operation
           content:
             application/json:
