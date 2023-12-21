@@ -1,17 +1,17 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Model } from 'sequelize';
-import { randomBytes } from 'crypto';
 import { JWT_SECRET } from '../../libs/env.js';
-import * as resetPasswordRepositories from '../repositories/password-reset.js';
+import * as resetPasswordRepository from '../repositories/password-reset.js';
 import * as userService from '../services/user.js';
 import * as userRepository from '../repositories/user.js';
-import * as mailer from './../../libs/mailer.js';
 import {
   ApplicationError,
   generateApplicationError
 } from '../../libs/error.js';
 import * as Models from '../models/user.js';
+import { generateRandomToken } from '../../libs/utils.js';
+import { sendResetPasswordEmail } from '../../libs/mail.js';
 
 /**
  * Generate hash password with bcrypt
@@ -81,34 +81,38 @@ export async function verifyToken(token) {
 }
 
 /** @param {string} email */
-export async function sendVerifToResetPassword(email) {
+export async function sendVerifyToResetPassword(email) {
   try {
     const user = await userService.getUserByEmail(email);
+
     if (!user) {
       throw new ApplicationError('User not found', 404);
     }
-    await resetPasswordRepositories.setUsedTrueByUserId(user.dataValues.id);
+
+    await resetPasswordRepository.setUsedTrueByUserId(user.dataValues.id);
 
     const nextHourDate = new Date();
+
+    nextHourDate.setHours(nextHourDate.getHours() + 1);
+
     const payload = {
-      used: false,
-      token: randomBytes(24).toString('base64url'),
-      expired_at: new Date(nextHourDate.getTime() + 60 * 60 * 1000),
-      user_id: user.dataValues.id
+      token: generateRandomToken(),
+      user_id: user.dataValues.id,
+      expired_at: nextHourDate
     };
 
     const verifyToReset =
-      await resetPasswordRepositories.setPasswordReset(payload);
-    const mailInfo = {
-      to: 'luthfiyanto1425@gmail.com',
-      subject: 'Password Reset Verification Required',
-      html: `<p>Hi ${email},<br>To reset your password for Learnify, please use the following verification link:</p><a href='localhost:3000/auth/password-reset/${verifyToReset.dataValues.token}'>Click here to verify</a><p>If you didn't request this, please contact us immediately at [Your Customer Support Email/Phone].</p><p>Thank you</p><p>Learnify</p>`
-    };
+      await resetPasswordRepository.setPasswordReset(payload);
 
-    mailer.sendEmail(mailInfo);
+    await sendResetPasswordEmail(email, verifyToReset.dataValues.token);
+
     return verifyToReset;
   } catch (err) {
-    throw generateApplicationError(err, 'Error while getting user', 500);
+    throw generateApplicationError(
+      err,
+      'Error while creating reset password link',
+      500
+    );
   }
 }
 
@@ -116,20 +120,26 @@ export async function sendVerifToResetPassword(email) {
 export async function checkLinkToResetPassword(token) {
   try {
     const resetPasswordData =
-      await resetPasswordRepositories.getDataPasswordResetByToken(token);
+      await resetPasswordRepository.getDataPasswordResetByToken(token);
 
     if (!resetPasswordData) {
       throw new ApplicationError('Verification invalid', 404);
     }
+
     return resetPasswordData;
   } catch (err) {
-    throw generateApplicationError(err, 'Error while getting user', 500);
+    throw generateApplicationError(
+      err,
+      'Error while checking reset password link',
+      500
+    );
   }
 }
 
 /** @param {{ token: string; password: string }} payload */
 export async function changePassword(payload) {
   const { token, password } = payload;
+
   try {
     const resetPasswordData = await checkLinkToResetPassword(token);
     const user_id = resetPasswordData.dataValues.user_id;
@@ -141,9 +151,9 @@ export async function changePassword(payload) {
 
     await Promise.all([
       userRepository.updateUser(user_id, updatePassword),
-      resetPasswordRepositories.updateUsedPasswordResetLink(token)
+      resetPasswordRepository.updateUsedPasswordResetLink(token)
     ]);
   } catch (err) {
-    throw generateApplicationError(err, 'Error while verify user', 500);
+    throw generateApplicationError(err, 'Error changing password', 500);
   }
 }

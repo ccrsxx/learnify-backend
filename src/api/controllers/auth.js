@@ -116,11 +116,13 @@ export async function loginWithAdmin(req, res) {
  * @type {Types.Controller}
  * @returns {Promise<void>}
  */
-export async function sendVerifToResetPassword(req, res) {
+export async function sendVerifyToResetPassword(req, res) {
   const { email } = req.body;
+
   try {
-    const verification = await authService.sendVerifToResetPassword(email);
-    res.status(200).json({
+    const verification = await authService.sendVerifyToResetPassword(email);
+
+    res.status(201).json({
       message: 'Account verification sent successfully',
       data: verification
     });
@@ -140,9 +142,10 @@ export async function sendVerifToResetPassword(req, res) {
  */
 export async function checkLinkToResetPassword(req, res) {
   const token = req.params.token;
+
   try {
-    // @ts-ignore
     await authService.checkLinkToResetPassword(token);
+
     res.status(200).json({ message: 'Verification is valid' });
   } catch (err) {
     if (err instanceof ApplicationError) {
@@ -161,7 +164,9 @@ export async function checkLinkToResetPassword(req, res) {
 export async function changePassword(req, res) {
   try {
     const payload = req.body;
+
     await authService.changePassword(payload);
+
     res.status(200).json({ message: 'Password successfully updated' });
   } catch (err) {
     if (err instanceof ApplicationError) {

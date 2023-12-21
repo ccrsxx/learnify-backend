@@ -30,9 +30,17 @@ export default (app) => {
     authController.register
   );
 
-  router.post('/password-reset', authController.sendVerifToResetPassword);
+  router.post(
+    '/password-reset',
+    validationMiddleware.isValidEmail,
+    authController.sendVerifyToResetPassword
+  );
+
+  router.put(
+    '/password-reset',
+    validationMiddleware.isValidResetPasswordPayload,
+    authController.changePassword
+  );
 
   router.get('/password-reset/:token', authController.checkLinkToResetPassword);
-
-  router.put('/password-reset', authController.changePassword);
 };
