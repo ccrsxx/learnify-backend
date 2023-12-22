@@ -158,3 +158,24 @@ export async function destroyUser(id) {
     throw generateApplicationError(err, 'Error while deleting user', 500);
   }
 }
+
+/**
+ * @param {string} id
+ * @param {string} newPassword
+ */
+export async function resetPasswordProfile(id, newPassword) {
+  try {
+    const [, [resetPassword]] = await userRepository.resetPasswordProfile(
+      id,
+      newPassword
+    );
+
+    return resetPassword;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while updating user notifications',
+      500
+    );
+  }
+}

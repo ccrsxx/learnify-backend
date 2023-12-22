@@ -85,6 +85,32 @@ export function isValidResetPasswordPayload(req, res, next) {
 /**
  * Check if valid credentials.
  *
+ * @type {Types.Middleware}
+ * @returns {void}
+ */
+export function isValidResetPasswordProfile(req, res, next) {
+  const { old_password, new_password } = req.body;
+
+  if (!old_password || !new_password) {
+    res
+      .status(400)
+      .json({ message: 'Old password and new password are required' });
+    return;
+  }
+
+  if (typeof old_password !== 'string' || typeof new_password !== 'string') {
+    res
+      .status(400)
+      .json({ message: 'Old password and new password must be string' });
+    return;
+  }
+
+  next();
+}
+
+/**
+ * Check if valid credentials.
+ *
  * @type {Types.Middleware<
  *   Types.ExtractLocalsMiddleware<typeof isAdmin> & {
  *     course: CourseModel.CourseAttributes;
