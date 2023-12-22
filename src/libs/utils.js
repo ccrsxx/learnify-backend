@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto';
+import { randomBytes, randomInt } from 'crypto';
 
 /**
  * Remove a property from an object.
@@ -40,4 +40,8 @@ export function pickPropertiesFromObject(object, properties) {
 
 export function generateRandomToken() {
   return randomBytes(24).toString('base64url');
+}
+
+export function generateRandomOTP() {
+  return randomInt(100_000, 1_000_000);
 }

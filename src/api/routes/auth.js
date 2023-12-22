@@ -43,4 +43,8 @@ export default (app) => {
   );
 
   router.get('/password-reset/:token', authController.checkLinkToResetPassword);
+
+  router.post('/otp', authController.sendOtpRequest);
+
+  router.post('/otp/verify', authController.verifyOtp);
 };

@@ -176,3 +176,41 @@ export async function changePassword(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function sendOtpRequest(req, res) {
+  try {
+    const { email } = req.body;
+    await authService.sendOtpRequest(email);
+    res.status(201).json({ message: 'sending OTP successfully' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+/**
+ * @type {Types.Controller}
+ * @returns {Promise<void>}
+ */
+export async function verifyOtp(req, res) {
+  try {
+    const payload = req.body;
+    await authService.verifyOtp(payload);
+    res.status(200).json({ message: 'Verification is valid' });
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}

@@ -36,10 +36,10 @@ export default (sequelize, DataTypes) => {
   Otp.init(
     // @ts-ignore
     {
-      otp: DataTypes.INTEGER,
-      used: DataTypes.BOOLEAN,
-      user_id: DataTypes.UUID,
-      expired_at: DataTypes.DATE
+      otp: { type: DataTypes.INTEGER, allowNull: false },
+      used: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+      user_id: { type: DataTypes.UUID, allowNull: false },
+      expired_at: { type: DataTypes.DATE, allowNull: false }
     },
     {
       sequelize,
