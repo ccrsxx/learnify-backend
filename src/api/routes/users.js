@@ -15,4 +15,6 @@ export default (app) => {
   router.get('/me', authMiddleware.isAuthorized, userController.getCurrentUser);
 
   router.put('/me', authMiddleware.isAuthorized, userController.updateUser);
+
+  router.put('/me/password-reset', authMiddleware.isAuthorized);
 };
