@@ -86,12 +86,27 @@ export async function getCourseById(id, userId = null) {
 
       if (existingUserCourse) {
         course = await courseRepository.getCourseWithUserStatus(id, userId);
+        //if user not enroll
+      } else {
+        course = await courseRepository.getCourseById(id);
+        if (course) {
+          // @ts-ignore
+          course.course_chapter.forEach((chapter) => {
+            if (chapter.order_index !== 1) {
+              chapter.course_material.forEach(
+                (/** @type {{ dataValues: { video: any } }} */ material) => {
+                  delete material.dataValues.video;
+                }
+              );
+            }
+          });
+        }
       }
     }
 
     // If user is not logged in or not enrolled in course
     if (!course) {
-      course = await courseRepository.getCourseById(id);
+      course = await courseRepository.getNonVideoCourseById(id);
     }
 
     // If course is not found
