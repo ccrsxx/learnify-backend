@@ -18,6 +18,7 @@ import config from '../../db/config/database.js';
  * @property {ReturnType<typeof import('./course-material.js').default>} CourseMaterial
  * @property {ReturnType<typeof import('./course-material-status.js').default>} CourseMaterialStatus
  * @property {ReturnType<typeof import('./password-reset.js').default>} PasswordReset
+ * @property {ReturnType<typeof import('./otp.js').default>} OtpVerify
  */
 
 /** @typedef {keyof Omit<Database, 'sequelize' | 'Sequelize'>} ModelName */
@@ -72,5 +73,6 @@ export const {
   CourseCategory,
   CourseMaterial,
   CourseMaterialStatus,
-  PasswordReset
+  PasswordReset,
+  OtpVerify
 } = await initializeDatabase();

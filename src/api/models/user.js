@@ -55,6 +55,10 @@ export default (sequelize, DataTypes) => {
       this.hasMany(models.PasswordReset, {
         foreignKey: 'user_id'
       });
+
+      this.hasMany(models.OtpVerify, {
+        foreignKey: 'user_id'
+      });
     }
   }
 
