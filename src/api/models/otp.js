@@ -18,7 +18,7 @@ export const Models = {};
  */
 export default (sequelize, DataTypes) => {
   /** @extends {Model<OtpAttributes>} */
-  class OtpVerify extends Model {
+  class Otp extends Model {
     /**
      * Helper method for defining associations. This method is not a part of
      * Sequelize lifecycle. The `models/index` file will call this method
@@ -33,7 +33,7 @@ export default (sequelize, DataTypes) => {
       });
     }
   }
-  OtpVerify.init(
+  Otp.init(
     // @ts-ignore
     {
       otp: DataTypes.INTEGER,
@@ -43,12 +43,12 @@ export default (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'OtpVerify',
-      tableName: 'otps',
+      modelName: 'Otp',
+      tableName: 'otp',
       createdAt: 'created_at',
       updatedAt: 'updated_at',
       underscored: true
     }
   );
-  return OtpVerify;
+  return Otp;
 };
