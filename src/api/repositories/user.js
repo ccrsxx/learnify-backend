@@ -14,14 +14,14 @@ export function getUser(id) {
 /** @param {string} email */
 export function getUserByEmail(email) {
   return User.findOne({
-    where: { email }
+    where: { email, verified: true }
   });
 }
 
 /** @param {string} phoneNumber */
 export function getUserByPhoneNumber(phoneNumber) {
   return User.findOne({
-    where: { phone_number: phoneNumber }
+    where: { phone_number: phoneNumber, verified: true }
   });
 }
 
