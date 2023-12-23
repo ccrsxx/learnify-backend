@@ -140,6 +140,7 @@ export function getCourseWithUserStatus(id, userId) {
         where: { user_id: userId }
       }
     ],
+    order: [['course_chapter', 'course_material', 'order_index', 'ASC']],
     attributes: {
       include: [
         getTotalDuration(),
