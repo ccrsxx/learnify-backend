@@ -18,10 +18,24 @@ export function getUserByEmail(email) {
   });
 }
 
+/** @param {string} email */
+export function getUnverifiedUserByEmail(email) {
+  return User.findOne({
+    where: { email, verified: false }
+  });
+}
+
 /** @param {string} phoneNumber */
 export function getUserByPhoneNumber(phoneNumber) {
   return User.findOne({
     where: { phone_number: phoneNumber, verified: true }
+  });
+}
+
+/** @param {string} phoneNumber */
+export function getUnverifiedUserByPhoneNumber(phoneNumber) {
+  return User.findOne({
+    where: { phone_number: phoneNumber, verified: false }
   });
 }
 

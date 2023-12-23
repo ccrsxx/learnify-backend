@@ -85,7 +85,7 @@ export async function getAdminUserByPhoneNumber(phoneNumber) {
 
 /** @param {Models.UserAttributes} payload */
 export async function createUser(payload) {
-  const { password } = payload;
+  const { email, phone_number, password } = payload;
 
   const parsedPayload = omitPropertiesFromObject(payload, [
     'id',
@@ -105,6 +105,23 @@ export async function createUser(payload) {
         password: encryptedPassword
       });
 
+    const unverifiedUser = email
+      ? await userRepository.getUnverifiedUserByEmail(email)
+      : await userRepository.getAdminUserByPhoneNumber(phone_number);
+
+    if (unverifiedUser) {
+      const [, [user]] = await userRepository.updateUser(
+        unverifiedUser.dataValues.id,
+        parsedUserWithEncryptedPassword
+      );
+
+      await UserNotificationService.createUserNotification(user.dataValues.id, {
+        name: 'Notifikasi',
+        description: 'Selamat datang di Learnify!'
+      });
+
+      return user;
+    }
     const user = await userRepository.createUser(
       parsedUserWithEncryptedPassword
     );
