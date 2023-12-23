@@ -30,10 +30,42 @@ export async function getCourses(params) {
   }
 }
 
-/** @param {string} id */
-export async function getUserCourses(id) {
+/**
+ * @param {string} id
+ * @param {Types.RequestQuery} params
+ */
+export async function getUserCourses(id, params) {
   try {
-    const userCourses = await courseRepository.getUserCourses(id);
+    const queryFilters = await getCourseFilterQuery(params);
+
+    // @ts-ignore
+    const sortByNewest = params.filter?.includes?.('new');
+
+    let userCourses = await (queryFilters
+      ? courseRepository.getUserCoursesWithFilter(
+          id,
+          queryFilters,
+          sortByNewest
+        )
+      : courseRepository.getUserCourses(id));
+
+    // @ts-ignore
+    const trimmedMyCourseType = params.type?.trim?.();
+
+    const hasMyCourseTypeFilter =
+      trimmedMyCourseType &&
+      ['ongoing', 'completed'].includes(trimmedMyCourseType);
+
+    if (hasMyCourseTypeFilter) {
+      userCourses = userCourses.filter(
+        ({ dataValues: { total_materials, total_completed_materials } }) => {
+          const isOngoing = total_materials > total_completed_materials;
+          const isCompleted = total_materials === total_completed_materials;
+
+          return trimmedMyCourseType === 'ongoing' ? isOngoing : isCompleted;
+        }
+      );
+    }
 
     return userCourses;
   } catch (err) {

@@ -46,7 +46,7 @@ export function getPayments() {
 /** @param {string} id */
 export function getUserPaymentById(id) {
   return UserPayment.findOne({
-    where: { id },
+    where: { id, expired_at: { [Op.gt]: new Date() }, status: 'PENDING' },
     include: [
       {
         model: User,

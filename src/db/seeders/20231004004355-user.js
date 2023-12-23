@@ -27,7 +27,17 @@ module.exports = {
       phone_number: '+6281234567890'
     };
 
-    const seedUsers = [adminUser, normalUser];
+    const secondNormalUser = {
+      ...generateRandomUser(),
+      id: '6a28814a-956d-4b9e-a052-f4b918898cde',
+      name: 'Risal Amin',
+      admin: false,
+      email: 'aminrisal@gmail.com',
+      password: '$2b$10$atdYjR8rXBN1QwPoMEnpneUwiQT3Y4IM5da3jxA.wJs6Ea4i.ChOW', // i-love-emilia
+      phone_number: '+6285925300629'
+    };
+
+    const seedUsers = [adminUser, normalUser, secondNormalUser];
 
     return queryInterface.bulkInsert('user', seedUsers);
   },

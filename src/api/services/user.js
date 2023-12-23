@@ -6,6 +6,7 @@ import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as authService from '../services/auth.js';
 import * as userRepository from '../repositories/user.js';
 import * as Models from '../models/user.js';
+import * as UserNotificationService from '../services/user-notification.js';
 
 /** @param {string} id */
 export async function getUser(id) {
@@ -104,10 +105,16 @@ export async function createUser(payload) {
         password: encryptedPassword
       });
 
-    const car = await userRepository.createUser(
+    const user = await userRepository.createUser(
       parsedUserWithEncryptedPassword
     );
-    return car;
+
+    await UserNotificationService.createUserNotification(user.dataValues.id, {
+      name: 'Notifikasi',
+      description: 'Selamat datang di Learnify!'
+    });
+
+    return user;
   } catch (err) {
     throw generateApplicationError(err, 'Error while creating user', 500);
   }

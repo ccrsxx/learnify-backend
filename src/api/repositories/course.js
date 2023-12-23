@@ -57,6 +57,38 @@ export function getUserCourses(userId) {
   });
 }
 
+/**
+ * @param {string} userId
+ * @param {Types.WhereOptions<Course>} whereOptions
+ * @param {boolean} [sortByNewest=false] Default is `false`
+ */
+export function getUserCoursesWithFilter(userId, whereOptions, sortByNewest) {
+  return Course.findAll({
+    where: whereOptions,
+    include: [
+      {
+        model: UserCourse,
+        as: 'user_course',
+        where: { user_id: userId },
+        attributes: []
+      },
+      {
+        model: CourseCategory,
+        as: 'course_category'
+      }
+    ],
+    ...(sortByNewest && { order: [['created_at', 'DESC']] }),
+    attributes: {
+      include: [
+        getTotalDuration(),
+        getTotalMaterials(),
+        getUserTotalCompletedMaterials()
+      ]
+    },
+    replacements: { user_id: userId }
+  });
+}
+
 /** @param {string} id */
 export function getCourseById(id) {
   return Course.findByPk(id, {

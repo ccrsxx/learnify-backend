@@ -11,11 +11,13 @@ import config from '../../db/config/database.js';
  * @property {ReturnType<typeof import('./user.js').default>} User
  * @property {ReturnType<typeof import('./user-course.js').default>} UserCourse
  * @property {ReturnType<typeof import('./user-payment.js').default>} UserPayment
+ * @property {ReturnType<typeof import('./user-notification.js').default>} UserNotification
  * @property {ReturnType<typeof import('./course.js').default>} Course
  * @property {ReturnType<typeof import('./course-chapter.js').default>} CourseChapter
  * @property {ReturnType<typeof import('./course-category.js').default>} CourseCategory
  * @property {ReturnType<typeof import('./course-material.js').default>} CourseMaterial
  * @property {ReturnType<typeof import('./course-material-status.js').default>} CourseMaterialStatus
+ * @property {ReturnType<typeof import('./password-reset.js').default>} PasswordReset
  */
 
 /** @typedef {keyof Omit<Database, 'sequelize' | 'Sequelize'>} ModelName */
@@ -64,9 +66,11 @@ export const {
   User,
   UserCourse,
   UserPayment,
+  UserNotification,
   Course,
   CourseChapter,
   CourseCategory,
   CourseMaterial,
-  CourseMaterialStatus
+  CourseMaterialStatus,
+  PasswordReset
 } = await initializeDatabase();

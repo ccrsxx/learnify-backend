@@ -1,5 +1,5 @@
 import { ApplicationError } from '../../libs/error.js';
-import { isPaymentExists } from '../middlewares/validation.js';
+import { isCourseExists, isPaymentExists } from '../middlewares/validation.js';
 import * as Types from '../../libs/types/common.js';
 import * as paymentServices from '../services/user-payment.js';
 
@@ -133,15 +133,15 @@ export async function updatePayCourse(req, res) {
 }
 
 /**
- * @type {Types.Controller}
+ * @type {Types.AuthorizedController<typeof isCourseExists>}
  * @returns {Promise<void>}
  */
-export async function payFreeCourse(req, res) {
-  const { course_id: courseId } = req.body;
+export async function payFreeCourse(_req, res) {
   const { id: userId } = res.locals.user;
+  const course = res.locals.course;
 
   try {
-    await paymentServices.paymentFreePass(courseId, userId);
+    await paymentServices.paymentFreePass(course, userId);
 
     res.status(200).json({
       message: 'Free course successfully enrolled'

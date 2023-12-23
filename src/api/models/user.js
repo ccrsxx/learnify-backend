@@ -31,6 +31,10 @@ export default (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.hasMany(models.UserNotification, {
+        foreignKey: 'user_id'
+      });
+
       this.hasMany(models.UserPayment, {
         foreignKey: 'user_id'
       });
@@ -44,6 +48,10 @@ export default (sequelize, DataTypes) => {
       });
 
       this.hasMany(models.Course, {
+        foreignKey: 'user_id'
+      });
+
+      this.hasMany(models.PasswordReset, {
         foreignKey: 'user_id'
       });
     }
