@@ -124,7 +124,6 @@ export function getCourseWithUserStatus(id, userId) {
           {
             model: CourseMaterial,
             as: 'course_material',
-            order: [['order_index', 'ASC']],
             include: [
               {
                 model: CourseMaterialStatus,
