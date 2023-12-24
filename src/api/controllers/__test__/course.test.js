@@ -51,6 +51,7 @@ describe('Course controller', () => {
       const mockRequest = {};
 
       const mockResponse = {
+        locals: { user: null },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
@@ -73,6 +74,7 @@ describe('Course controller', () => {
       const mockRequest = {};
 
       const mockResponse = {
+        locals: { user: null },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };

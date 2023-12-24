@@ -60,7 +60,7 @@ export async function getCourseMaterialByCourseId(courseId) {
   return courseMaterialsIds;
 }
 
-/** @param {any} ids */
+/** @param {string[]} ids */
 export function destroyMaterial(ids) {
   return CourseMaterial.destroy({ where: { id: { [Op.in]: ids } } });
 }

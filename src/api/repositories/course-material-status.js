@@ -1,5 +1,10 @@
 import Sequelize from 'sequelize';
-import { User, UserCourse, CourseMaterialStatus } from '../models/index.js';
+import {
+  User,
+  sequelize,
+  UserCourse,
+  CourseMaterialStatus
+} from '../models/index.js';
 /**
  * @param {any} payload
  * @param {Sequelize.Transaction} transaction
@@ -29,13 +34,17 @@ export async function backfillCourseMaterialStatus(courseId, courseMaterialId) {
     ]
   });
 
-  for (const user of users) {
-    // @ts-ignore
-    await setCourseMaterialStatus({
-      user_id: user.dataValues.id,
-      course_material_id: courseMaterialId
-    });
-  }
+  await sequelize.transaction(async (transaction) => {
+    for (const user of users) {
+      await setCourseMaterialStatus(
+        {
+          user_id: user.dataValues.id,
+          course_material_id: courseMaterialId
+        },
+        transaction
+      );
+    }
+  });
 }
 
 /** @param {string} id */
