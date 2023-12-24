@@ -5,8 +5,14 @@ import * as Types from '../../libs/types/common.js';
 /** @type {Types.AuthorizedController} */
 export async function updateCourseMaterialStatus(req, res) {
   const { id } = req.params;
+  const { id: userId } = res.locals.user;
 
   try {
+    await courseMaterialStatusService.getCourseMaterialStatusByUserId(
+      id,
+      userId
+    );
+
     const courseMaterialStatus =
       await courseMaterialStatusService.updateCourseMaterialStatus(id);
 

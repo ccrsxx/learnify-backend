@@ -234,3 +234,38 @@ export async function paymentFreePass(course, userId) {
     throw generateApplicationError(error, 'Error while enrolling course', 500);
   }
 }
+
+// @ts-ignore
+export async function isCourseFree(courseId) {
+  try {
+    const isFree = await paymentRepository.isCourseFree(courseId);
+
+    if (isFree) {
+      throw new ApplicationError(
+        'Payment is not required on free courses',
+        422
+      );
+    }
+
+    return isFree;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while comparing course', 500);
+  }
+}
+
+// @ts-ignore
+export async function isCoursePremium(course) {
+  const { id } = course;
+
+  try {
+    const isPremium = await paymentRepository.isCoursePremium(id);
+
+    if (isPremium) {
+      throw new ApplicationError('Make payment to enroll premium courses', 422);
+    }
+
+    return isPremium;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while comparing course', 500);
+  }
+}

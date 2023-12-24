@@ -16,6 +16,14 @@ export function getCourseMaterialStatusById(id) {
   return CourseMaterialStatus.findByPk(id);
 }
 
+/**
+ * @param {string} id
+ * @param {string} userId
+ */
+export function getCourseMaterialStatusByUserId(id, userId) {
+  return CourseMaterialStatus.findOne({ where: { id, user_id: userId } });
+}
+
 /** @param {string} id */
 export function updateCourseMaterialStatus(id) {
   return CourseMaterialStatus.update(

@@ -105,3 +105,13 @@ export function getPendingPaymentByUserIdAndCourseId(userId, courseId) {
     }
   });
 }
+
+/** @param {string} courseId */
+export function isCourseFree(courseId) {
+  return Course.findOne({ where: { id: courseId, premium: false } });
+}
+
+/** @param {string} courseId */
+export function isCoursePremium(courseId) {
+  return Course.findOne({ where: { id: courseId, premium: true } });
+}

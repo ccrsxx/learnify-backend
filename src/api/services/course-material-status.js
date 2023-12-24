@@ -24,6 +24,35 @@ export async function getCourseMaterialStatusById(id) {
   }
 }
 
+/**
+ * @param {string} id
+ * @param {string} userId
+ */
+export async function getCourseMaterialStatusByUserId(id, userId) {
+  try {
+    const isUserExist =
+      await courseMaterialStatusRepository.getCourseMaterialStatusByUserId(
+        id,
+        userId
+      );
+
+    if (!isUserExist) {
+      throw new ApplicationError(
+        'Your not allowed to access this course material status',
+        403
+      );
+    }
+
+    return isUserExist;
+  } catch (err) {
+    throw generateApplicationError(
+      err,
+      'Error while getting course material status user',
+      500
+    );
+  }
+}
+
 /** @param {string} id */
 export async function updateCourseMaterialStatus(id) {
   try {

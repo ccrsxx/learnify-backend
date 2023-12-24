@@ -68,10 +68,11 @@ export async function getPaymentsHistory(_req, res) {
  */
 export async function payCourse(req, res) {
   const { course_id: courseId } = req.body;
-
   const { id: userId } = res.locals.user;
 
   try {
+    await paymentServices.isCourseFree(courseId);
+
     const { newPayment, ...payment } = await paymentServices.payCourse(
       courseId,
       userId
@@ -141,6 +142,8 @@ export async function payFreeCourse(_req, res) {
   const course = res.locals.course;
 
   try {
+    await paymentServices.isCoursePremium(course);
+
     await paymentServices.paymentFreePass(course, userId);
 
     res.status(200).json({
@@ -149,6 +152,7 @@ export async function payFreeCourse(_req, res) {
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
+      return;
     }
 
     res.status(500).json({ message: 'Internal server error' });
