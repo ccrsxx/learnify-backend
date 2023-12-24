@@ -14,7 +14,7 @@ export default (app) => {
 
   app.use('/courses', router);
 
-  router.get('/', courseController.getCourses);
+  router.get('/', authMiddleware.isLoggedIn, courseController.getCourses);
 
   router.post(
     '/',
