@@ -32,7 +32,7 @@ export function updateChapter(payload, chapterId) {
   });
 }
 
-/** @param {any} ids */
+/** @param {string[]} ids */
 export function destroyChapter(ids) {
   return CourseChapter.destroy({ where: { id: { [Op.in]: ids } } });
 }
