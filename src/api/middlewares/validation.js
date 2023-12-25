@@ -105,6 +105,13 @@ export function isValidResetPasswordProfile(req, res, next) {
     return;
   }
 
+  if (new_password === old_password) {
+    res
+      .status(409)
+      .json({ message: 'New password cannot be the same as old password' });
+    return;
+  }
+
   next();
 }
 
