@@ -328,7 +328,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/EditableUser'
-
         required: true
       responses:
         '200':
@@ -353,6 +352,64 @@ paths:
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
           $ref: '#/components/responses/InvalidAuthorizationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - token: []
+  /users/me/password-reset:
+    put:
+      tags:
+        - users
+      summary: Reset password user
+      description: Reset password user on profile
+      operationId: reset-password-user
+      requestBody:
+        description: The user object to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPasswordReset'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Password successfully updated
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/User'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            example: Rem
+                          email:
+                            type: string
+                            example: rem@rezero.com
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MissingAuthorizationError'
+                  - $ref: '#/components/schemas/ValidationError'
+        '401':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidAuthorizationError'
+                  - $ref: '#/components/schemas/OldPasswordIsNotMatchError'
+        '409':
+          $ref: '#/components/responses/SamePasswordError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -1204,6 +1261,15 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
+    UserPasswordReset:
+      type: object
+      properties:
+        old_password:
+          type: string
+          example: rem-rezero
+        new_password:
+          type: string
+          example: theresia-rezero
     UserNotification:
       type: object
       properties:
@@ -2070,6 +2136,18 @@ components:
         message:
           type: string
           example: Invalid authorization header
+    SamePasswordError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: New password cannot be the same as old password
+    OldPasswordIsNotMatchError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Old password is not match
     CourseNotFoundError:
       type: object
       properties:
@@ -2125,6 +2203,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerError'
+    SamePasswordError:
+      description: Cannot use same password
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SamePasswordError'
     AdminError:
       description: Only admin is allowed for this endpoint
       content:
