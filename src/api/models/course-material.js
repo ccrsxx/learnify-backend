@@ -4,7 +4,7 @@ import { Model } from 'sequelize';
  * @typedef CourseMaterialAttributes
  * @property {string} id
  * @property {string} name
- * @property {string} video
+ * @property {string} [video]
  * @property {number} order_index
  * @property {string} course_chapter_id
  * @property {Date} created_at
