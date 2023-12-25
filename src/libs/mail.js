@@ -41,7 +41,7 @@ export async function sendResetPasswordEmail(email, token) {
 
 /**
  * @param {string} email
- * @param {string} otp
+ * @param {number} otp
  */
 export async function sendOtpEmail(email, otp) {
   await sendEmail({

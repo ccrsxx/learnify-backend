@@ -15,6 +15,8 @@ jest.unstable_mockModule(
       getUserByPhoneNumber: jest.fn(),
       getAdminUserByEmail: jest.fn(),
       getAdminUserByPhoneNumber: jest.fn(),
+      getVerifiedUserWithEmailAndPhoneNumber: jest.fn(),
+      getUnverifiedUserByEmailAndPhoneNumber: jest.fn(),
       createUser: jest.fn(),
       updateUser: jest.fn(),
       destroyUser: jest.fn(),

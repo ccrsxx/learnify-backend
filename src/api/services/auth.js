@@ -188,11 +188,11 @@ export async function sendOtpRequest(email) {
         user_id: user.dataValues.id,
         expired_at: nextMinuteDate
       };
-      const otpdata = await otpRepository.setOtpVerification(
+      const otpData = await otpRepository.setOtpVerification(
         payload,
         transaction
       );
-      await sendOtpEmail(email, otpdata.dataValues.otp);
+      await sendOtpEmail(email, otpData.dataValues.otp);
     });
   } catch (err) {
     throw generateApplicationError(

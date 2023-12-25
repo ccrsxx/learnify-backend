@@ -5,8 +5,8 @@ import {
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as authService from '../services/auth.js';
 import * as userRepository from '../repositories/user.js';
+import * as userNotificationService from '../services/user-notification.js';
 import * as Models from '../models/user.js';
-import * as UserNotificationService from '../services/user-notification.js';
 
 /** @param {string} id */
 export async function getUser(id) {
@@ -105,28 +105,45 @@ export async function createUser(payload) {
         password: encryptedPassword
       });
 
-    const unverifiedUser = email
-      ? await userRepository.getUnverifiedUserByEmail(email)
-      : await userRepository.getAdminUserByPhoneNumber(phone_number);
+    const verifiedUser =
+      await userRepository.getVerifiedUserWithEmailAndPhoneNumber(
+        email,
+        phone_number
+      );
+
+    if (verifiedUser) {
+      const errorMessage =
+        verifiedUser.dataValues.email === email
+          ? 'Email already exists'
+          : 'Phone number already exists';
+
+      throw new ApplicationError(errorMessage, 409);
+    }
+
+    let user;
+
+    const unverifiedUser =
+      await userRepository.getUnverifiedUserByEmailAndPhoneNumber(
+        email,
+        phone_number
+      );
 
     if (unverifiedUser) {
-      const [, [user]] = await userRepository.updateUser(
+      const [, [updatedUser]] = await userRepository.updateUser(
         unverifiedUser.dataValues.id,
         parsedUserWithEncryptedPassword
       );
 
-      await UserNotificationService.createUserNotification(user.dataValues.id, {
-        name: 'Notifikasi',
-        description: 'Selamat datang di Learnify!'
-      });
+      user = updatedUser;
+    } else {
+      const newUser = await userRepository.createUser(
+        parsedUserWithEncryptedPassword
+      );
 
-      return user;
+      user = newUser;
     }
-    const user = await userRepository.createUser(
-      parsedUserWithEncryptedPassword
-    );
 
-    await UserNotificationService.createUserNotification(user.dataValues.id, {
+    await userNotificationService.createUserNotification(user.dataValues.id, {
       name: 'Notifikasi',
       description: 'Selamat datang di Learnify!'
     });
