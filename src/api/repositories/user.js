@@ -75,3 +75,17 @@ export function updateUser(id, payload, transaction) {
 export function destroyUser(id) {
   return User.destroy({ where: { id } });
 }
+
+/**
+ * @param {string} id
+ * @param {string} newPassword
+ */
+export function resetPasswordProfile(id, newPassword) {
+  return User.update(
+    { password: newPassword },
+    {
+      where: { id },
+      returning: true
+    }
+  );
+}

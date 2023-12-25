@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import * as CourseMaterialModel from './course-material.js';
 
 /**
  * @typedef CourseChapterAttributes
@@ -7,6 +8,7 @@ import { Model } from 'sequelize';
  * @property {number} duration
  * @property {number} order_index
  * @property {string} course_id
+ * @property {Model<CourseMaterialModel.CourseMaterialAttributes>[]} course_material
  * @property {Date} created_at
  * @property {Date} updated_at
  */
