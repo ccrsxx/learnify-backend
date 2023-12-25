@@ -3,7 +3,7 @@ import { Model } from 'sequelize';
 /**
  * @typedef OtpAttributes
  * @property {string} id
- * @property {string} otp
+ * @property {number} otp
  * @property {boolean} used
  * @property {string} user_id
  * @property {Date} expired_at

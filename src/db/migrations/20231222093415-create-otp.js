@@ -20,7 +20,11 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.UUID,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: 'user',
+          key: 'id'
+        }
       },
       expired_at: {
         allowNull: false,
