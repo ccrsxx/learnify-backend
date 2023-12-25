@@ -1,4 +1,5 @@
 import { Model } from 'sequelize';
+import * as CourseChapterModel from './course-chapter.js';
 
 /**
  * @typedef CourseAttributes
@@ -21,6 +22,7 @@ import { Model } from 'sequelize';
  * @property {number} total_completed_materials
  * @property {string} user_id
  * @property {string} course_category_id
+ * @property {Model<CourseChapterModel.CourseChapterAttributes>[]} course_chapter
  * @property {Date} created_at
  * @property {Date} updated_at
  */

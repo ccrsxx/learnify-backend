@@ -113,6 +113,36 @@ export function getUserCoursesWithFilter(userId, whereOptions, sortByNewest) {
 }
 
 /** @param {string} id */
+export function getNonVideoCourseById(id) {
+  return Course.findByPk(id, {
+    include: [
+      'course_category',
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material',
+            attributes: {
+              exclude: ['video']
+            }
+          }
+        ]
+      }
+    ],
+    order: [
+      ['course_chapter', 'order_index', 'ASC'],
+      ['course_chapter', 'course_material', 'order_index', 'ASC']
+    ],
+    attributes: {
+      include: [getTotalDuration(), getTotalMaterials()],
+      exclude: ['intro_video']
+    }
+  });
+}
+
+/** @param {string} id */
 export function getCourseById(id) {
   return Course.findByPk(id, {
     include: [
