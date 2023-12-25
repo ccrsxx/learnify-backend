@@ -131,6 +131,10 @@ export function getNonVideoCourseById(id) {
         ]
       }
     ],
+    order: [
+      ['course_chapter', 'order_index', 'ASC'],
+      ['course_chapter', 'course_material', 'order_index', 'ASC']
+    ],
     attributes: {
       include: [getTotalDuration(), getTotalMaterials()],
       exclude: ['intro_video']
