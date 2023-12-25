@@ -393,9 +393,23 @@ paths:
                             type: string
                             example: rem@rezero.com
         '400':
-          $ref: '#/components/responses/MissingAuthorizationError'
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/MissingAuthorizationError'
+                  - $ref: '#/components/schemas/ValidationError'
         '401':
-          $ref: '#/components/responses/InvalidAuthorizationError'
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InvalidAuthorizationError'
+                  - $ref: '#/components/schemas/OldPasswordIsNotMatchError'
+        '409':
+          $ref: '#/components/responses/SamePasswordError'
         '500':
           $ref: '#/components/responses/InternalServerError'
       security:
@@ -2122,6 +2136,18 @@ components:
         message:
           type: string
           example: Invalid authorization header
+    SamePasswordError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: New password cannot be the same as old password
+    OldPasswordIsNotMatchError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Old password is not match
     CourseNotFoundError:
       type: object
       properties:
@@ -2177,6 +2203,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/InternalServerError'
+    SamePasswordError:
+      description: Cannot use same password
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/SamePasswordError'
     AdminError:
       description: Only admin is allowed for this endpoint
       content:

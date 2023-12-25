@@ -57,7 +57,7 @@ export async function resetPasswordProfile(req, res) {
     );
 
     if (!isOldPasswordMatch) {
-      res.status(401).json({ message: 'Old password is incorrect' });
+      res.status(401).json({ message: 'Old password is not match' });
       return;
     }
 

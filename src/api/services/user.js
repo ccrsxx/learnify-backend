@@ -174,7 +174,7 @@ export async function resetPasswordProfile(id, newPassword) {
   } catch (err) {
     throw generateApplicationError(
       err,
-      'Error while updating user notifications',
+      'Error while resetting password profile',
       500
     );
   }
