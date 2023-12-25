@@ -5,14 +5,17 @@ import { isLoggedIn } from '../middlewares/auth.js';
 import { uploadCloudinary } from '../middlewares/upload.js';
 
 /**
- * @type {Types.Controller}
+ * @type {Types.Controller<typeof isLoggedIn>}
  * @returns {Promise<void>}
  */
 export async function getCourses(req, res) {
   try {
     const params = req.query;
 
-    const data = await courseService.getCourses(params);
+    const user = res.locals.user;
+    const admin = user?.admin;
+
+    const data = await courseService.getCourses(params, admin);
 
     res.status(200).json({ data });
   } catch (err) {

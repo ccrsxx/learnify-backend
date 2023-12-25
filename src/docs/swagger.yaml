@@ -395,7 +395,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Body'
+              $ref: '#/components/schemas/CourseBody'
         required: true
       responses:
         '200':
@@ -665,7 +665,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Delete'
+                $ref: '#/components/schemas/DeletedCourse'
         '400':
           $ref: '#/components/responses/MissingAuthorizationError'
         '401':
@@ -1057,8 +1057,8 @@ paths:
     delete:
       tags:
         - user-notifications
-      summary: Delete user notifications by ID
-      description: Delete user notifications by ID
+      summary: DeletedCourse user notifications by ID
+      description: DeletedCourse user notifications by ID
       operationId: delete-notifications
       parameters:
         - in: path
@@ -1432,10 +1432,26 @@ components:
             - You want to become a great programmer
         user_id:
           type: string
-          example: 68a58152-8b12-449f-9eae-ec3485941bad
+          example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
         course_category_id:
           type: string
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
+        course_category:
+          $ref: '#/components/schemas/CourseCategory'
+        course_chapter_id:
+          type: string
+          example: 3062d67c-e17a-46e5-9bcb-8c31045d8a74
+        course_chapter:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/CourseChapter'
+        total_duration:
+          type: integer
+          example: 55
+        total_materials:
+          type: integer
+          example: 3
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -1590,7 +1606,7 @@ components:
           type: array
           items:
             type: object
-            $ref: '#/components/schemas/CourseChapterWithOutVideos'
+            $ref: '#/components/schemas/CourseChapterWithoutVideos'
         total_duration:
           type: integer
           example: 55
@@ -1637,7 +1653,7 @@ components:
         updated_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
-    CourseChapterWithOutVideos:
+    CourseChapterWithoutVideos:
       type: object
       properties:
         id:
@@ -1662,10 +1678,7 @@ components:
           type: array
           items:
             type: object
-            oneOf:
-              - $ref: '#/components/schemas/CourseMaterial'
-              - $ref: '#/components/schemas/CourseMaterialWithStatus'
-              - $ref: '#/components/schemas/CourseMaterialWithoutVideos'
+            $ref: '#/components/schemas/CourseMaterialWithoutVideos'
         created_at:
           type: string
           example: '2021-01-01T00:00:00.000Z'
@@ -1898,9 +1911,12 @@ components:
         updated_at:
           type: string
           example: '2023-12-13T17:08:25.120Z'
-    Body:
+    CourseBody:
       type: object
       properties:
+        id:
+          type: string
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
         name:
           type: string
           example: Web Development
@@ -1916,6 +1932,9 @@ components:
         image:
           type: string
           example: https://loremflickr.com/640/480/animals?lock=5129160257175552
+        rating:
+          type: integer
+          example: 5
         premium:
           type: boolean
           example: false
@@ -1946,10 +1965,47 @@ components:
             - You want to become a great programmer
             - You want to become a great programmer
             - You want to become a great programmer
+        user_id:
+          type: string
+          example: c6e7c58b-d2a7-430c-b913-00b9bf09bf5e
         course_category_id:
           type: string
           example: 3bc509a0-923c-419d-8bcd-3e269289dc8e
-    Delete:
+        course_chapter:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/CourseChapterBody'
+    CourseChapterBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Pengenalan Fullstack
+        duration:
+          type: integer
+          example: 39
+        order_index:
+          type: integer
+          example: 1
+        course_material:
+          type: array
+          items:
+            type: object
+            $ref: '#/components/schemas/CourseMaterialBody'
+    CourseMaterialBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Apa itu Fullstack?
+        video:
+          type: string
+          example: https://overcooked-weight.org
+        order_index:
+          type: integer
+          example: 1
+    DeletedCourse:
       type: object
       properties:
         message:

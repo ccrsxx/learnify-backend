@@ -18,6 +18,29 @@ export function getCourses() {
   });
 }
 
+export function getCoursesWithDetails() {
+  return Course.findAll({
+    order: [
+      ['created_at', 'DESC'],
+      ['course_chapter', 'order_index', 'ASC'],
+      ['course_chapter', 'course_material', 'order_index', 'ASC']
+    ],
+    include: [
+      'course_category',
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material'
+          }
+        ]
+      }
+    ]
+  });
+}
+
 /**
  * @param {Types.WhereOptions<Course>} whereOptions
  * @param {boolean} [sortByNewest=false] Default is `false`
@@ -131,9 +154,11 @@ export function getCourseById(id) {
         ]
       }
     ],
-    attributes: {
-      include: [getTotalDuration(), getTotalMaterials()]
-    }
+    order: [
+      ['course_chapter', 'order_index', 'ASC'],
+      ['course_chapter', 'course_material', 'order_index', 'ASC']
+    ],
+    attributes: { include: [getTotalDuration(), getTotalMaterials()] }
   });
 }
 
@@ -152,7 +177,6 @@ export function getCourseWithUserStatus(id, userId) {
           {
             model: CourseMaterial,
             as: 'course_material',
-            order: [['order_index', 'ASC']],
             include: [
               {
                 model: CourseMaterialStatus,
@@ -169,6 +193,10 @@ export function getCourseWithUserStatus(id, userId) {
         where: { user_id: userId }
       }
     ],
+    order: [
+      ['course_chapter', 'order_index', 'ASC'],
+      ['course_chapter', 'course_material', 'order_index', 'ASC']
+    ],
     attributes: {
       include: [
         getTotalDuration(),
@@ -180,9 +208,22 @@ export function getCourseWithUserStatus(id, userId) {
   });
 }
 
-/** @param {Models.CourseAttributes} payload */
+/** @param {any} payload */
 export function createCourse(payload) {
-  return Course.create(payload);
+  return Course.create(payload, {
+    include: [
+      {
+        model: CourseChapter,
+        as: 'course_chapter',
+        include: [
+          {
+            model: CourseMaterial,
+            as: 'course_material'
+          }
+        ]
+      }
+    ]
+  });
 }
 
 /**
