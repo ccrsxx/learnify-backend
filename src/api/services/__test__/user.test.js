@@ -15,6 +15,8 @@ jest.unstable_mockModule(
       getUserByPhoneNumber: jest.fn(),
       getAdminUserByEmail: jest.fn(),
       getAdminUserByPhoneNumber: jest.fn(),
+      getVerifiedUserWithEmailAndPhoneNumber: jest.fn(),
+      getUnverifiedUserByEmailAndPhoneNumber: jest.fn(),
       createUser: jest.fn(),
       updateUser: jest.fn(),
       destroyUser: jest.fn(),
@@ -26,7 +28,8 @@ jest.unstable_mockModule(
   '../auth.js',
   () =>
     /** @type {AuthServiceMock} */ ({
-      hashPassword: jest.fn()
+      hashPassword: jest.fn(),
+      sendOtpRequest: jest.fn()
     })
 );
 
@@ -210,7 +213,11 @@ describe('User service', () => {
         mockHashedPassword
       );
 
-      userRepository.createUser.mockImplementation((payload) => payload);
+      userRepository.createUser.mockImplementation((payload) => ({
+        // @ts-ignore
+        ...payload,
+        admin: false
+      }));
       userNotificationService.createUserNotification.mockReturnValue(
         () => undefined
       );

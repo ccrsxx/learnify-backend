@@ -38,3 +38,22 @@ export async function sendResetPasswordEmail(email, token) {
     `
   });
 }
+
+/**
+ * @param {string} email
+ * @param {string} otp
+ */
+export async function sendOtpEmail(email, otp) {
+  await sendEmail({
+    to: email,
+    from: 'Learnify <noreply@gmail.com>',
+    subject: 'OTP Verification',
+    html: `
+      <h1>OTP Verification</h1>
+      <h2>Thank you for choosing Learnify! To ensure the security of your account, we require you to verify your identity using the following One-Time Password (OTP)</p>
+      <h3>Your OTP: ${otp}</h3>
+      <p>Please note that this OTP is valid for 5 minutes, so make sure to complete the verification promptly.</p>
+      <p>If you didn't request this OTP, you can ignore this email.</p>
+    `
+  });
+}

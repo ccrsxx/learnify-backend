@@ -291,6 +291,79 @@ paths:
         '500':
           $ref: '#/components/responses/InternalServerError'
 
+  /auth/otp:
+    post:
+      tags:
+        - auth
+      summary: Otp verification request
+      description: Otp verification request
+      operationId: otpVerificationReq
+      requestBody:
+        description: user email to send otp verification
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  example: 'rem@rezero.com'
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP sent successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/otp/verify:
+    post:
+      tags:
+        - auth
+      summary: Otp verification
+      description: Otp verification
+      operationId: otpVerification
+      requestBody:
+        description: user email to send otp verification
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  example: 179389
+                email:
+                  type: string
+                  example: emilia@rezero.com
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: OTP Verified successfully
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/InvalidVerificationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /users/me:
     get:
       tags:
@@ -2130,6 +2203,12 @@ components:
         message:
           type: string
           example: Missing authorization header
+    InvalidVerificationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Verification invalid
     InvalidAuthorizationError:
       type: object
       properties:
@@ -2173,6 +2252,12 @@ components:
           type: string
           example: 'Payment method cannot be null'
   responses:
+    InvalidVerificationError:
+      description: Verification invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidVerificationError'
     InvalidAuthorizationError:
       description: Invalid authorization header
       content:

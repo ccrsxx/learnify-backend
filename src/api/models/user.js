@@ -7,6 +7,7 @@ import isMobilePhone from 'validator/lib/isMobilePhone.js';
  * @property {string} name
  * @property {string} email
  * @property {boolean} admin
+ * @property {boolean} verified
  * @property {string} password
  * @property {string} phone_number
  * @property {Date} created_at
@@ -54,6 +55,10 @@ export default (sequelize, DataTypes) => {
       this.hasMany(models.PasswordReset, {
         foreignKey: 'user_id'
       });
+
+      this.hasMany(models.Otp, {
+        foreignKey: 'user_id'
+      });
     }
   }
 
@@ -87,6 +92,11 @@ export default (sequelize, DataTypes) => {
             msg: 'Email is not valid'
           }
         }
+      },
+      verified: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       },
       password: DataTypes.STRING,
       phone_number: {

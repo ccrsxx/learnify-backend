@@ -7,8 +7,10 @@ import * as paymentServices from '../services/user-payment.js';
 import * as UserPaymentModel from '../models/user-payment.js';
 import * as userNotificationService from '../services/user-notification.js';
 import * as courseMaterialStatusService from '../services/course-material-status.js';
+import * as userService from '../services/user.js';
 import * as CourseMaterialStatusModel from '../models/course-material-status.js';
 import * as UserNotificationModel from '../models/user-notification.js';
+import * as UserModel from '../models/user.js';
 
 /**
  * Check if valid credentials.
@@ -88,6 +90,28 @@ export function isValidResetPasswordPayload(req, res, next) {
  * @type {Types.Middleware}
  * @returns {void}
  */
+export function isValidVerifyOtpPayload(req, res, next) {
+  const { otp, email } = req.body;
+
+  if (!otp || !email) {
+    res.status(400).json({ message: 'OTP and email are required' });
+    return;
+  }
+
+  if (typeof otp !== 'string' || typeof email !== 'string') {
+    res.status(400).json({ message: 'OTP and email must be string' });
+    return;
+  }
+
+  next();
+}
+
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware}
+ * @returns {void}
+ */
 export function isValidResetPasswordProfile(req, res, next) {
   const { old_password, new_password } = req.body;
 
@@ -109,6 +133,35 @@ export function isValidResetPasswordProfile(req, res, next) {
     res
       .status(409)
       .json({ message: 'New password cannot be the same as old password' });
+    return;
+  }
+
+  next();
+}
+
+/**
+ * Check if valid credentials.
+ *
+ * @type {Types.Middleware<
+ *   Types.ExtractLocalsMiddleware<typeof isValidEmail> & {
+ *     user: UserModel.UserAttributes;
+ *   }
+ * >}
+ * @returns {Promise<void>}
+ */
+export async function isUnverifiedUserExists(req, res, next) {
+  const { email } = req.body;
+
+  try {
+    const user = await userService.getUnverifiedUserByEmail(email);
+    res.locals.user = user.dataValues;
+  } catch (err) {
+    if (err instanceof ApplicationError) {
+      res.status(err.statusCode).json({ message: err.message });
+      return;
+    }
+
+    res.status(500).json({ message: 'Internal server error' });
     return;
   }
 

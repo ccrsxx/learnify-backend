@@ -5,6 +5,7 @@ import { JWT_SECRET } from '../../libs/env.js';
 import * as resetPasswordRepository from '../repositories/password-reset.js';
 import * as userService from '../services/user.js';
 import * as userRepository from '../repositories/user.js';
+import * as otpRepository from '../repositories/otp.js';
 import {
   ApplicationError,
   generateApplicationError
@@ -12,7 +13,8 @@ import {
 import * as UserModel from '../models/user.js';
 import { sequelize } from '../models/index.js';
 import { generateRandomToken } from '../../libs/utils.js';
-import { sendResetPasswordEmail } from '../../libs/mail.js';
+import { sendResetPasswordEmail, sendOtpEmail } from '../../libs/mail.js';
+import { generateRandomOTP } from '../../libs/utils.js';
 
 /**
  * Generate hash password with bcrypt
@@ -164,5 +166,65 @@ export async function changePassword(payload) {
     });
   } catch (err) {
     throw generateApplicationError(err, 'Error changing password', 500);
+  }
+}
+
+/**
+ * @param {string} email
+ * @param {string} userId
+ * @param {() => Promise<unknown>} [callback]
+ */
+export async function sendOtpRequest(email, userId, callback) {
+  try {
+    await sequelize.transaction(async (transaction) => {
+      await otpRepository.setUsedTrueByUserId(userId, transaction);
+
+      const nextFiveMinutesDate = new Date();
+
+      nextFiveMinutesDate.setMinutes(nextFiveMinutesDate.getMinutes() + 5);
+
+      const payload = {
+        otp: generateRandomOTP(),
+        used: false,
+        user_id: userId,
+        expired_at: nextFiveMinutesDate
+      };
+
+      const otpData = await otpRepository.setOtpVerification(
+        payload,
+        transaction
+      );
+
+      await sendOtpEmail(email, otpData.dataValues.otp);
+
+      if (callback) await callback();
+    });
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while generating OTP', 500);
+  }
+}
+
+/** @param {any} payload */
+export async function verifyOtp(payload) {
+  const { otp, email } = payload;
+
+  try {
+    const verifyOtpData = await otpRepository.getDataOtpVerificationByOtp(
+      otp,
+      email
+    );
+
+    if (!verifyOtpData) {
+      throw new ApplicationError('Verification invalid', 404);
+    }
+
+    const userId = verifyOtpData.dataValues.user_id;
+
+    await sequelize.transaction(async (transaction) => {
+      await userRepository.updateUser(userId, { verified: true }, transaction);
+      await otpRepository.updateUsedOtpVerification(otp, userId, transaction);
+    });
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while verifying OTP', 500);
   }
 }

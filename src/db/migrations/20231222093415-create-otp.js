@@ -2,40 +2,33 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('user', {
+    await queryInterface.createTable('otp', {
       id: {
         allowNull: false,
         primaryKey: true,
         type: Sequelize.UUID,
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
-      name: {
+      otp: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      admin: {
+      used: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
         defaultValue: false
       },
-      email: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.UUID,
         allowNull: false,
-        unique: true
+        references: {
+          model: 'user',
+          key: 'id'
+        }
       },
-      verified: {
-        type: Sequelize.BOOLEAN,
+      expired_at: {
         allowNull: false,
-        defaultValue: false
-      },
-      password: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      phone_number: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.DATE
       },
       created_at: {
         allowNull: false,
@@ -48,6 +41,6 @@ module.exports = {
     });
   },
   async down(queryInterface, _Sequelize) {
-    await queryInterface.dropTable('user');
+    await queryInterface.dropTable('otp');
   }
 };

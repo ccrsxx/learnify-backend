@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import Sequelize, { Op } from 'sequelize';
 import { User } from '../models/index.js';
 import * as Models from '../models/user.js';
 
@@ -14,14 +14,47 @@ export function getUser(id) {
 /** @param {string} email */
 export function getUserByEmail(email) {
   return User.findOne({
-    where: { email }
+    where: { email, verified: true }
+  });
+}
+
+/** @param {string} email */
+export function getUnverifiedUser(email) {
+  return User.findOne({
+    where: { email, verified: false }
+  });
+}
+
+/**
+ * @param {string} email
+ * @param {string} phoneNumber
+ */
+export function getVerifiedUserWithEmailAndPhoneNumber(email, phoneNumber) {
+  return User.findOne({
+    where: {
+      [Op.or]: [{ email }, { phone_number: phoneNumber }],
+      verified: true
+    }
+  });
+}
+
+/**
+ * @param {string} email
+ * @param {string} phoneNumber
+ */
+export function getUnverifiedUserByEmailAndPhoneNumber(email, phoneNumber) {
+  return User.findOne({
+    where: {
+      [Op.or]: [{ email }, { phone_number: phoneNumber }],
+      verified: false
+    }
   });
 }
 
 /** @param {string} phoneNumber */
 export function getUserByPhoneNumber(phoneNumber) {
   return User.findOne({
-    where: { phone_number: phoneNumber }
+    where: { phone_number: phoneNumber, verified: true }
   });
 }
 
