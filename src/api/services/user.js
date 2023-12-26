@@ -180,13 +180,11 @@ export async function updateUser(id, payload) {
   try {
     const parsedPayload = omitPropertiesFromObject(payload, [
       'id',
-      'email',
       'admin',
       'verified',
       'password',
       'created_at',
-      'updated_at',
-      'phone_number'
+      'updated_at'
     ]);
 
     const [, [user]] = await userRepository.updateUser(id, parsedPayload);

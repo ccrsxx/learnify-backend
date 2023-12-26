@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as userController from '../controllers/user.js';
+import * as uploadMiddleware from '../middlewares/upload.js';
 import * as authMiddleware from '../middlewares/auth.js';
 import * as validationMiddleware from '../middlewares/validation.js';
 import * as Types from '../../libs/types/common.js';
@@ -15,7 +16,13 @@ export default (app) => {
 
   router.get('/me', authMiddleware.isAuthorized, userController.getCurrentUser);
 
-  router.put('/me', authMiddleware.isAuthorized, userController.updateUser);
+  router.put(
+    '/me',
+    authMiddleware.isAuthorized,
+    uploadMiddleware.parseImage,
+    uploadMiddleware.uploadCloudinary,
+    userController.updateUser
+  );
 
   router.put(
     '/me/password-reset',

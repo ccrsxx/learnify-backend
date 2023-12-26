@@ -5,6 +5,7 @@ import isMobilePhone from 'validator/lib/isMobilePhone.js';
  * @typedef UserAttributes
  * @property {string} id
  * @property {string} name
+ * @property {string | null} image
  * @property {string} email
  * @property {boolean} admin
  * @property {boolean} verified
@@ -74,6 +75,10 @@ export default (sequelize, DataTypes) => {
             msg: 'Name must be at least 3 characters'
           }
         }
+      },
+      image: {
+        type: DataTypes.STRING,
+        allowNull: true
       },
       admin: {
         type: DataTypes.BOOLEAN,

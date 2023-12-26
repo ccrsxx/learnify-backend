@@ -13,6 +13,8 @@ module.exports = {
       name: 'Emilia',
       admin: true,
       email: 'emilia@rezero.com',
+      image:
+        'https://res.cloudinary.com/dnipscdmt/image/upload/v1703308890/iynjqrgrln1jueqymwsc.gif',
       verified: true,
       password: '$2b$10$S5jendkv1xbBWqPrZxqN7.PtnPAPPHoa94/8LzmjEZQp2ZdiWTB3u', // emilia-rezero
       phone_number: '+6289876543210'

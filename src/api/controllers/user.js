@@ -1,4 +1,5 @@
 import { ApplicationError } from '../../libs/error.js';
+import { uploadCloudinary } from '../middlewares/upload.js';
 import * as Types from '../../libs/types/common.js';
 import * as userService from '../services/user.js';
 import * as authService from '../services/auth.js';
@@ -14,7 +15,7 @@ export function getCurrentUser(_req, res) {
 }
 
 /**
- * @type {Types.AuthorizedController}
+ * @type {Types.AuthorizedController<typeof uploadCloudinary>}
  * @returns {Promise<void>}
  */
 export async function updateUser(req, res) {
@@ -22,8 +23,12 @@ export async function updateUser(req, res) {
 
   const { id: userId } = res.locals.user;
 
+  const image = res.locals.image;
+
+  const bodyWithImage = { ...body, image };
+
   try {
-    const updatedUser = await userService.updateUser(userId, body);
+    const updatedUser = await userService.updateUser(userId, bodyWithImage);
 
     res.status(200).json({
       message: 'User profile updated successfully',
