@@ -3,7 +3,7 @@ import { Model } from 'sequelize';
 /**
  * @typedef OtpAttributes
  * @property {string} id
- * @property {number} otp
+ * @property {string} otp
  * @property {boolean} used
  * @property {string} user_id
  * @property {Date} expired_at
@@ -36,7 +36,7 @@ export default (sequelize, DataTypes) => {
   Otp.init(
     // @ts-ignore
     {
-      otp: { type: DataTypes.INTEGER, allowNull: false },
+      otp: { type: DataTypes.STRING, allowNull: false },
       used: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
       user_id: { type: DataTypes.UUID, allowNull: false },
       expired_at: { type: DataTypes.DATE, allowNull: false }

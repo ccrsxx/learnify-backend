@@ -10,7 +10,7 @@ module.exports = {
         defaultValue: Sequelize.literal('gen_random_uuid()')
       },
       otp: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false
       },
       used: {

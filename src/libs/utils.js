@@ -55,5 +55,5 @@ export function generateRandomToken() {
 }
 
 export function generateRandomOTP() {
-  return randomInt(100_000, 1_000_000);
+  return randomInt(0, 1_000_000).toString().padStart(6, '0');
 }

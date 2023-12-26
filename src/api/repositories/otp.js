@@ -26,11 +26,18 @@ export async function setUsedTrueByUserId(user_id, transaction) {
 
 /**
  * @param {string} otp
- * @param {string} user_id
+ * @param {string} email
  */
-export async function getDataOtpVerificationByOtp(otp, user_id) {
+export async function getDataOtpVerificationByOtp(otp, email) {
   return Otp.findOne({
-    where: { otp, user_id, used: false, expired_at: { [Op.gt]: new Date() } }
+    where: { otp, used: false, expired_at: { [Op.gt]: new Date() } },
+    include: [
+      {
+        association: 'user',
+        where: { email, verified: false },
+        attributes: []
+      }
+    ]
   });
 }
 

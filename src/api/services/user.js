@@ -38,6 +38,21 @@ export async function getUserByEmail(email) {
   }
 }
 
+/** @param {string} email */
+export async function getUnverifiedUserByEmail(email) {
+  try {
+    const user = await userRepository.getUnverifiedUser(email);
+
+    if (!user) {
+      throw new ApplicationError('User not found', 404);
+    }
+
+    return user;
+  } catch (err) {
+    throw generateApplicationError(err, 'Error while getting user', 500);
+  }
+}
+
 /** @param {string} phoneNumber */
 export async function getUserByPhoneNumber(phoneNumber) {
   try {
@@ -90,6 +105,7 @@ export async function createUser(payload) {
   const parsedPayload = omitPropertiesFromObject(payload, [
     'id',
     'admin',
+    'verified',
     'password',
     'created_at',
     'updated_at'
@@ -101,7 +117,6 @@ export async function createUser(payload) {
     const parsedUserWithEncryptedPassword =
       /** @type {Models.UserAttributes} */ ({
         ...parsedPayload,
-        admin: false,
         password: encryptedPassword
       });
 
@@ -120,6 +135,7 @@ export async function createUser(payload) {
       throw new ApplicationError(errorMessage, 409);
     }
 
+    /** @type {Awaited<ReturnType<typeof userRepository.createUser>>} */
     let user;
 
     const unverifiedUser =
@@ -143,10 +159,12 @@ export async function createUser(payload) {
       user = newUser;
     }
 
-    await userNotificationService.createUserNotification(user.dataValues.id, {
-      name: 'Notifikasi',
-      description: 'Selamat datang di Learnify!'
-    });
+    await authService.sendOtpRequest(email, user.dataValues.id, () =>
+      userNotificationService.createUserNotification(user.dataValues.id, {
+        name: 'Notifikasi',
+        description: 'Selamat datang di Learnify!'
+      })
+    );
 
     return user;
   } catch (err) {
@@ -164,6 +182,7 @@ export async function updateUser(id, payload) {
       'id',
       'email',
       'admin',
+      'verified',
       'password',
       'created_at',
       'updated_at',

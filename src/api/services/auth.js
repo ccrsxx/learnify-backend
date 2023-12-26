@@ -169,30 +169,35 @@ export async function changePassword(payload) {
   }
 }
 
-/** @param {string} email */
-export async function sendOtpRequest(email) {
+/**
+ * @param {string} email
+ * @param {string} userId
+ * @param {() => Promise<unknown>} [callback]
+ */
+export async function sendOtpRequest(email, userId, callback) {
   try {
-    const user = await userService.getUserByEmail(email);
-    if (!user) {
-      throw new ApplicationError('User not found', 404);
-    }
-
     await sequelize.transaction(async (transaction) => {
-      await otpRepository.setUsedTrueByUserId(user.dataValues.id, transaction);
+      await otpRepository.setUsedTrueByUserId(userId, transaction);
 
-      const nextMinuteDate = new Date();
-      nextMinuteDate.setMinutes(nextMinuteDate.getMinutes() + 5);
+      const nextFiveMinutesDate = new Date();
+
+      nextFiveMinutesDate.setMinutes(nextFiveMinutesDate.getMinutes() + 5);
+
       const payload = {
         otp: generateRandomOTP(),
         used: false,
-        user_id: user.dataValues.id,
-        expired_at: nextMinuteDate
+        user_id: userId,
+        expired_at: nextFiveMinutesDate
       };
+
       const otpData = await otpRepository.setOtpVerification(
         payload,
         transaction
       );
+
       await sendOtpEmail(email, otpData.dataValues.otp);
+
+      if (callback) await callback();
     });
   } catch (err) {
     throw generateApplicationError(
@@ -203,22 +208,25 @@ export async function sendOtpRequest(email) {
   }
 }
 
-/** @param {{ otp: string; user_id: string }} payload */
+/** @param {any} payload */
 export async function verifyOtp(payload) {
-  const { otp, user_id } = payload;
+  const { otp, email } = payload;
+
   try {
     const verifyOtpData = await otpRepository.getDataOtpVerificationByOtp(
       otp,
-      user_id
+      email
     );
+
     if (!verifyOtpData) {
       throw new ApplicationError('Verification invalid', 404);
     }
 
+    const userId = verifyOtpData.dataValues.user_id;
+
     await sequelize.transaction(async (transaction) => {
-      // @ts-ignore
-      await userRepository.updateUser(user_id, { verified: true }, transaction);
-      await otpRepository.updateUsedOtpVerification(otp, user_id, transaction);
+      await userRepository.updateUser(userId, { verified: true }, transaction);
+      await otpRepository.updateUsedOtpVerification(otp, userId, transaction);
     });
   } catch (err) {
     throw generateApplicationError(err, 'Error while verifying OTP', 500);

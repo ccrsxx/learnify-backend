@@ -182,10 +182,13 @@ export async function changePassword(req, res) {
  * @returns {Promise<void>}
  */
 export async function sendOtpRequest(req, res) {
+  const { email } = req.body;
+  const { id: userId } = res.locals.user;
+
   try {
-    const { email } = req.body;
-    await authService.sendOtpRequest(email);
-    res.status(201).json({ message: 'sending OTP successfully' });
+    await authService.sendOtpRequest(email, userId);
+
+    res.status(201).json({ message: 'OTP sent successfully' });
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
@@ -203,8 +206,10 @@ export async function sendOtpRequest(req, res) {
 export async function verifyOtp(req, res) {
   try {
     const payload = req.body;
+
     await authService.verifyOtp(payload);
-    res.status(200).json({ message: 'Verification is valid' });
+
+    res.status(200).json({ message: 'OTP verified successfully' });
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
