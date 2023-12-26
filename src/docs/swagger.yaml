@@ -319,7 +319,7 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: sending OTP successfully
+                    example: OTP sent successfully
         '400':
           $ref: '#/components/responses/ValidationError'
         '500':
@@ -356,9 +356,11 @@ paths:
                 properties:
                   message:
                     type: string
-                    example: Verification is valid
+                    example: OTP Verified successfully
         '400':
           $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/InvalidVerificationError'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -2201,6 +2203,12 @@ components:
         message:
           type: string
           example: Missing authorization header
+    InvalidVerificationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Verification invalid
     InvalidAuthorizationError:
       type: object
       properties:
@@ -2244,6 +2252,12 @@ components:
           type: string
           example: 'Payment method cannot be null'
   responses:
+    InvalidVerificationError:
+      description: Verification invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvalidVerificationError'
     InvalidAuthorizationError:
       description: Invalid authorization header
       content:

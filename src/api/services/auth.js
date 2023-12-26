@@ -200,11 +200,7 @@ export async function sendOtpRequest(email, userId, callback) {
       if (callback) await callback();
     });
   } catch (err) {
-    throw generateApplicationError(
-      err,
-      'Error while generating OTP verification',
-      500
-    );
+    throw generateApplicationError(err, 'Error while generating OTP', 500);
   }
 }
 
