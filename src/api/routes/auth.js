@@ -54,6 +54,7 @@ export default (app) => {
   router.post(
     '/otp/verify',
     validationMiddleware.isValidVerifyOtpPayload,
+    validationMiddleware.isUnverifiedUserExists,
     authController.verifyOtp
   );
 };

@@ -215,7 +215,7 @@ export async function verifyOtp(payload) {
     );
 
     if (!verifyOtpData) {
-      throw new ApplicationError('Verification invalid', 404);
+      throw new ApplicationError('Verification invalid', 401);
     }
 
     const userId = verifyOtpData.dataValues.user_id;

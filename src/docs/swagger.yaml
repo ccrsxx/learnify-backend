@@ -322,6 +322,8 @@ paths:
                     example: OTP sent successfully
         '400':
           $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/UserNotFoundError'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -359,8 +361,10 @@ paths:
                     example: OTP Verified successfully
         '400':
           $ref: '#/components/responses/ValidationError'
-        '404':
+        '401':
           $ref: '#/components/responses/InvalidVerificationError'
+        '404':
+          $ref: '#/components/responses/UserNotFoundError'
         '500':
           $ref: '#/components/responses/InternalServerError'
 
@@ -2227,6 +2231,12 @@ components:
         message:
           type: string
           example: Old password is not match
+    UserNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: User not found
     CourseNotFoundError:
       type: object
       properties:
@@ -2318,6 +2328,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/PasswordIsNotMatchError'
+    UserNotFoundError:
+      description: User not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UserNotFoundError'
     CourseNotFoundError:
       description: Course not found
       content:
