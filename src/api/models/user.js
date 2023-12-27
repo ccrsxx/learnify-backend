@@ -68,13 +68,7 @@ export default (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          len: {
-            args: [3, 255],
-            msg: 'Name must be at least 3 characters'
-          }
-        }
+        allowNull: false
       },
       image: {
         type: DataTypes.STRING,
