@@ -5,7 +5,6 @@ import {
 import { omitPropertiesFromObject } from '../../libs/utils.js';
 import * as authService from '../services/auth.js';
 import * as userRepository from '../repositories/user.js';
-import * as userNotificationService from '../services/user-notification.js';
 import * as Models from '../models/user.js';
 
 /** @param {string} id */
@@ -159,12 +158,7 @@ export async function createUser(payload) {
       user = newUser;
     }
 
-    await authService.sendOtpRequest(email, user.dataValues.id, () =>
-      userNotificationService.createUserNotification(user.dataValues.id, {
-        name: 'Notifikasi',
-        description: 'Selamat datang di Learnify!'
-      })
-    );
+    await authService.sendOtpRequest(email, user.dataValues.id);
 
     return user;
   } catch (err) {
