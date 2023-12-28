@@ -4,6 +4,7 @@ import { Model } from 'sequelize';
 import { JWT_SECRET } from '../../libs/env.js';
 import * as resetPasswordRepository from '../repositories/password-reset.js';
 import * as userService from '../services/user.js';
+import * as userNotificationService from '../services/user-notification.js';
 import * as userRepository from '../repositories/user.js';
 import * as otpRepository from '../repositories/otp.js';
 import {
@@ -172,9 +173,8 @@ export async function changePassword(payload) {
 /**
  * @param {string} email
  * @param {string} userId
- * @param {() => Promise<unknown>} [callback]
  */
-export async function sendOtpRequest(email, userId, callback) {
+export async function sendOtpRequest(email, userId) {
   try {
     await sequelize.transaction(async (transaction) => {
       await otpRepository.setUsedTrueByUserId(userId, transaction);
@@ -196,8 +196,6 @@ export async function sendOtpRequest(email, userId, callback) {
       );
 
       await sendOtpEmail(email, otpData.dataValues.otp);
-
-      if (callback) await callback();
     });
   } catch (err) {
     throw generateApplicationError(err, 'Error while generating OTP', 500);
@@ -221,8 +219,13 @@ export async function verifyOtp(payload) {
     const userId = verifyOtpData.dataValues.user_id;
 
     await sequelize.transaction(async (transaction) => {
-      await userRepository.updateUser(userId, { verified: true }, transaction);
       await otpRepository.updateUsedOtpVerification(otp, userId, transaction);
+      await userRepository.updateUser(userId, { verified: true }, transaction);
+
+      await userNotificationService.createUserNotification(userId, {
+        name: 'Notifikasi',
+        description: 'Selamat datang di Learnify!'
+      });
     });
   } catch (err) {
     throw generateApplicationError(err, 'Error while verifying OTP', 500);

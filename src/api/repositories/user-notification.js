@@ -3,7 +3,10 @@ import * as UserNotificationModel from '../models/user-notification.js';
 
 /** @param {string} userId */
 export function getUserNotification(userId) {
-  return UserNotification.findAll({ where: { user_id: userId } });
+  return UserNotification.findAll({
+    where: { user_id: userId },
+    order: [['created_at', 'DESC']]
+  });
 }
 
 /** @param {string} id */
