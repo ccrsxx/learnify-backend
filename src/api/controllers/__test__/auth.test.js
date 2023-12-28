@@ -13,7 +13,10 @@ jest.unstable_mockModule(
       isPasswordMatch: jest.fn(),
       generateToken: jest.fn(),
       sendVerifyToResetPassword: jest.fn(),
-      sendOtpRequest: jest.fn()
+      sendOtpRequest: jest.fn(),
+      checkLinkToResetPassword: jest.fn(),
+      changePassword: jest.fn(),
+      verifyOtp: jest.fn()
     })
 );
 
@@ -599,6 +602,329 @@ describe('Auth controller', () => {
       // @ts-ignore
       authService.sendVerifyToResetPassword.mockRejectedValue(mockError);
       await authController.sendVerifyToResetPassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+    });
+  });
+
+  describe('Check link to reset password', () => {
+    it('returns 200 status code with message validation', async () => {
+      const data = {
+        used: false,
+        token: 'thisisatoken'
+      };
+      const mockRequest = {
+        params: {
+          token: data.token
+        }
+      };
+
+      const mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      // @ts-ignore
+      authService.checkLinkToResetPassword.mockResolvedValue(data);
+      await authController.checkLinkToResetPassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Verification is valid'
+      });
+    });
+
+    it('throws application error when check verification service throws fails', async () => {
+      const mockError = new ApplicationError(
+        'Error while checking reset password link',
+        500
+      );
+
+      const mockRequest = {
+        params: {
+          token: 'thisisatoken'
+        }
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.checkLinkToResetPassword.mockRejectedValue(mockError);
+      await authController.checkLinkToResetPassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+    });
+
+    it('throws generic error when check verification service throws fails', async () => {
+      const mockError = new Error();
+
+      const mockRequest = {
+        params: {
+          token: 'thisisatoken'
+        }
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.checkLinkToResetPassword.mockRejectedValue(mockError);
+      await authController.checkLinkToResetPassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+    });
+  });
+
+  describe('Change password', () => {
+    it('return 200 status code with successful message', async () => {
+      const mockRequest = {
+        token: 'thisistoken',
+        password: 'newPassword'
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.changePassword.mockResolvedValue(undefined);
+      await authController.changePassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Password successfully updated'
+      });
+    });
+
+    it('throws application error when change password service throws fails', async () => {
+      const mockError = new ApplicationError(
+        'Error while checking reset password link',
+        500
+      );
+
+      const mockRequest = {
+        params: {
+          token: 'thisisatoken',
+          password: 'newPassword'
+        }
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.changePassword.mockRejectedValue(mockError);
+      await authController.changePassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+    });
+
+    it('throws generic error when change password service throws fails', async () => {
+      const mockError = new Error();
+
+      const mockRequest = {
+        params: {
+          token: 'thisisatoken',
+          password: 'newPassword'
+        }
+      };
+
+      const mockResponse = {
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.changePassword.mockRejectedValue(mockError);
+      await authController.changePassword(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+    });
+  });
+
+  describe('Send otp verification', () => {
+    it('returns 201 status code with successful message', async () => {
+      const mockRequest = {
+        body: {
+          email: 'Emilia email'
+        }
+      };
+
+      const mockResponse = {
+        locals: {
+          user: {
+            userId: 'thisisId'
+          }
+        },
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      // @ts-ignore
+      authService.sendOtpRequest.mockResolvedValue(undefined);
+      await authController.sendOtpRequest(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'OTP sent successfully'
+      });
+    });
+
+    it('throws application error when sending verification service throws fails', async () => {
+      const mockError = new ApplicationError(
+        'Error while checking reset password link',
+        500
+      );
+
+      const mockRequest = {
+        body: {
+          email: 'Emilia email'
+        }
+      };
+
+      const mockResponse = {
+        locals: {
+          user: {
+            userId: 'thisisId'
+          }
+        },
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.sendOtpRequest.mockRejectedValue(mockError);
+      await authController.sendOtpRequest(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+    });
+
+    it('throws generic error when sending verification service throws fails', async () => {
+      const mockError = new Error();
+
+      const mockRequest = {
+        body: {
+          email: 'Emilia email'
+        }
+      };
+
+      const mockResponse = {
+        locals: {
+          user: {
+            userId: 'thisisId'
+          }
+        },
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      // @ts-ignore
+      authService.sendOtpRequest.mockRejectedValue(mockError);
+      await authController.sendOtpRequest(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+    });
+  });
+
+  describe('Verify otp', () => {
+    it('returns 200 status code with verified message', async () => {
+      const mockRequest = {
+        body: {
+          otp: 'otp',
+          email: 'Emilia'
+        }
+      };
+
+      const mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      // @ts-ignore
+      authService.verifyOtp.mockResolvedValue(undefined);
+      await authController.verifyOtp(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'OTP verified successfully'
+      });
+    });
+
+    it('throws application error when verification service throws fails', async () => {
+      const mockError = new ApplicationError(
+        'Error while checking reset password link',
+        500
+      );
+
+      const mockRequest = {
+        body: {
+          otp: 'otp',
+          email: 'Emilia'
+        }
+      };
+
+      const mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      // @ts-ignore
+      authService.verifyOtp.mockRejectedValue(mockError);
+      await authController.verifyOtp(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+    });
+
+    it('throws generic error when verification service throws fails', async () => {
+      const mockError = new Error();
+
+      const mockRequest = {
+        body: {
+          otp: 'otp',
+          email: 'Emilia'
+        }
+      };
+
+      const mockResponse = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      // @ts-ignore
+      authService.verifyOtp.mockRejectedValue(mockError);
+      await authController.verifyOtp(mockRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(500);
       expect(mockResponse.json).toHaveBeenCalledWith({
