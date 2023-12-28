@@ -149,6 +149,7 @@ export async function payFreeCourse(_req, res) {
   } catch (err) {
     if (err instanceof ApplicationError) {
       res.status(err.statusCode).json({ message: err.message });
+      return;
     }
 
     res.status(500).json({ message: 'Internal server error' });
