@@ -234,4 +234,150 @@ describe('Auth middleware', () => {
       expect(mockNext).not.toHaveBeenCalled();
     });
   });
+
+  describe('Is logged in', () => {
+    it('returns 400 status code with message when authorization header is missing', async () => {
+      const mockRequest = {
+        get: jest.fn().mockReturnValue(undefined)
+      };
+
+      const mockResponse = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      const mockNext = jest.fn();
+
+      await authMiddleware.isLoggedIn(mockRequest, mockResponse, mockNext);
+
+      expect(mockRequest.get).toHaveBeenCalledWith('authorization');
+
+      expect(mockResponse.locals).toEqual({ user: null });
+      expect(mockNext).toHaveBeenCalled();
+    });
+
+    it('returns 401 status code with message when authorization type is not bearer', async () => {
+      const mockRequest = {
+        get: jest.fn().mockReturnValue('Basic Emilia-tan')
+      };
+
+      const mockResponse = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      const mockNext = jest.fn();
+
+      await authMiddleware.isLoggedIn(mockRequest, mockResponse, mockNext);
+
+      expect(mockRequest.get).toHaveBeenCalledWith('authorization');
+
+      expect(mockResponse.status).toHaveBeenCalledWith(401);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Invalid authorization token'
+      });
+
+      expect(mockResponse.locals).toEqual({});
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    it('passes the middleware and put the user to the res.locals', async () => {
+      const mockUser = {
+        name: 'Emilia'
+      };
+
+      authService.verifyToken.mockResolvedValue(
+        // @ts-ignore
+        { dataValues: mockUser }
+      );
+
+      const mockToken = 'Bearer Emilia-tan';
+
+      const mockRequest = {
+        get: jest.fn().mockReturnValue(mockToken)
+      };
+
+      const mockResponse = {
+        locals: {}
+      };
+
+      const mockNext = jest.fn();
+
+      await authMiddleware.isLoggedIn(mockRequest, mockResponse, mockNext);
+
+      expect(mockRequest.get).toHaveBeenCalledWith('authorization');
+
+      expect(mockResponse.locals).toEqual({ user: mockUser });
+
+      expect(mockNext).toHaveBeenCalledTimes(1);
+    });
+
+    it('throws application error when verify token fails', async () => {
+      const mockError = new ApplicationError('Token expired', 401);
+
+      authService.verifyToken.mockRejectedValue(
+        // @ts-ignore
+        mockError
+      );
+
+      const mockRequest = {
+        get: jest.fn().mockReturnValue('Bearer Emilia-tan')
+      };
+
+      const mockResponse = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      const mockNext = jest.fn();
+
+      await authMiddleware.isLoggedIn(mockRequest, mockResponse, mockNext);
+
+      expect(mockRequest.get).toHaveBeenCalledWith('authorization');
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+
+      expect(mockResponse.locals).toEqual({});
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+
+    it('throws generic error when verify token fails', async () => {
+      const mockError = new Error();
+
+      authService.verifyToken.mockRejectedValue(
+        // @ts-ignore
+        mockError
+      );
+
+      const mockRequest = {
+        get: jest.fn().mockReturnValue('Bearer Emilia-tan')
+      };
+
+      const mockResponse = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn()
+      };
+
+      const mockNext = jest.fn();
+
+      await authMiddleware.isLoggedIn(mockRequest, mockResponse, mockNext);
+
+      expect(mockRequest.get).toHaveBeenCalledWith('authorization');
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+
+      expect(mockResponse.locals).toEqual({});
+      expect(mockNext).not.toHaveBeenCalled();
+    });
+  });
 });
