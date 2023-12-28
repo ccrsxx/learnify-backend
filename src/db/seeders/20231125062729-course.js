@@ -70,7 +70,7 @@ module.exports = {
       {
         id: '0d7925a7-0c68-4c25-9c9a-c1f346bdc9fc',
         name: 'Web Development Microservice: Website Kelas Online',
-        price: 450000,
+        price: 420000,
         premium: true,
         rating: 3.5,
         difficulty: 'INTERMEDIATE',
