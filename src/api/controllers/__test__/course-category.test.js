@@ -1,12 +1,7 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
 
-/**
- * @typedef {Record<
- *   keyof import('../../services/course-category.js'),
- *   jest.Mock
- * >} CourseCategoryControllerMock
- */
+/** @typedef {Record<keyof import('../course-category.js'), jest.Mock>} CourseCategoryControllerMock */
 /**
  * @typedef {Record<
  *   keyof import('../../services/course-category.js'),

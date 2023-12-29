@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
 
-/** @typedef {Record<keyof import('../../services/user-course.js'), jest.Mock>} UserCourseControllerMock */
+/** @typedef {Record<keyof import('../user-course.js'), jest.Mock>} UserCourseControllerMock */
 /** @typedef {Record<keyof import('../../services/user-course.js'), jest.Mock>} UserCourseServiceMock */
 
 jest.unstable_mockModule(
