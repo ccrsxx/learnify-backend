@@ -17,7 +17,7 @@ module.exports = {
         course_chapter_id: await getCourseChapterIdByName(
           'Pengenalan Design System'
         ),
-        video: 'https://youtu.be/ChdiLQ1iy5o'
+        video: 'https://youtu.be/ixOd42SEUF0'
       },
       {
         id: 'abd244c7-5f79-4e46-80c9-2c89846f1738',
@@ -36,6 +36,27 @@ module.exports = {
           'Workflow Membangun Design System'
         ),
         video: 'https://youtu.be/rd-590n3H6w'
+      },
+      {
+        id: '55c9fe05-25f7-4395-b4ef-1875384294b3',
+        name: 'Menambahkan Text Style',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Typography'),
+        video: 'https://youtu.be/HYfG_uCOlhc'
+      },
+      {
+        id: '3f367d01-96ae-4bda-aafa-10f8623c0aa5',
+        name: 'Menambahkan Typography Layout',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Typography'),
+        video: 'https://youtu.be/DmxXl1k0X5g'
+      },
+      {
+        id: '870a429b-0898-4cf2-ac02-26c996f80a3a',
+        name: 'Menambahkan Paragraph Section',
+        order_index: 3,
+        course_chapter_id: await getCourseChapterIdByName('Typography'),
+        video: 'https://youtu.be/1eJzLj9OE0Q'
       },
       {
         id: '8b24ff2c-8ba1-4970-ad5d-cb3e11c9edf7',
@@ -86,6 +107,27 @@ module.exports = {
           'Service Media & Service User'
         ),
         video: 'https://youtu.be/rd-590n3H6w'
+      },
+      {
+        id: 'c8f746e9-193a-4c1c-8e38-67096e01273f',
+        name: 'Membuat API Register',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Integrasi API'),
+        video: 'https://youtu.be/HYfG_uCOlhc'
+      },
+      {
+        id: 'e4b2f3f8-3e99-40c8-817d-21fe4e66607b',
+        name: 'Membuat API Login',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Integrasi API'),
+        video: 'https://youtu.be/DmxXl1k0X5g'
+      },
+      {
+        id: '7622c266-38da-4ad7-b129-86ce68690c78',
+        name: 'Membuat API Logout',
+        order_index: 3,
+        course_chapter_id: await getCourseChapterIdByName('Integrasi API'),
+        video: 'https://youtu.be/1eJzLj9OE0Q'
       },
       {
         id: 'b579193f-cb57-4e4f-a09e-2722872a52b9',
@@ -157,6 +199,33 @@ module.exports = {
         video: 'https://youtu.be/rd-590n3H6w'
       },
       {
+        id: '4c4cb04d-cf80-4b8a-a328-f7208a0f5e37',
+        name: 'Perkenalan Tools Adobe XD',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName(
+          'Design UI Component'
+        ),
+        video: 'https://youtu.be/HYfG_uCOlhc'
+      },
+      {
+        id: '88e7b0ca-8c2b-4de6-ad7a-aa2281281e18',
+        name: 'Home Page',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName(
+          'Design UI Component'
+        ),
+        video: 'https://youtu.be/DmxXl1k0X5g'
+      },
+      {
+        id: '145ebf21-a8ae-43c5-bb5e-f94a1b2b4236',
+        name: 'Dashboard page',
+        order_index: 3,
+        course_chapter_id: await getCourseChapterIdByName(
+          'Design UI Component'
+        ),
+        video: 'https://youtu.be/1eJzLj9OE0Q'
+      },
+      {
         id: '24cb0e9e-7d4b-4f03-b36a-041b4aedd38e',
         name: 'Workspace XCode',
         order_index: 1,
@@ -172,10 +241,31 @@ module.exports = {
       },
       {
         id: 'ed4e4ee2-87f6-460f-973f-d31b57c719fb',
-        name: 'Kustomisasi Font',
+        name: 'Belajar Alignment',
         order_index: 2,
         course_chapter_id: await getCourseChapterIdByName('Memulai Koding'),
         video: 'https://youtu.be/rd-590n3H6w'
+      },
+      {
+        id: '72b1898e-e4ac-4aac-94a6-1bea74ef2929',
+        name: 'Kustomisasi Font Pada XCOde',
+        order_index: 1,
+        course_chapter_id: await getCourseChapterIdByName('Kustomisasi'),
+        video: '	https://youtu.be/HYfG_uCOlhc'
+      },
+      {
+        id: '2cbcefe0-c867-4ada-99b1-4e5494077635',
+        name: 'Widget ScrollView Design',
+        order_index: 2,
+        course_chapter_id: await getCourseChapterIdByName('Kustomisasi'),
+        video: 'https://youtu.be/DmxXl1k0X5g'
+      },
+      {
+        id: '066bebc4-388d-462f-8eec-94c57cd7608f',
+        name: 'Kustomisasi Widget Frame',
+        order_index: 3,
+        course_chapter_id: await getCourseChapterIdByName('Kustomisasi'),
+        video: 'https://youtu.be/1eJzLj9OE0Q'
       },
       {
         id: '092ae275-9e02-452e-9c22-3a6c3edc2e63',

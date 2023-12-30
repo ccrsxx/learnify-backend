@@ -25,6 +25,13 @@ module.exports = {
         duration: 80
       },
       {
+        id: '7dee9e86-d87e-4361-a383-0613fca40885',
+        name: 'Typography',
+        order_index: 3,
+        course_id: await getCourseIdByName('Intro to Design System'),
+        duration: 100
+      },
+      {
         id: '3062d67c-e17a-46e5-9bcb-8c31045d8a74',
         name: 'Memahami Product Management',
         order_index: 1,
@@ -55,6 +62,15 @@ module.exports = {
           'Web Development Microservice: Website Kelas Online'
         ),
         duration: 90
+      },
+      {
+        id: '7ffb133a-ce56-4fed-8f5e-c90d30ef58ea',
+        name: 'Integrasi API',
+        order_index: 3,
+        course_id: await getCourseIdByName(
+          'Web Development Microservice: Website Kelas Online'
+        ),
+        duration: 120
       },
       {
         id: '3fbd0e34-76d0-4bdc-be25-0f5b7d6ce0a7',
@@ -107,6 +123,15 @@ module.exports = {
         duration: 90
       },
       {
+        id: '08fdf97a-f91b-4fa9-bf62-5c1233818e62',
+        name: 'Design UI Component',
+        order_index: 3,
+        course_id: await getCourseIdByName(
+          'Learn Flutter & Adobe XD: Build a Complete Mobile App'
+        ),
+        duration: 120
+      },
+      {
         id: '3f2e8391-448a-4053-8b14-195218adedbe',
         name: 'Pengenalan XCode',
         order_index: 1,
@@ -123,6 +148,15 @@ module.exports = {
           'SwiftUI & iOS Engineer: The Complete App Development Bootcamp'
         ),
         duration: 80
+      },
+      {
+        id: '4db168a0-fd52-432c-a7cc-ae8b43fe747b',
+        name: 'Kustomisasi',
+        order_index: 3,
+        course_id: await getCourseIdByName(
+          'SwiftUI & iOS Engineer: The Complete App Development Bootcamp'
+        ),
+        duration: 100
       },
       {
         id: '30c202ea-da0c-4c03-9393-6b50f8bfa678',
