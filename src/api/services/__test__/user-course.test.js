@@ -27,7 +27,7 @@ const userCourseService = /** @type {UserCourseServiceMock} */ (
 );
 
 describe('User course service', () => {
-  test('should update onboarded status and return the updated user course', async () => {
+  it('should update onboarded status and return the updated user course', async () => {
     const userId = '123';
     const mockUserCourse = { id: '123', onboarded: true };
 
@@ -43,7 +43,7 @@ describe('User course service', () => {
     expect(userCourseRepository.setOnboardedTrue).toHaveBeenCalledWith(userId);
   });
 
-  test('should throw an ApplicationError when user course is not found', async () => {
+  it('should throw an ApplicationError when user course is not found', async () => {
     const userId = '123';
 
     // @ts-ignore
@@ -54,7 +54,7 @@ describe('User course service', () => {
     );
   });
 
-  test('should throw a generated ApplicationError when an unexpected error occurs', async () => {
+  it('should throw a generated ApplicationError when an unexpected error occurs', async () => {
     const userId = '123';
     const mockError = new ApplicationError(
       'Failed to update user courses',
