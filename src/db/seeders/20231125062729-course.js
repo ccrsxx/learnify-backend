@@ -31,7 +31,7 @@ module.exports = {
         Kelas ini sesuai untuk Anda yang ingin memahami apa itu design system. Tidak hanya ditujukan untuk UI/UX Designer ataupun Developer, kelas ini sangat sesuai untuk stakeholder lain agar dapat memudahkan tim dalam bekerja sama.
 
         Yuk segera daftar dan kami tunggu di kelas ya!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin memahami poin penting design system',
           'Anda yang ingin latihan membangun design system',
@@ -58,7 +58,7 @@ module.exports = {
           Siswa juga akan diperkenalkan dengan peran dan jenjang karier seorang Manajer Produk dan konteks bisnis, teknologi, dan pelanggan yang perlu dikuasai seseorang untuk menjadi Manajer Produk yang baik.
           
           Meskipun tidak diperlukan pengetahuan sebelumnya, apresiasi atau pengalaman langsung tentang bagaimana perusahaan produk dan layanan beroperasi akan sangat membantu.`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin bekerja dalam peran Manajemen Produk',
           'Anda yang ingin memahami tentang Manajemen Produk',
@@ -83,7 +83,7 @@ module.exports = {
           Setelah itu kita akan coba menggunakan API (per service) yang telah kita buat menggunakan Laravel dan Express JS. Jika kamu tertarik untuk belajar web development lebih dalam silakan bergabung di kelas ini dan kami akan mengarahkan dengan secara terstruktur dan rapih.
           
           Silakan bergabung dan kami tunggu di kelas. Kelas ini menggunakan tools NextJS versi 9.`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Cocok untuk yang ingin membangun website kelas online',
           'Cocok untuk yang ingin belajar menerapkan arsitektur microservice pada aplikasi',
@@ -106,7 +106,7 @@ module.exports = {
           Di kelas ini, mentor kami akan menjelaskan UX design, UI design, dan pengembangan web menggunakan Bootstrap dan Laravel secara terperinci. Kelas ini cocok bagi Anda yang sedang bingung menentukan spesialisasi karir di bidang teknologi. Banyak ilmu yang bisa didapatkan dan bisa menjadi bekal untuk menjadi developer yang handal. Kelas ini menggunakan tools Laravel 6 dan PHP ≥ 7.2.
           
           Setelah menyelesaikan kelas ini, Anda dapat lebih fokus memilih bidang sesuai dengan minat dan kemampuan. Segera daftar dan kami tunggu di kelas!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari Prototype',
           'Anda yang ingin menguasai pengembangan web',
@@ -131,7 +131,7 @@ module.exports = {
           Pada kelas ini, kita akan belajar bagaimana mengimplementasikan State Management dengan menggunakan Provider agar state dapat tersimpan, maintainable dan mudah digunakan kembali di mana pun dan kapan pun saat dibutuhkan. Flutter memberikan kemudahan kepada para developer agar dapat dengan mudah mengelola state sesuai dengan keinginan mereka.
           
           Pada case study, kita akan membangun sebuah aplikasi pencarian kerja IT secara online dan mengelola datanya menggunakan State Management. Kelas ini sangat tepat untuk dipelajari bagi Anda yang ingin memperdalam ilmu mengenai State Management. Silahkan bergabung dan kami tunggu di kelas, ya!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin membangun aplikasi mobile menggunakan API',
           'Anda yang ingin memperdalam State Management Provider pada Flutter',
@@ -156,7 +156,7 @@ module.exports = {
           Setelah desain selesai dibuat, proses berlanjut pada tahapan slicing design asset ke Flutter SDK. Slicing dilakukan untuk menulis coding dalam satu basis kode dengan beragam Widget praktis seperti Scaffold, Drawer, hingga Navigator.
           
           Kelas ini cocok bagi Anda yang ingin mendalami desain aplikasi berskala besar. Bila menemukan kendala selama belajar, silakan berkonsultasi dengan para Mentor ahli kami di grup konsultasi. Segera daftar dan kami tunggu di kelas, ya!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari proses Design to Code',
           'Anda yang ingin mempelajari Slicing UI ke Flutter',
@@ -179,7 +179,7 @@ module.exports = {
           Melalui kelas ini, kamu akan berperan sebagai UI Engineer untuk melakukan slicing Food App design dari Figma menggunakan aplikasi Xcode, development tools untuk aplikasi berbasis iOS. Nantinya, mentor tidak hanya akan memberikan panduan untuk melakukan slicing, namun juga akan ada challange untuk kamu melakukan slicing sendiri. Namun jangan khawatir, di akhir kelas kamu bisa mencocokan bagiamana cara kamu dan mentor dalam melakukan slicing page tersebut.
           
           Silahkan bergabung untuk upgrade skill slicing kamu dan mendapatkan sertifikat resminya setelah kamu menyelesaikan kelas. Okay people with the spirit of learning semoga bermanfaat dan kami tunggu di kelas ya!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin meningkatkan skill slicing User Interface',
           'Anda yang ingin mempelajari lebih dalam tools Xcode',
@@ -204,7 +204,7 @@ module.exports = {
           Selain itu juga kita menggunakan TablePlus karena bahasa query lebih fleksibel dan hasil database mudah dipahami melalui tampilan yang user friendly. Kelas ini menggunakan tools XAMPP, Beekeeper Studio, Dbeaver, Mamp, Table Plus dan MySQL 5.7.
           
           Kelas ini cocok bagi Anda yang ingin mendalami database management dalam pengembangan aplikasi. Mentor ahli kami pun siap membantumu melalui grup konsultasi. Silakan daftar dan sampai jumpa di kelas!`,
-        intro_video: 'https://www.youtube.com/watch?v=tsgy7OsDARU',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari MySQL',
           'Anda yang ingin mengelola big data secara efisien',
