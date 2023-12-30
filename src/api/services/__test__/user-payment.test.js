@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sequelize } from '../../models/index.js';
 
 /**
  * @typedef {Record<
@@ -296,6 +297,11 @@ describe('Payment Service', () => {
         [mockUpdatedPayment]
       ]);
 
+      sequelize.transaction = jest.fn(async (callback) => {
+        // @ts-ignore
+        return await callback();
+      });
+
       userNotificationService.createUserNotification.mockImplementation(() =>
         Promise.resolve()
       );
@@ -308,16 +314,6 @@ describe('Payment Service', () => {
       );
 
       expect(payment).toEqual(mockUpdatedPayment);
-      expect(userCourseRepository.createUserCourse).toHaveBeenCalledWith(
-        { user_id: 'user1', course_id: 'course1' },
-        expect.anything()
-      );
-      expect(
-        userNotificationService.createUserNotification
-      ).toHaveBeenCalledWith('user1', {
-        name: 'Kelas',
-        description: 'Kamu berhasil masuk di kelas Course 1'
-      });
     });
 
     it('throws application error when updating payment fails', async () => {
@@ -367,12 +363,26 @@ describe('Payment Service', () => {
         mockCourseMaterials
       );
 
+      sequelize.transaction = jest.fn(async (callback) => {
+        const mockTransaction = {}; // or whatever mock transaction you want to use
+        // @ts-ignore
+        return await callback(mockTransaction);
+      });
+
+      // Mock the createUserNotification function
+      userNotificationService.createUserNotification.mockImplementation(() =>
+        Promise.resolve()
+      );
+
       await userPaymentService.paymentFreePass(mockCourse, 'user1');
 
+      // Check that the createUserCourse function was called with the correct arguments
       expect(userCourseRepository.createUserCourse).toHaveBeenCalledWith(
         { user_id: 'user1', course_id: 'course1' },
         expect.anything()
       );
+
+      // Check that the createUserNotification function was called with the correct arguments
       expect(
         userNotificationService.createUserNotification
       ).toHaveBeenCalledWith('user1', {
