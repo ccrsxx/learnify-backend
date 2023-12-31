@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
 
-/** @typedef {Record<keyof import('../../services/course.js'), jest.Mock>} CourseControllerMock */
+/** @typedef {Record<keyof import('../course.js'), jest.Mock>} CourseControllerMock */
 /** @typedef {Record<keyof import('../../services/course.js'), jest.Mock>} CourseServiceMock */
 
 jest.unstable_mockModule(
@@ -10,6 +10,7 @@ jest.unstable_mockModule(
     /** @type {CourseServiceMock} */
     ({
       getCourses: jest.fn(),
+      getUserCourses: jest.fn(),
       getCourseById: jest.fn(),
       createCourse: jest.fn(),
       updateCourse: jest.fn(),
@@ -113,51 +114,125 @@ describe('Course controller', () => {
     });
   });
 
-  describe.skip('Get course by id', () => {
-    it('get a course', async () => {
+  describe('getUserCourses', () => {
+    it('returns user courses when successful', async () => {
+      const mockCourses = [
+        {
+          id: '1',
+          name: 'Emilia'
+        },
+        {
+          id: '2',
+          name: 'Rem'
+        }
+      ];
+
+      // @ts-ignore
+      courseService.getUserCourses.mockResolvedValue(mockCourses);
+
+      const mockRequest = {
+        query: {}
+      };
+
+      const mockResponse = {
+        locals: { user: { id: '1' } },
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      await courseController.getUserCourses(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({ data: mockCourses });
+    });
+
+    it('returns application error when getUserCourses fails', async () => {
+      const mockError = new ApplicationError('Failed to get user courses', 500);
+
+      // @ts-ignore
+      courseService.getUserCourses.mockRejectedValue(mockError);
+
+      const mockRequest = {
+        query: {}
+      };
+
+      const mockResponse = {
+        locals: { user: { id: '1' } },
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      await courseController.getUserCourses(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(mockError.statusCode);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: mockError.message
+      });
+    });
+
+    it('returns generic error when getUserCourses fails', async () => {
+      const mockError = new Error();
+
+      // @ts-ignore
+      courseService.getUserCourses.mockRejectedValue(mockError);
+
+      const mockRequest = {
+        query: {}
+      };
+
+      const mockResponse = {
+        locals: { user: { id: '1' } },
+        json: jest.fn(),
+        status: jest.fn().mockReturnThis()
+      };
+
+      await courseController.getUserCourses(mockRequest, mockResponse);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'Internal server error'
+      });
+    });
+  });
+
+  describe('getCourseById', () => {
+    it('returns course data when successful', async () => {
       const mockCourse = {
         id: '1',
         name: 'Emilia'
       };
 
-      courseService.getCourseById.mockResolvedValue(
-        // @ts-ignore
-        mockCourse
-      );
+      // @ts-ignore
+      courseService.getCourseById.mockResolvedValue(mockCourse);
 
       const mockRequest = {
-        params: { id: mockCourse.id }
+        params: { id: '1' }
       };
 
       const mockResponse = {
+        locals: { user: null },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
 
-      // @ts-ignore
       await courseController.getCourseById(mockRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        data: mockCourse
-      });
+      expect(mockResponse.json).toHaveBeenCalledWith({ data: mockCourse });
     });
 
-    it('throws application error when getCourseById fails', async () => {
+    it('returns application error when getCourseById fails', async () => {
       const mockError = new ApplicationError('Failed to get course', 500);
 
-      courseService.getCourseById.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+      // @ts-ignore
+      courseService.getCourseById.mockRejectedValue(mockError);
 
       const mockRequest = {
-        params: {
-          id: 1
-        }
+        params: { id: '1' }
       };
 
       const mockResponse = {
+        locals: { user: null },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
@@ -170,18 +245,14 @@ describe('Course controller', () => {
       });
     });
 
-    it('throws generic error when getCourseById fails', async () => {
+    it('returns generic error when getCourseById fails', async () => {
       const mockError = new Error();
 
-      courseService.getCourseById.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+      // @ts-ignore
+      courseService.getCourseById.mockRejectedValue(mockError);
 
       const mockRequest = {
-        params: {
-          id: 1
-        }
+        params: { id: '1' }
       };
 
       const mockResponse = {
@@ -283,40 +354,28 @@ describe('Course controller', () => {
     });
   });
 
-  describe.skip('Update course', () => {
-    it('updates a course', async () => {
+  describe('updateCourse', () => {
+    it('updates course and returns success message when successful', async () => {
       const mockCourse = {
         id: '1',
         name: 'Emilia',
-        image: 'default'
-      };
-
-      const oldCourseData = {
-        id: '1',
-        name: 'Old Course Name',
-        image: 'oldImage.jpg'
+        image: 'image.jpg'
       };
 
       // @ts-ignore
-      courseService.getCourseById.mockResolvedValue(oldCourseData);
-
-      courseService.updateCourse.mockResolvedValue(
-        // @ts-ignore
-        mockCourse
-      );
+      courseService.updateCourse.mockResolvedValue(mockCourse);
 
       const mockRequest = {
-        body: mockCourse,
-        params: { id: mockCourse.id }
+        params: { id: '1' },
+        body: { name: 'Emilia' }
       };
 
       const mockResponse = {
-        locals: { user: {} },
+        locals: { image: 'image.jpg' },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
 
-      // @ts-ignore
       await courseController.updateCourse(mockRequest, mockResponse);
 
       expect(mockResponse.status).toHaveBeenCalledWith(200);
@@ -326,22 +385,19 @@ describe('Course controller', () => {
       });
     });
 
-    it('throws application error when updateCourse fails', async () => {
+    it('returns application error when updateCourse fails', async () => {
       const mockError = new ApplicationError('Failed to update course', 500);
 
-      courseService.updateCourse.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+      // @ts-ignore
+      courseService.updateCourse.mockRejectedValue(mockError);
 
       const mockRequest = {
-        params: {
-          id: 1
-        }
+        params: { id: '1' },
+        body: { name: 'Emilia' }
       };
 
       const mockResponse = {
-        locals: { user: {} },
+        locals: { image: 'image.jpg' },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
@@ -354,22 +410,19 @@ describe('Course controller', () => {
       });
     });
 
-    it('throws generic error when updateCourse fails', async () => {
+    it('returns generic error when updateCourse fails', async () => {
       const mockError = new Error();
 
-      courseService.updateCourse.mockRejectedValue(
-        // @ts-ignore
-        mockError
-      );
+      // @ts-ignore
+      courseService.updateCourse.mockRejectedValue(mockError);
 
       const mockRequest = {
-        params: {
-          id: 1
-        }
+        params: { id: '1' },
+        body: { name: 'Emilia' }
       };
 
       const mockResponse = {
-        locals: { user: {} },
+        locals: { image: 'image.jpg' },
         json: jest.fn(),
         status: jest.fn().mockReturnThis()
       };
