@@ -107,16 +107,20 @@ export async function getCourseById(id, userId = null) {
         // If logged in user has not bought the course
         course = await courseRepository.getCourseById(id);
 
-        // Remove video from all materials except the first chapter
-        course?.dataValues.course_chapter.forEach(
-          ({ dataValues: { order_index, course_material } }) => {
-            if (order_index > 1) {
-              course_material.forEach(
-                ({ dataValues }) => delete dataValues.video
-              );
+        const courseIsPremium = course?.dataValues?.premium;
+
+        if (courseIsPremium) {
+          // Remove video from all materials except the first chapter on premium course
+          course?.dataValues.course_chapter.forEach(
+            ({ dataValues: { order_index, course_material } }) => {
+              if (order_index > 1) {
+                course_material.forEach(
+                  ({ dataValues }) => delete dataValues.video
+                );
+              }
             }
-          }
-        );
+          );
+        }
       }
     } else {
       // If user is not logged in

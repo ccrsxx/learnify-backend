@@ -16,6 +16,10 @@ module.exports = {
       {
         id: 'c63a172f-4eb1-44b2-8c90-66336b016d8f',
         name: 'Intro to Design System',
+        price: 0,
+        premium: false,
+        rating: 4.2,
+        difficulty: 'BEGINNER',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('UI/UX Design'),
         description: `Design system adalah kumpulan komponen design, code, ataupun dokumentasi yang dapat digunakan sebagai panduan utama yang memunginkan designer serta developer memiliki lebih banyak kontrol atas berbagai platform.
@@ -27,7 +31,7 @@ module.exports = {
         Kelas ini sesuai untuk Anda yang ingin memahami apa itu design system. Tidak hanya ditujukan untuk UI/UX Designer ataupun Developer, kelas ini sangat sesuai untuk stakeholder lain agar dapat memudahkan tim dalam bekerja sama.
 
         Yuk segera daftar dan kami tunggu di kelas ya!`,
-        intro_video: 'https://youtu.be/ixOd42SEUF0',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin memahami poin penting design system',
           'Anda yang ingin latihan membangun design system',
@@ -39,6 +43,10 @@ module.exports = {
       {
         id: '5db0a017-6041-4d9a-8f44-5fca03d5378a',
         name: 'Product Management Fundamentals',
+        price: 280000,
+        premium: true,
+        rating: 3.1,
+        difficulty: 'BEGINNER',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Product Management'),
         description: `Sebuah artikel berita baru-baru ini menyebut Manajer Produk sebagai peran terpenting ke-4 dalam perusahaan saat ini, menjadikan manajemen produk sebagai salah satu pekerjaan terpanas di pasar. Namun, kebanyakan orang tidak mengetahui apa yang sebenarnya dilakukan oleh Manajer Produk. 
@@ -50,7 +58,7 @@ module.exports = {
           Siswa juga akan diperkenalkan dengan peran dan jenjang karier seorang Manajer Produk dan konteks bisnis, teknologi, dan pelanggan yang perlu dikuasai seseorang untuk menjadi Manajer Produk yang baik.
           
           Meskipun tidak diperlukan pengetahuan sebelumnya, apresiasi atau pengalaman langsung tentang bagaimana perusahaan produk dan layanan beroperasi akan sangat membantu.`,
-        intro_video: 'https://youtu.be/HYfG_uCOlhc',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin bekerja dalam peran Manajemen Produk',
           'Anda yang ingin memahami tentang Manajemen Produk',
@@ -62,6 +70,10 @@ module.exports = {
       {
         id: '0d7925a7-0c68-4c25-9c9a-c1f346bdc9fc',
         name: 'Web Development Microservice: Website Kelas Online',
+        price: 420000,
+        premium: true,
+        rating: 3.5,
+        difficulty: 'INTERMEDIATE',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Web Development'),
         description: `Microservice adalah salah satu arsitektur pada Website Development yang digunakan oleh banyak Developer dan perusahaan IT dalam mengembangkan suatu Website. Tujuannya adalah agar Website tersebut lebih stabil dan mudah diperbaiki pada setiap service-nya jika adanya suatu bug pada service tersebut.
@@ -71,7 +83,7 @@ module.exports = {
           Setelah itu kita akan coba menggunakan API (per service) yang telah kita buat menggunakan Laravel dan Express JS. Jika kamu tertarik untuk belajar web development lebih dalam silakan bergabung di kelas ini dan kami akan mengarahkan dengan secara terstruktur dan rapih.
           
           Silakan bergabung dan kami tunggu di kelas. Kelas ini menggunakan tools NextJS versi 9.`,
-        intro_video: 'https://youtu.be/6hIUgd6WuFw',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Cocok untuk yang ingin membangun website kelas online',
           'Cocok untuk yang ingin belajar menerapkan arsitektur microservice pada aplikasi',
@@ -83,6 +95,10 @@ module.exports = {
       {
         id: '14b3347c-bc8a-4cee-b2fd-b41764c3db10',
         name: 'Full-Stack Web Developer',
+        price: 0,
+        premium: false,
+        rating: 3.8,
+        difficulty: 'BEGINNER',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Web Development'),
         description: `Penguasaan front end (user interface) dan back end (business logic) pada saat membangun website adalah hal utama bagi seorang Full Stack Web Developer. Bahkan, akan lebih baik jika didukung oleh skill UI/UX Design dan System Administration agar keseluruhan sistem web dapat berjalan dengan baik.
@@ -90,7 +106,7 @@ module.exports = {
           Di kelas ini, mentor kami akan menjelaskan UX design, UI design, dan pengembangan web menggunakan Bootstrap dan Laravel secara terperinci. Kelas ini cocok bagi Anda yang sedang bingung menentukan spesialisasi karir di bidang teknologi. Banyak ilmu yang bisa didapatkan dan bisa menjadi bekal untuk menjadi developer yang handal. Kelas ini menggunakan tools Laravel 6 dan PHP ≥ 7.2.
           
           Setelah menyelesaikan kelas ini, Anda dapat lebih fokus memilih bidang sesuai dengan minat dan kemampuan. Segera daftar dan kami tunggu di kelas!`,
-        intro_video: 'https://youtu.be/6hXoBeIQd-o',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari Prototype',
           'Anda yang ingin menguasai pengembangan web',
@@ -102,6 +118,10 @@ module.exports = {
       {
         id: 'f3102f7e-9916-4ff8-a50c-60048f7b634c',
         name: 'Flutter Developer: Provider State Management',
+        price: 0,
+        premium: false,
+        rating: 4.5,
+        difficulty: 'BEGINNER',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Android Development'),
         description: `Pada pengembangan aplikasi, kita tidak akan terlepas dari proses penyimpanan data. Namun, dalam menjaga sebuah data agar dapat mudah digunakan kapan pun diperlukan proses dalam jangka waktu yang lama.
@@ -111,7 +131,7 @@ module.exports = {
           Pada kelas ini, kita akan belajar bagaimana mengimplementasikan State Management dengan menggunakan Provider agar state dapat tersimpan, maintainable dan mudah digunakan kembali di mana pun dan kapan pun saat dibutuhkan. Flutter memberikan kemudahan kepada para developer agar dapat dengan mudah mengelola state sesuai dengan keinginan mereka.
           
           Pada case study, kita akan membangun sebuah aplikasi pencarian kerja IT secara online dan mengelola datanya menggunakan State Management. Kelas ini sangat tepat untuk dipelajari bagi Anda yang ingin memperdalam ilmu mengenai State Management. Silahkan bergabung dan kami tunggu di kelas, ya!`,
-        intro_video: 'https://youtu.be/eSrXU5vrgaI',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin membangun aplikasi mobile menggunakan API',
           'Anda yang ingin memperdalam State Management Provider pada Flutter',
@@ -123,6 +143,10 @@ module.exports = {
       {
         id: 'b4863ea2-0fb8-46ca-97e7-ee8a817b7f70',
         name: 'Learn Flutter & Adobe XD: Build a Complete Mobile App',
+        price: 350000,
+        premium: true,
+        rating: 3.9,
+        difficulty: 'INTERMEDIATE',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Android Development'),
         description: `Faktor pertama yang menjadi alasan pengguna menggunakan aplikasi e-commerce adalah tampilan antarmuka (UI) yang menarik. UI yang dirancang dengan baik dapat menanamkan kepercayaan pada produk yang ditawarkan, yang nantinya berpengaruh penting terhadap kelancaran bisnis produk tersebut. Kelas ini akan membahas proses pengembangan UI pada sisi Front-End secara lengkap, dari mendesain UI dengan Adobe XD sampai slicing desain ke Flutter.
@@ -132,7 +156,7 @@ module.exports = {
           Setelah desain selesai dibuat, proses berlanjut pada tahapan slicing design asset ke Flutter SDK. Slicing dilakukan untuk menulis coding dalam satu basis kode dengan beragam Widget praktis seperti Scaffold, Drawer, hingga Navigator.
           
           Kelas ini cocok bagi Anda yang ingin mendalami desain aplikasi berskala besar. Bila menemukan kendala selama belajar, silakan berkonsultasi dengan para Mentor ahli kami di grup konsultasi. Segera daftar dan kami tunggu di kelas, ya!`,
-        intro_video: 'https://youtu.be/JVJc4k6xjTM',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari proses Design to Code',
           'Anda yang ingin mempelajari Slicing UI ke Flutter',
@@ -144,6 +168,10 @@ module.exports = {
       {
         id: '65d6891c-8369-4241-bf8c-18ae3fc0939f',
         name: 'SwiftUI & iOS Engineer: The Complete App Development Bootcamp',
+        price: 500000,
+        premium: true,
+        rating: 2.8,
+        difficulty: 'ADVANCED',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('IOS Development'),
         description: `Di era digital, berbagai perusahaan berlomba untuk mengembangkan situs web dan aplikasi yang user friendly dan responsif. Oleh karena itu, berbagai pekerjaan seputar design dan development sangat dibutuhkan saat ini. Jika kamu menyukai bagaimana melakukan slicing UI ke dalam UI/UX Development, profesi Junior UI/UX Developer atau yang lebih dikenal dengan UI Engineer akan menjadi profesi yang ideal untukmu.
@@ -151,7 +179,7 @@ module.exports = {
           Melalui kelas ini, kamu akan berperan sebagai UI Engineer untuk melakukan slicing Food App design dari Figma menggunakan aplikasi Xcode, development tools untuk aplikasi berbasis iOS. Nantinya, mentor tidak hanya akan memberikan panduan untuk melakukan slicing, namun juga akan ada challange untuk kamu melakukan slicing sendiri. Namun jangan khawatir, di akhir kelas kamu bisa mencocokan bagiamana cara kamu dan mentor dalam melakukan slicing page tersebut.
           
           Silahkan bergabung untuk upgrade skill slicing kamu dan mendapatkan sertifikat resminya setelah kamu menyelesaikan kelas. Okay people with the spirit of learning semoga bermanfaat dan kami tunggu di kelas ya!`,
-        intro_video: 'https://youtu.be/yk_p1bi6Oyw',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin meningkatkan skill slicing User Interface',
           'Anda yang ingin mempelajari lebih dalam tools Xcode',
@@ -163,6 +191,10 @@ module.exports = {
       {
         id: 'bfd0ab17-01f8-4572-bc78-347c635ecf38',
         name: 'SQL for Beginners: Learn SQL using MySQL and Database Design',
+        price: 300000,
+        premium: true,
+        rating: 3.1,
+        difficulty: 'BEGINNER',
         user_id: userAdminId,
         course_category_id: await getCategoryIdByName('Data Science'),
         description: `Charles Bachman menciptakan database agar data memiliki tampilan yang mudah dipahami dan tentunya dapat dikelola oleh banyak pengguna. Data yang tersusun rapi melalui Database Management System (DBMS), dapat memudahkan kebutuhan kita dalam pengembangan aplikasi. Dengan menguasai DBMS, kita dapat dengan mudah mencari atau mengubah data sesuai kebutuhan, mengolah big data, hingga mempercepat kinerja aplikasi secara efisien.
@@ -172,7 +204,7 @@ module.exports = {
           Selain itu juga kita menggunakan TablePlus karena bahasa query lebih fleksibel dan hasil database mudah dipahami melalui tampilan yang user friendly. Kelas ini menggunakan tools XAMPP, Beekeeper Studio, Dbeaver, Mamp, Table Plus dan MySQL 5.7.
           
           Kelas ini cocok bagi Anda yang ingin mendalami database management dalam pengembangan aplikasi. Mentor ahli kami pun siap membantumu melalui grup konsultasi. Silakan daftar dan sampai jumpa di kelas!`,
-        intro_video: 'https://youtu.be/CQDcJ07sMNg',
+        intro_video: 'https://youtu.be/tsgy7OsDARU',
         target_audience: [
           'Anda yang ingin mempelajari MySQL',
           'Anda yang ingin mengelola big data secara efisien',
