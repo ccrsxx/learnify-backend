@@ -5,6 +5,7 @@ import { sequelize } from '../../models/index.js';
 /** @typedef {{ default: Record<keyof import('bcrypt'), jest.Mock> }} BcryptMock */
 /** @typedef {{ default: Record<keyof import('jsonwebtoken'), jest.Mock> }} JWTMock */
 /** @typedef {Record<keyof import('../../services/user.js'), jest.Mock>} UserServiceMock */
+/** @typedef {Record<keyof import('../../../libs/mail.js'), jest.Mock>} EmailHelper */
 /** @typedef {Record<keyof import('../../services/auth.js'), jest.Mock>} AuthServiceMock */
 /** @typedef {Record<keyof import('../../repositories/otp.js'), jest.Mock>} OtpRepositoryMock */
 /**
@@ -65,6 +66,16 @@ jest.unstable_mockModule(
     })
 );
 
+jest.unstable_mockModule(
+  '../../../libs/mail.js',
+  () =>
+    /** @type {EmailHelper} */
+    ({
+      sendResetPasswordEmail: jest.fn(),
+      sendOtpEmail: jest.fn()
+    })
+);
+
 const bcrypt = /** @type {BcryptMock} */ (
   /** @type {unknown} */ (await import('bcrypt'))
 );
@@ -83,6 +94,10 @@ const userService = /** @type {UserServiceMock} */ (
 
 const passwordResetRepository = /** @type {AuthRepositoryMock} */ (
   await import('../../repositories/password-reset.js')
+);
+
+const emailHelper = /** @type {EmailHelper} */ (
+  await import('../../../libs/mail.js')
 );
 
 describe('Auth service', () => {
@@ -249,6 +264,8 @@ describe('Send verify to reset password', () => {
     passwordResetRepository.setUsedTrueByUserId.mockResolvedValue(undefined);
     // @ts-ignore
     passwordResetRepository.setPasswordReset.mockResolvedValue(mockToken);
+    // @ts-ignore
+    emailHelper.sendResetPasswordEmail.mockResolvedValue(undefined);
 
     sequelize.transaction = jest.fn(async (callback) => {
       // @ts-ignore
