@@ -26,7 +26,6 @@ export async function isAuthorized(req, res, next) {
 
   try {
     const user = await authService.verifyToken(token);
-
     res.locals.user = user.dataValues;
   } catch (err) {
     if (err instanceof ApplicationError) {
