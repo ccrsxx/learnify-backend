@@ -4,7 +4,7 @@ import { ApplicationError } from '../../../libs/error.js';
 /** @typedef {Record<keyof import('../../repositories/user.js'), jest.Mock>} UserRepositoryMock */
 /** @typedef {Record<keyof import('../user.js'), jest.Mock>} UserServiceMock */
 /** @typedef {Record<keyof import('../auth.js'), jest.Mock>} AuthServiceMock */
-/** @typedef {Record<keyof import('../user-notification.js'), jest.Mock>} UserNotificationMock */
+/** @typedef {Record<keyof import('../user-notification.js'), jest.Mock>} UserNotificationServiceMock */
 
 jest.unstable_mockModule(
   '../../repositories/user.js',
@@ -12,6 +12,7 @@ jest.unstable_mockModule(
     /** @type {UserRepositoryMock} */ ({
       getUser: jest.fn(),
       getUserByEmail: jest.fn(),
+      getUnverifiedUser: jest.fn(),
       getUserByPhoneNumber: jest.fn(),
       getAdminUserByEmail: jest.fn(),
       getAdminUserByPhoneNumber: jest.fn(),
@@ -20,7 +21,15 @@ jest.unstable_mockModule(
       createUser: jest.fn(),
       updateUser: jest.fn(),
       destroyUser: jest.fn(),
-      resetUser: jest.fn()
+      resetPasswordProfile: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../user-notification.js',
+  () =>
+    /** @type {UserNotificationServiceMock} */ ({
+      createUserNotification: jest.fn()
     })
 );
 
@@ -33,14 +42,6 @@ jest.unstable_mockModule(
     })
 );
 
-jest.unstable_mockModule(
-  '../user-notification.js',
-  () =>
-    /** @type {UserNotificationMock} */ ({
-      createUserNotification: jest.fn()
-    })
-);
-
 const userRepository = /** @type {UserRepositoryMock} */ (
   await import('../../repositories/user.js')
 );
@@ -49,7 +50,7 @@ const authService = /** @type {AuthServiceMock} */ (await import('../auth.js'));
 
 const userService = /** @type {UserServiceMock} */ (await import('../user.js'));
 
-const userNotificationService = /** @type {UserNotificationMock} */ (
+const userNotificationService = /** @type {UserNotificationServiceMock} */ (
   await import('../user-notification.js')
 );
 
@@ -146,6 +147,51 @@ describe('User service', () => {
     });
   });
 
+  describe('Get unverified user by email', () => {
+    it('returns user data', async () => {
+      const mockUser = {
+        dataValues: {
+          id: '1',
+          name: 'Emilia'
+        }
+      };
+
+      // @ts-ignore
+      userRepository.getUnverifiedUser.mockResolvedValue(mockUser);
+
+      const user = await userService.getUnverifiedUserByEmail('email');
+
+      expect(userRepository.getUnverifiedUser).toHaveBeenCalledWith('email');
+      expect(user).toEqual(mockUser);
+    });
+
+    it('throws application error when user is not found', async () => {
+      const mockError = new ApplicationError('User not found', 404);
+
+      userRepository.getUnverifiedUser.mockResolvedValue(
+        /** @ts-ignore */
+        null
+      );
+
+      await expect(
+        userService.getUnverifiedUserByEmail('email')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
+    });
+
+    it('throws application error when getting user fails', async () => {
+      const mockError = new ApplicationError('Failed to get user', 500);
+
+      userRepository.getUnverifiedUser.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
+
+      await expect(
+        userService.getUnverifiedUserByEmail('email')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
+    });
+  });
+
   describe('Get user by phone number', () => {
     it('returns user data', async () => {
       const mockUser = {
@@ -192,51 +238,257 @@ describe('User service', () => {
     });
   });
 
-  describe('Create user', () => {
-    it('returns user data with admin false when member creates it', async () => {
+  describe('Get admin user by email', () => {
+    it('returns user data', async () => {
       const mockUser = {
-        name: 'Emilia',
-        password: 'Emilia',
-        dataValues: { id: '1' }
+        dataValues: {
+          id: '1',
+          name: 'Emilia'
+        }
       };
 
-      const mockHashedPassword = 'Emilia-tan';
+      // @ts-ignore
+      userRepository.getAdminUserByEmail.mockResolvedValue(mockUser);
 
-      const mockUserWithHashedPasswordAndAdmin = {
-        ...mockUser,
-        admin: false,
-        password: mockHashedPassword
-      };
+      const user = await userService.getAdminUserByEmail('email');
 
-      authService.hashPassword.mockResolvedValue(
+      expect(userRepository.getAdminUserByEmail).toHaveBeenCalledWith('email');
+      expect(user).toEqual(mockUser);
+    });
+
+    it('throws application error when user is not found', async () => {
+      const mockError = new ApplicationError('User not found', 404);
+
+      userRepository.getAdminUserByEmail.mockResolvedValue(
         /** @ts-ignore */
-        mockHashedPassword
+        null
       );
 
-      userRepository.createUser.mockImplementation((payload) => ({
+      await expect(userService.getAdminUserByEmail('email')).rejects.toThrow(
+        `Error while getting user: ${mockError.message}`
+      );
+    });
+
+    it('throws application error when getting user fails', async () => {
+      const mockError = new ApplicationError('Failed to get user', 500);
+
+      userRepository.getAdminUserByEmail.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
+
+      await expect(userService.getAdminUserByEmail('email')).rejects.toThrow(
+        `Error while getting user: ${mockError.message}`
+      );
+    });
+  });
+
+  describe('Get admin user by phone number', () => {
+    it('returns user data', async () => {
+      const mockUser = {
+        dataValues: {
+          id: '1',
+          name: 'Emilia'
+        }
+      };
+
+      // @ts-ignore
+      userRepository.getAdminUserByPhoneNumber.mockResolvedValue(mockUser);
+
+      const user = await userService.getAdminUserByPhoneNumber('phoneNumber');
+
+      expect(userRepository.getAdminUserByPhoneNumber).toHaveBeenCalledWith(
+        'phoneNumber'
+      );
+      expect(user).toEqual(mockUser);
+    });
+
+    it('throws application error when user is not found', async () => {
+      const mockError = new ApplicationError('User not found', 404);
+
+      userRepository.getAdminUserByPhoneNumber.mockResolvedValue(
+        /** @ts-ignore */
+        null
+      );
+
+      await expect(
+        userService.getAdminUserByPhoneNumber('phoneNumber')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
+    });
+
+    it('throws application error when getting user fails', async () => {
+      const mockError = new ApplicationError('Failed to get user', 500);
+
+      userRepository.getAdminUserByPhoneNumber.mockRejectedValue(
+        /** @ts-ignore */
+        mockError
+      );
+
+      await expect(
+        userService.getAdminUserByPhoneNumber('phoneNumber')
+      ).rejects.toThrow(`Error while getting user: ${mockError.message}`);
+    });
+  });
+
+  describe('Create user', () => {
+    it('should create a new user and return user data', async () => {
+      const mockUser = {
+        email: 'emilia@rezero.com',
+        phone_number: '0123',
+        password: 'emilia-rezero',
+        dataValues: { id: '1' }
+      };
+      const mockEncryptedPassword = 'EncryptedPassword';
+      const mockUserWithEncryptedPasswordAndAdmin = {
+        ...mockUser,
+        admin: false,
+        password: mockEncryptedPassword
+      };
+      const mockNotification = {
+        id: '1',
+        name: 'Notifikasi',
+        description: 'Selamat datang di Learnify!'
+      };
+
+      // @ts-ignore
+      authService.hashPassword.mockResolvedValue(mockEncryptedPassword);
+      userRepository.getVerifiedUserWithEmailAndPhoneNumber.mockResolvedValue(
         // @ts-ignore
-        ...payload,
-        admin: false
-      }));
-      userNotificationService.createUserNotification.mockReturnValue(
-        () => undefined
+        null
+      );
+      userRepository.getUnverifiedUserByEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        null
+      );
+      userRepository.createUser.mockResolvedValue(
+        // @ts-ignore
+        mockUserWithEncryptedPasswordAndAdmin
+      );
+
+      // @ts-ignore
+      authService.sendOtpRequest.mockResolvedValue(Function);
+      userNotificationService.createUserNotification.mockResolvedValue(
+        // @ts-ignore
+        mockNotification
       );
 
       const userResult = await userService.createUser(mockUser);
 
-      expect(userResult).toEqual(mockUserWithHashedPasswordAndAdmin);
+      expect(userResult).toEqual(mockUserWithEncryptedPasswordAndAdmin);
       expect(userResult).toMatchObject({ admin: false });
+    });
+
+    it('throw an application error for existing verified user by email', async () => {
+      const mockError = new ApplicationError('Email already exist', 409);
+      const mockUser = {
+        email: 'emilia@rezero.com',
+        phone_number: '0123',
+        password: 'emilia-rezero',
+        dataValues: { id: '1' }
+      };
+      const mockVerifiedUser = { dataValues: { email: 'emilia@rezero.com' } };
+
+      userRepository.getVerifiedUserWithEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        mockVerifiedUser
+      );
+
+      await expect(userService.createUser(mockUser)).rejects.toThrow(
+        `Error while creating user: ${mockError.message}`
+      );
+    });
+
+    it('throw an application error for existing verified user by phone number', async () => {
+      const mockError = new ApplicationError(
+        'Phone number already exists',
+        409
+      );
+      const mockUser = {
+        email: 'emilia@rezero.com',
+        phone_number: '0123',
+        password: 'emilia-rezero',
+        dataValues: { id: '1' }
+      };
+      const mockVerifiedUser = { dataValues: { phone_number: '0123' } };
+
+      userRepository.getVerifiedUserWithEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        mockVerifiedUser
+      );
+
+      await expect(userService.createUser(mockUser)).rejects.toThrow(
+        `Error while creating user: ${mockError.message}`
+      );
+    });
+
+    it('should update an existing unverified user and return user data', async () => {
+      const mockUser = {
+        email: 'emilia@rezero.com',
+        phone_number: '0123',
+        password: 'emilia-rezero',
+        dataValues: { id: '1' }
+      };
+      const mockEncryptedPassword = 'EncryptedPassword';
+      const mockUserWithEncryptedPasswordAndAdmin = {
+        ...mockUser,
+        admin: false,
+        password: mockEncryptedPassword
+      };
+      const mockNotification = {
+        id: '1',
+        name: 'Notifikasi',
+        description: 'Selamat datang di Learnify!'
+      };
+
+      // @ts-ignore
+      authService.hashPassword.mockResolvedValue(mockEncryptedPassword);
+      userRepository.getVerifiedUserWithEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        null
+      );
+      userRepository.getUnverifiedUserByEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        mockUser
+      );
+      // @ts-ignore
+      userRepository.updateUser.mockResolvedValue([
+        null,
+        [mockUserWithEncryptedPasswordAndAdmin]
+      ]);
+
+      // @ts-ignore
+      authService.sendOtpRequest.mockResolvedValue(Function);
+      userNotificationService.createUserNotification.mockResolvedValue(
+        // @ts-ignore
+        mockNotification
+      );
+
+      const userResult = await userService.createUser(mockUser);
+
+      expect(userRepository.updateUser).toHaveBeenCalledWith('1', {
+        ...mockUser,
+        password: 'EncryptedPassword'
+      });
+      expect(userResult).toEqual(mockUserWithEncryptedPasswordAndAdmin);
     });
 
     it('throws application error when creating user fails', async () => {
       const mockError = new ApplicationError('Failed to create user', 500);
 
-      userRepository.createUser.mockRejectedValue(
-        /** @ts-ignore */
-        mockError
+      // @ts-ignore
+      authService.hashPassword.mockResolvedValue(null);
+      userRepository.getVerifiedUserWithEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        null
       );
+      userRepository.getUnverifiedUserByEmailAndPhoneNumber.mockResolvedValue(
+        // @ts-ignore
+        null
+      );
+      // @ts-ignore
+      userRepository.createUser.mockRejectedValue(mockError);
 
-      await expect(userService.createUser({}, false)).rejects.toThrow(
+      await expect(userService.createUser({})).rejects.toThrow(
         `Error while creating user: ${mockError.message}`
       );
     });
@@ -301,6 +553,53 @@ describe('User service', () => {
 
       await expect(userService.destroyUser('1')).rejects.toThrow(
         `Error while deleting user: ${mockError.message}`
+      );
+    });
+  });
+
+  describe('reset password on profile', () => {
+    it('should reset the password and return the updated password data', async () => {
+      const mockResetPasswordData = {
+        id: '1',
+        name: 'Emilia',
+        password: 'emilia-rezero'
+      };
+
+      const mockId = '1';
+      const mockNewPassword = 'newPassword';
+
+      // @ts-ignore
+      userRepository.resetPasswordProfile.mockResolvedValue([
+        null,
+        [mockResetPasswordData]
+      ]);
+
+      const resetPassword = await userService.resetPasswordProfile(
+        mockId,
+        mockNewPassword
+      );
+
+      expect(userRepository.resetPasswordProfile).toHaveBeenCalledWith(
+        mockId,
+        mockNewPassword
+      );
+      expect(resetPassword).toEqual(mockResetPasswordData);
+    });
+
+    it('throws an error when reset password fails', async () => {
+      const mockError = new ApplicationError(
+        'Failed to reset password on profile',
+        500
+      );
+      userRepository.resetPasswordProfile.mockRejectedValue(
+        // @ts-ignore
+        mockError
+      );
+
+      await expect(
+        userService.resetPasswordProfile('1', 'newPassword')
+      ).rejects.toThrow(
+        `Error while resetting password profile: ${mockError.message}`
       );
     });
   });
