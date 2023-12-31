@@ -1,10 +1,18 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
+import { sequelize } from '../../models/index.js';
 
 /** @typedef {{ default: Record<keyof import('bcrypt'), jest.Mock> }} BcryptMock */
 /** @typedef {{ default: Record<keyof import('jsonwebtoken'), jest.Mock> }} JWTMock */
 /** @typedef {Record<keyof import('../../services/user.js'), jest.Mock>} UserServiceMock */
 /** @typedef {Record<keyof import('../../services/auth.js'), jest.Mock>} AuthServiceMock */
+/** @typedef {Record<keyof import('../../repositories/otp.js'), jest.Mock>} OtpRepositoryMock */
+/**
+ * @typedef {Record<
+ *   keyof import('../../repositories/password-reset.js'),
+ *   jest.Mock
+ * >} AuthRepositoryMock
+ */
 
 jest.unstable_mockModule(
   'bcrypt',
@@ -33,7 +41,27 @@ jest.unstable_mockModule(
   () =>
     /** @type {UserServiceMock} */
     ({
-      getUser: jest.fn()
+      getUser: jest.fn(),
+      getUserByEmail: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../repositories/password-reset.js',
+  () =>
+    /** @type {AuthRepositoryMock} */
+    ({
+      setUsedTrueByUserId: jest.fn(),
+      setPasswordReset: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../repositories/otp.js',
+  () =>
+    /** @type {OtpRepositoryMock} */
+    ({
+      setOtpVerification: jest.fn()
     })
 );
 
@@ -51,6 +79,10 @@ const authService = /** @type {AuthServiceMock} */ (
 
 const userService = /** @type {UserServiceMock} */ (
   await import('../../services/user.js')
+);
+
+const passwordResetRepository = /** @type {AuthRepositoryMock} */ (
+  await import('../../repositories/password-reset.js')
 );
 
 describe('Auth service', () => {
@@ -194,5 +226,37 @@ describe('Auth service', () => {
         `Error while verifying token: ${mockError.message}`
       );
     });
+  });
+});
+
+describe('Send verify to reset password', () => {
+  it('records reset password request and send to email', async () => {
+    const mockEmail = 'email@gmail.com';
+
+    const mockUser = {
+      dataValues: { id: 'emilia' },
+      email: mockEmail,
+      name: 'Emilia'
+    };
+
+    const mockToken = {
+      dataValues: { id: 'fa757f35-384f-4050-a9c5-a86831a6a111' }
+    };
+
+    // @ts-ignore
+    userService.getUserByEmail.mockResolvedValue(mockUser);
+    // @ts-ignore
+    passwordResetRepository.setUsedTrueByUserId.mockResolvedValue(undefined);
+    // @ts-ignore
+    passwordResetRepository.setPasswordReset.mockResolvedValue(mockToken);
+
+    sequelize.transaction = jest.fn(async (callback) => {
+      // @ts-ignore
+      return await callback();
+    });
+
+    expect(
+      await authService.sendVerifyToResetPassword(mockEmail)
+    ).toBeUndefined();
   });
 });
