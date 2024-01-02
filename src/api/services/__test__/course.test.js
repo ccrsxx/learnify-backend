@@ -231,37 +231,6 @@ describe('Courses service', () => {
     });
   });
 
-  describe.skip('Update course', () => {
-    it('returns updated course data with that user id updates it', async () => {
-      const mockCourse = {
-        id: '1',
-        name: 'Emilia'
-      };
-
-      courseRepository.updateCourse.mockResolvedValue(
-        /** @ts-ignore */
-        [null, [mockCourse]]
-      );
-
-      const course = await courseService.updateCourse('1', mockCourse);
-
-      expect(course).toEqual(mockCourse);
-    });
-
-    it('throws application error when updating course fails', async () => {
-      const mockError = new ApplicationError('Failed to update course', 500);
-
-      courseRepository.updateCourse.mockRejectedValue(
-        /** @ts-ignore */
-        mockError
-      );
-
-      await expect(courseService.updateCourse('1', {}, '1')).rejects.toThrow(
-        `Error while updating course: ${mockError.message}`
-      );
-    });
-  });
-
   describe('Destroy course', () => {
     it('throws application error when destroying course fails', async () => {
       const mockError = new ApplicationError('Failed to destroy course', 500);

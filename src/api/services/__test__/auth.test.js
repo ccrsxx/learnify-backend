@@ -369,37 +369,6 @@ describe('Check link to reset password', () => {
 });
 
 describe('Change password', () => {
-  // it('updates new password', async () => {
-  //   const mockPayload = {
-  //     token: 'fa757f35-384f-4050-a9c5-a86831a6a111',
-  //     password: 'newPassword'
-  //   };
-
-  //   const mockEncryptedPassword = 'EncryptedPassword';
-  //   const mockUserWithEncryptedPassword = {
-  //     password: mockEncryptedPassword
-  //   };
-
-  //   // @ts-ignore
-  //   authService.hashPassword.mockResolvedValue(mockEncryptedPassword);
-
-  //   // @ts-ignore
-  //   userRepository.updateUser.mockResolvedValue([
-  //     null,
-  //     [mockUserWithEncryptedPassword]
-  //   ]);
-  //   passwordResetRepository.updateUsedPasswordResetLink.mockResolvedValue(
-  //     // @ts-ignore
-  //     undefined
-  //   );
-
-  //   sequelize.transaction = jest.fn(async (callback) => {
-  //     // @ts-ignore
-  //     return await callback();
-  //   });
-  //   expect(await authService.changePassword(mockPayload)).toBeDefined();
-  // });
-
   it('throws application error when changing password fails', async () => {
     const mockError = new ApplicationError(
       'Error while checking reset password link: Verification invalid',
