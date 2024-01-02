@@ -1,10 +1,20 @@
 import { jest } from '@jest/globals';
 import { ApplicationError } from '../../../libs/error.js';
+import { sequelize } from '../../models/index.js';
 
 /** @typedef {{ default: Record<keyof import('bcrypt'), jest.Mock> }} BcryptMock */
 /** @typedef {{ default: Record<keyof import('jsonwebtoken'), jest.Mock> }} JWTMock */
 /** @typedef {Record<keyof import('../../services/user.js'), jest.Mock>} UserServiceMock */
+/** @typedef {Record<keyof import('../../../libs/mail.js'), jest.Mock>} EmailHelper */
 /** @typedef {Record<keyof import('../../services/auth.js'), jest.Mock>} AuthServiceMock */
+/** @typedef {Record<keyof import('../../repositories/otp.js'), jest.Mock>} OtpRepositoryMock */
+/**
+ * @typedef {Record<
+ *   keyof import('../../repositories/password-reset.js'),
+ *   jest.Mock
+ * >} AuthRepositoryMock
+ */
+/** @typedef {Record<keyof import('../../repositories/user.js'), jest.Mock>} UserRepositoryMock */
 
 jest.unstable_mockModule(
   'bcrypt',
@@ -33,7 +43,48 @@ jest.unstable_mockModule(
   () =>
     /** @type {UserServiceMock} */
     ({
-      getUser: jest.fn()
+      getUser: jest.fn(),
+      getUserByEmail: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../repositories/password-reset.js',
+  () =>
+    /** @type {AuthRepositoryMock} */
+    ({
+      setUsedTrueByUserId: jest.fn(),
+      setPasswordReset: jest.fn(),
+      getDataPasswordResetByToken: jest.fn(),
+      updateUsedPasswordResetLink: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../repositories/user.js',
+  () =>
+    /** @type {UserRepositoryMock} */
+    ({
+      updateUser: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../repositories/otp.js',
+  () =>
+    /** @type {OtpRepositoryMock} */
+    ({
+      setOtpVerification: jest.fn()
+    })
+);
+
+jest.unstable_mockModule(
+  '../../../libs/mail.js',
+  () =>
+    /** @type {EmailHelper} */
+    ({
+      sendResetPasswordEmail: jest.fn(),
+      sendOtpEmail: jest.fn()
     })
 );
 
@@ -51,6 +102,18 @@ const authService = /** @type {AuthServiceMock} */ (
 
 const userService = /** @type {UserServiceMock} */ (
   await import('../../services/user.js')
+);
+
+const passwordResetRepository = /** @type {AuthRepositoryMock} */ (
+  await import('../../repositories/password-reset.js')
+);
+
+// const userRepository = /** @type {UserRepositoryMock} */ (
+//   await import('../../repositories/user.js')
+// );
+
+const emailHelper = /** @type {EmailHelper} */ (
+  await import('../../../libs/mail.js')
 );
 
 describe('Auth service', () => {
@@ -194,5 +257,134 @@ describe('Auth service', () => {
         `Error while verifying token: ${mockError.message}`
       );
     });
+  });
+});
+
+describe('Send verify to reset password', () => {
+  it('records reset password request and send to email', async () => {
+    const mockEmail = 'email@gmail.com';
+
+    const mockUser = {
+      dataValues: { id: 'emilia' },
+      email: mockEmail,
+      name: 'Emilia'
+    };
+
+    const mockToken = {
+      dataValues: { id: 'fa757f35-384f-4050-a9c5-a86831a6a111' }
+    };
+
+    // @ts-ignore
+    userService.getUserByEmail.mockResolvedValue(mockUser);
+    // @ts-ignore
+    passwordResetRepository.setUsedTrueByUserId.mockResolvedValue(undefined);
+    // @ts-ignore
+    passwordResetRepository.setPasswordReset.mockResolvedValue(mockToken);
+    // @ts-ignore
+    emailHelper.sendResetPasswordEmail.mockResolvedValue(undefined);
+
+    sequelize.transaction = jest.fn(async (callback) => {
+      // @ts-ignore
+      return await callback();
+    });
+
+    expect(
+      await authService.sendVerifyToResetPassword(mockEmail)
+    ).toBeUndefined();
+  });
+
+  it('throws application error when sending verification fails', async () => {
+    const mockError = new ApplicationError('Verification failed', 500);
+
+    // @ts-ignore
+    passwordResetRepository.setPasswordReset.mockRejectedValue(mockError);
+
+    await expect(authService.sendVerifyToResetPassword()).rejects.toThrow(
+      `Error while creating reset password link: ${mockError.message}`
+    );
+  });
+
+  it('throws application error when user not found', async () => {
+    const mockError = new ApplicationError('User not found', 404);
+    const mockEmail = 'email@gmail.com';
+
+    // @ts-ignore
+    userService.getUserByEmail.mockResolvedValue(undefined);
+
+    await expect(
+      authService.sendVerifyToResetPassword(mockEmail)
+    ).rejects.toThrow(
+      `Error while creating reset password link: ${mockError.message}`
+    );
+  });
+});
+
+describe('Check link to reset password', () => {
+  it('returns reset password data request', async () => {
+    const mockToken = {
+      dataValues: { id: 'fa757f35-384f-4050-a9c5-a86831a6a111' }
+    };
+
+    const mockResetPasswordData = {
+      dataValues: {
+        id: mockToken.dataValues.id,
+        used: false
+      }
+    };
+
+    passwordResetRepository.getDataPasswordResetByToken.mockResolvedValue(
+      // @ts-ignore
+      mockResetPasswordData
+    );
+
+    const data = await authService.checkLinkToResetPassword(mockToken);
+    expect(data).toBe(mockResetPasswordData);
+  });
+
+  it('throws application error when checking verification fails', async () => {
+    const mockError = new ApplicationError('Verification invalid', 500);
+
+    passwordResetRepository.getDataPasswordResetByToken.mockResolvedValue(
+      // @ts-ignore
+      undefined
+    );
+
+    await expect(authService.checkLinkToResetPassword()).rejects.toThrow(
+      `Error while checking reset password link: ${mockError.message}`
+    );
+  });
+
+  it('throws application error when checking verification fails', async () => {
+    const mockError = new ApplicationError('Verification invalid', 500);
+
+    passwordResetRepository.getDataPasswordResetByToken.mockRejectedValue(
+      // @ts-ignore
+      mockError
+    );
+
+    await expect(authService.checkLinkToResetPassword()).rejects.toThrow(
+      `Error while checking reset password link: ${mockError.message}`
+    );
+  });
+});
+
+describe('Change password', () => {
+  it('throws application error when changing password fails', async () => {
+    const mockError = new ApplicationError(
+      'Error while checking reset password link: Verification invalid',
+      500
+    );
+    const mockPayload = {
+      token: 'fa757f35-384f-4050-a9c5-a86831a6a111',
+      password: 'newPassword'
+    };
+    passwordResetRepository.updateUsedPasswordResetLink.mockRejectedValue(
+      // @ts-ignore
+      mockError
+    );
+
+    await expect(authService.changePassword(mockPayload)).rejects.toThrow(
+      `Error changing password: ${mockError.message}`
+    );
   });
 });
