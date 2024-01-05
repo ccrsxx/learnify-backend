@@ -7,13 +7,13 @@ Here are the steps to run the project locally.
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/ccrsxx/binar-backend.git
+   git clone https://github.com/ccrsxx/learnify-backend.git
    ```
 
 1. Change directory to the project
 
    ```bash
-   cd binar-backend
+   cd learnify-backend
    ```
 
 1. Install dependencies
